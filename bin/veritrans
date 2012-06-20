@@ -1,0 +1,70 @@
+require File.expand_path(
+        File.join(File.dirname(__FILE__),%w[.. lib veritrans]))
+wpath=  File.dirname(__FILE__).gsub(/bin$/,'')
+
+def howto_veritrans
+puts <<END
+
+How to Veritrans:
+~~~~~~~~~~~~~~~~~~~~~~~
+syntax:
+veritrans [*.w2erb] [-a] [-d:*opt*]
+OR
+veritrans [file1,file2,file3] [-b] [-d:*opt*]
+
+example:
+1. veritrans -a                #=> translate all file with ext: w2erb
+2. veritrans *.w2erb -a        #=> translate all file with ext: w2erb
+3. veritrans fl.w2erb          #=> translate a file
+4. veritrans fl.w2erb -b       #=> translate a file with no initialize/finalize
+5. veritrans fl.w2erb -d:parse #=> translate with debug parser
+6. veritrans fl.w2erb -d:const #=> translate with debug constanta
+7. veritrans fl.w2erb -d:stack #=> translate with debug stack indentation
+8. veritrans -try              #=> Test veritrans using Sinatra http://localhost:4567/
+9. veritrans -irb              #=> Start IRB with   W2 as instance object of veritrans
+10.veritrans -rails            #=> Copy w2scaffold Rails and set environment.rb
+11.veritrans -tags2w           #=> Parsing erb to veritrans
+
+Enjoy... 
+END
+
+end
+
+arg = ARGV 
+if arg.size==0
+	howto_veritrans
+	exit
+end
+
+if arg[0]=='-irb'
+  ARGV.shift
+  
+  require 'irb'
+  puts <<EOF
+example:
+require 'veritrans'
+client = Veritrans::Client.new
+client.order_id   = "#{(0...4).map{65.+(rand(25))}.join}"
+client.session_id = "#{(0...4).map{65.+(rand(25))}.join}"
+client.gross_amount = "10"
+client.commodity    = [
+  {"COMMODITY_ID" => "IDxx1", "COMMODITY_UNIT" => "10", "COMMODITY_NUM" => "1", "COMMODITY_NAME1" => "Waterbotle", "COMMODITY_NAME2" => "Waterbottle in Indonesian"}
+]
+client.get_keys
+client
+
+OR 
+
+client = Veritrans::Client.new do 
+  @order_id   = "1234"
+  @session_id = "3456"
+  @gross_amount = "10"
+  @commodity    = [
+    {"COMMODITY_ID" => "IDxx1", "COMMODITY_UNIT" => "10", "COMMODITY_NUM" => "1", "COMMODITY_NAME1" => "Waterbotle", "COMMODITY_NAME2" => "Waterbottle in Indonesian"}
+  ]
+end
+
+EOF
+
+  IRB.start 
+end
