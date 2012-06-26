@@ -5,18 +5,18 @@ module Veritrans
       class <<self
         self
       end.class_eval do
-        attr_accessor(:commodity,*PostData::Params) 
+        attr_accessor(:commodity, *PostData::Params) 
       end
       if block_given?
-        self.instance_eval &block 
+        self.instance_eval(&block)
         self.get_keys
       end
     end
 
     def get_keys
-      init_return_url
+      init_instance
 
-      params = prepare_params(PostData::HiddenParams,PostData::Params)
+      params = prepare_params(PostData::HiddenParams, PostData::Params)
 
       if @commodity.class == Array
         commodity = @commodity.collect do |data|
@@ -36,7 +36,7 @@ module Veritrans
         req.url(Config::REQUEST_KEY_URL)
         req.body = query_string
       end.env
-
+      puts @resp
       @resp.delete(:ssl)
       @resp.delete(:request)
       @resp.delete(:response)
@@ -44,14 +44,18 @@ module Veritrans
       @resp.delete(:parallel_manager)
       @resp[:url] = @resp[:url].to_s
 
-      parse_body(@resp[:body])
+      @token = parse_body(@resp[:body])
     end
-
-    private
 
     def merchant_id
       Config::MERCHANT_ID
     end
+
+    def token
+      @token
+    end
+
+    private
 
     def merchanthash
       # Generate merchant hash code
@@ -67,7 +71,8 @@ module Veritrans
       Hash[arrs[-2,2].collect{|x|x.split("=")}]
     end
   
-    def init_return_url
+    def init_instance
+      @token                       = nil
       # @settlement_type           = Config::SETTLEMENT_TYPE_CARD
       @finish_payment_return_url   = Config::FINISH_PAYMENT_RETURN_URL
       @unfinish_payment_return_url = Config::UNFINISH_PAYMENT_RETURN_URL

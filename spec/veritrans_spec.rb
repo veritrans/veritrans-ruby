@@ -6,7 +6,7 @@ describe Veritrans::Client,Faraday::Connection do
 		@conn     = MiniTest::Mock.new
 		@conn.expect(:env, {
 			url:  "http://test", 
-			body: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n\r\n\r\n\r\nMERCHANT_ENCRYPTION_KEY=K8331\r\nBROWSER_ENCRYPTION_KEY=K4456\r\n"
+			body: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n\r\n\r\n\r\nTOKEN_MERCHANT=LJZTMuUGVvOYAEa55AWAkGpTckjBbuP9LS0ICWJra2iZfygT6w\r\nTOKEN_BROWSER=Dha7NVnwNnh8UvJBISujEA5sRckLLcIEWgnNEVGLa38DTzRYIS\r\n"
 		})
 
 	  @faraday = MiniTest::Mock.new
@@ -31,7 +31,7 @@ describe Veritrans::Client,Faraday::Connection do
 
   it '#getkeys' do
 		Faraday.stub(:new,@faraday) do 
-  		client.get_keys.must_equal({"MERCHANT_ENCRYPTION_KEY"=>"K8331", "BROWSER_ENCRYPTION_KEY"=>"K4456"})
+  		client.get_keys.must_equal({"TOKEN_MERCHANT"=>"LJZTMuUGVvOYAEa55AWAkGpTckjBbuP9LS0ICWJra2iZfygT6w", "TOKEN_BROWSER"=>"Dha7NVnwNnh8UvJBISujEA5sRckLLcIEWgnNEVGLa38DTzRYIS"})
 	  end
   end
 end

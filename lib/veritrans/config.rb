@@ -4,9 +4,9 @@ module Veritrans
     MERCHANT_ID       = "sample1"
     MERCHANT_HASH_KEY = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz0123456789012345678901"
 
-    FINISH_PAYMENT_RETURN_URL   = "http://192.168.10.228"
-    UNFINISH_PAYMENT_RETURN_URL = "http://192.168.10.228"
-    ERROR_PAYMENT_RETURN_URL    = "http://192.168.10.228"
+    FINISH_PAYMENT_RETURN_URL   = "http://192.168.10.219"
+    UNFINISH_PAYMENT_RETURN_URL = "http://192.168.10.219"
+    ERROR_PAYMENT_RETURN_URL    = "http://192.168.10.219"
     
     SERVER_HOST          = 'http://192.168.10.250:80'
     # Configuration         http://192.168.10.250:80/web1/deviceCheck.action
