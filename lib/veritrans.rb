@@ -6,8 +6,8 @@ require 'digest/sha2'
 require "addressable/uri"
 require 'faraday'
 
-
-module VT
+# root namespace 
+module Veritrans
 end
 
 require 'veritrans/hash_generator'

@@ -1,6 +1,10 @@
+# :nodoc:
 module Veritrans
+
+  # :nodoc:
   class Client
 
+    # constructor to create instance of Veritrans::Client
     def initialize(&block)
       class <<self
         self
@@ -13,6 +17,21 @@ module Veritrans
       end
     end
 
+    #
+    # Example:
+    #
+    #   client = Veritrans::Client.new
+    #   client.order_id     = "dummy#{(0...12).map{65.+(rand(25))}.join}"
+    #   client.session_id   = "session#{(0...12).map{65.+(rand(25))}.join}"
+    #   client.gross_amount = "10"
+    #   client.commodity    = [{
+    #     "COMMODITY_ID"    => "IDxx1", 
+    #     "COMMODITY_UNIT"  => "10",
+    #     "COMMODITY_NUM"   => "1",
+    #     "COMMODITY_NAME1" => "Waterbotle",
+    #     "COMMODITY_NAME2" => "Waterbottle in Indonesian"}]
+    #   client.get_keys
+    #
     def get_keys
       init_instance
 
@@ -29,14 +48,15 @@ module Veritrans
       uri = Addressable::URI.new
       uri.query_values = params
       query_string = "#{uri.query}&REPEAT_LINE=#{@commodity.length}&#{commodity.join('&')}"
-      #puts query_string
+      # puts query_string
 
       conn = Faraday.new(:url => Config::SERVER_HOST)
       @resp = conn.post do |req|
         req.url(Config::REQUEST_KEY_URL)
         req.body = query_string
       end.env
-      puts @resp
+      # puts @resp
+
       @resp.delete(:ssl)
       @resp.delete(:request)
       @resp.delete(:response)
@@ -47,10 +67,12 @@ module Veritrans
       @token = parse_body(@resp[:body])
     end
 
+    # :nodoc:
     def merchant_id
       Config::MERCHANT_ID
     end
 
+    # :nodoc:
     def token
       @token
     end

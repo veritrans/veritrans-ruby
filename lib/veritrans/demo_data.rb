@@ -1,10 +1,16 @@
+# :nodoc:
 module Veritrans
+
+  # :nodoc:
   module DemoData
+
+    # :nodoc:
     def init_order_info
       @order_id        = "1234"  #{}"#{(0...4).map{65.+(rand(25))}.join}"
       @session_id      = "3456"  #{}"#{(0...4).map{65.+(rand(25))}.join}"
     end
 
+    # :nodoc:
     def ini_commodity
       @gross_amount = "10"
       @commodity    = [
@@ -12,6 +18,7 @@ module Veritrans
       ]
     end
   
+    # :nodoc:
     def init_checkout_info
       @customer_status = "1"
       @email           = "test@veritrans.co.jp"
@@ -25,13 +32,14 @@ module Veritrans
       @phone           = "0123456789123"
     end
   
+    # :nodoc:
     def init_card_info
       @card_no       = "4111111111111111"
       @card_exp_date = "11/14"
     end
   
+    # :nodoc:
     def init_shipping
-
       @shipping_input_flag         = "1"
       @shipping_specification_flag = "1"
       @shipping_first_name         = "TARO"
@@ -39,5 +47,6 @@ module Veritrans
       @shipping_postal_code        = "1606028"
       @shipping_phone              = "03111122229"
     end
+    
   end
 end
