@@ -4,84 +4,139 @@ module Veritrans
   # hold information of "post data" need to pass when server need to get_keys
   module PostData
 
-    # +:settlement_type,+
     # +:merchant_id,+
-    # +:merchanthash+
-    HiddenParams =[
-      :settlement_type, 
-      :merchant_id, 
-      :merchanthash
-    ]
-
-    # +:order_id,+
+    # +:merchant_url,+
     # +:session_id,+
-    # +:gross_amount,+
-    # +:card_capture_flag+
-    RequiredParams =[
-      :order_id, 
-      :session_id, 
-      :gross_amount,
-      :card_capture_flag
+    # +:finish_payment_return_url,+
+    # +:unfinish_payment_return_url,+
+    # +:error_payment_return_url
+    Merchant =[
+      :merchant_id, 
+      :merchant_url, 
+      :finish_payment_return_url,
+      :unfinish_payment_return_url,
+      :error_payment_return_url
     ]
 
+    # +:settlement_type,+
+    # +:gross_amount,+
+    # +:card_no,+
+    # +:card_exp_date,+
+    # +:customer_id,+
     # +:previous_customer_flag,+
     # +:customer_status,+
-    # +:email,+
+    Payment =[
+      :settlement_type, 
+      :gross_amount,
+      :card_no,
+      :card_exp_date, # mm/yy
+      :customer_id,
+      :previous_customer_flag,
+      :customer_status,
+    ]
+
     # +:first_name,+
     # +:last_name,+
-    # +:postal_code,+
     # +:address1,+
     # +:address2,+
     # +:city,+
     # +:country_code,+
+    # +:postal_code,+
     # +:phone,+
-    # +:birthday,+
-    # +:sex,+
-    # +:card_no,+
-    # +:card_exp_date,+
-    # +:card_holder_name,+
-    # +:card_number_of_installment,+
-    # +:settlement_sub_type,+ 
-    # +:shop_name,+
-    # +:screen_title,+
-    # +:contents,+
-    # +:timelimit_of_payment,+
-    # +:timelimit_of_cancel,+
-    # +:lang_enable_flag,+
-    # +:lang+
-    OptionalParams =[
-      :previous_customer_flag,
-      :customer_status,
-      :email,
+    # +:email,+
+    # customer_specification_flag,
+    Personal =[
       :first_name,
       :last_name,
-      :postal_code,
       :address1,
       :address2,
       :city,
       :country_code,
+      :postal_code,
       :phone,
-      :birthday,
-      :sex, # 1:male, 2:female, 3:other
-      :card_no,
-      :card_exp_date, # mm/yy
-      :card_holder_name,
-      :card_number_of_installment,
-      :settlement_sub_type, 
-      :shop_name,
-      :screen_title,
-      :contents,
-      :timelimit_of_payment,
-      :timelimit_of_cancel,
+      :email,
+      :customer_specification_flag
+    ]
+
+    # +:shipping_flag,
+    # +:shipping_first_name,
+    # +:shipping_last_name,
+    # +:shipping_address1,
+    # +:shipping_address2,
+    # +:shipping_city,
+    # +:shipping_country_code,
+    # +:shipping_postal_code,
+    # +:shipping_phone,
+    # +:shipping_method,
+    Shipping =[
+      :shipping_flag,
+      :shipping_first_name,
+      :shipping_last_name,
+      :shipping_address1,
+      :shipping_address2,
+      :shipping_city,
+      :shipping_country_code,
+      :shipping_postal_code,
+      :shipping_phone,
+      :shipping_method
+    ]
+
+    # +:lang_enable_flag,+
+    # +:lang+
+    Language =[
       :lang_enable_flag,
       :lang
     ]
 
-    # combination of RequiredParams + OptionalParams
-    Params = RequiredParams + OptionalParams
+    # +:repeat_line,+
+    # +:purchases,+
+    Purchases =[
+      :repeat_line,
+      :purchases
+    ]
+
+    # +:commodity_id,+
+    # +:commodity_unit,+
+    # +:commodity_num,+
+    # +:commodity_name1,+
+    # +:commodity_name2+ 
+    PurchaseParam =[
+      :commodity_id,
+      :commodity_unit,
+      :commodity_num,
+      :commodity_name1,
+      :commodity_name2 
+    ]
+
+    # +:order_id,+
+    # +:session_id,+
+    # +:merchanthash,+
+    # +:card_capture_flag+
+    OtherParam =[
+      :order_id, 
+      :session_id, 
+      :merchanthash,
+      :card_capture_flag
+    ]
+
+    # +:merchant_id,+ 
+    # +:merchanthash,+
+    # +:finish_payment_return_url,+
+    # +:unfinish_payment_return_url,+
+    # +:error_payment_return_url+
+    ServerParam =[
+      :merchant_id, 
+      :merchanthash,
+      :finish_payment_return_url,
+      :unfinish_payment_return_url,
+      :error_payment_return_url
+    ]
+
+    # Params are the combination of this group:
+    PostParam = (Merchant + Payment + Personal + Shipping + Language + Purchases + OtherParam) - ServerParam
   end
 
-  # Sample of Array of commodity
+  # Sample of Array of purchase commodity
   # [
   #   {"COMMODITY_ID" => "1233", "COMMODITY_UNIT" => "1", "COMMODITY_NUM" => "1", "COMMODITY_NAME1" => "BUKU",          "COMMODITY_NAME2" => "BOOK"},
   #   {"COMMODITY_ID" => "1243", "COMMODITY_UNIT" => "9", "COMMODITY_NUM" => "1", "COMMODITY_NAME1" => "BUKU Sembilan", "COMMODITY_NAME2" => "BOOK NINE"}

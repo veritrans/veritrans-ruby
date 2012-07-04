@@ -3,17 +3,23 @@ module Veritrans
 
   # :nodoc:
   class Client
+    include Config
 
     # constructor to create instance of Veritrans::Client
     def initialize(&block)
       class <<self
         self
       end.class_eval do
-        attr_accessor(:commodity, *PostData::Params) 
+        attr_accessor(:commodity, *PostData::PostParam) 
       end
+      
+      # return-back to merchant-web
+      self.customer_specification_flag = Config::CUSTOMER_SPECIFICATION_FLAG 
+      self.settlement_type             = Config::SETTLEMENT_TYPE_CARD
+
       if block_given?
-        self.instance_eval(&block)
-        self.get_keys
+        yield(self) #self.instance_eval(&block)
+        return self.get_keys
       end
     end
 
@@ -35,7 +41,7 @@ module Veritrans
     def get_keys
       init_instance
 
-      params = prepare_params(PostData::HiddenParams, PostData::Params)
+      params = prepare_params(PostData::ServerParam,PostData::PostParam)
 
       if @commodity.class == Array
         commodity = @commodity.collect do |data|
@@ -50,12 +56,12 @@ module Veritrans
       query_string = "#{uri.query}&REPEAT_LINE=#{@commodity.length}&#{commodity.join('&')}"
       # puts query_string
 
-      conn = Faraday.new(:url => Config::SERVER_HOST)
+      conn = Faraday.new(:url => server_host)
       @resp = conn.post do |req|
         req.url(Config::REQUEST_KEY_URL)
         req.body = query_string
       end.env
-      # puts @resp
+      puts query_string
 
       @resp.delete(:ssl)
       @resp.delete(:request)
@@ -68,37 +74,50 @@ module Veritrans
     end
 
     # :nodoc:
+    def server_host
+      return Client.config["server_host"] ? Client.config["server_host"] : Config::SERVER_HOST
+    end
+
+    # :nodoc:
     def merchant_id
-      Config::MERCHANT_ID
+      return Client.config["merchant_id"]
+    end
+
+    # :nodoc:
+    def error_payment_return_url
+      return Client.config["error_payment_return_url"]
+    end
+
+    # :nodoc:
+    def finish_payment_return_url
+      return Client.config["finish_payment_return_url"]
+    end
+
+    # :nodoc:
+    def unfinish_payment_return_url
+      return Client.config["unfinish_payment_return_url"]
     end
 
     # :nodoc:
     def token
-      @token
+      return @token
     end
 
     private
 
     def merchanthash
       # Generate merchant hash code
-      HashGenerator::generate(merchant_id, settlement_type, order_id, gross_amount);
-    end
-
-    def settlement_type
-      Config::SETTLEMENT_TYPE_CARD
+      return HashGenerator::generate(merchant_id, settlement_type, order_id, gross_amount);
     end
 
     def parse_body(body)
       arrs = body.split("\r\n")
-      Hash[arrs[-2,2].collect{|x|x.split("=")}]
+      arrs = arrs[-2,2] if arrs.length > 1
+      return Hash[arrs.collect{|x|x.split("=")}]
     end
   
     def init_instance
-      @token                       = nil
-      # @settlement_type           = Config::SETTLEMENT_TYPE_CARD
-      @finish_payment_return_url   = Config::FINISH_PAYMENT_RETURN_URL
-      @unfinish_payment_return_url = Config::UNFINISH_PAYMENT_RETURN_URL
-      @error_payment_return_url    = Config::ERROR_PAYMENT_RETURN_URL
+      @token = nil
     end
 
     def prepare_params(*arg)

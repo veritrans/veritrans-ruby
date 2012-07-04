@@ -1,0 +1,22 @@
+development:
+  # Merchant ID - defined from veritrans
+  merchant_id: "sample1"
+  # Merchant Hash Key - defined from veritrans
+  merchant_hash_key: "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz0123456789012345678901"
+  # Finish return url (no error / sucees) - define by merchant
+  finish_payment_return_url: "http://localhost/finish"
+  # Unfinish return url - define by merchant
+  unfinish_payment_return_url: "http://localhost/unfinish"
+  # Error return url - define by merchant
+  error_payment_return_url: "http://localhost/error"
+  # Server Host 
+  server_host: "http://192.168.10.250:80"
+
+production:
+  merchant_id: "sample1"
+  merchant_hash_key: "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz0123456789012345678901"
+  finish_payment_return_url: "http://localhost/finish"
+  unfinish_payment_return_url: "http://localhost/unfinish"
+  error_payment_return_url: "http://localhost/error"
+  server_host: "http://192.168.10.250:80"
+  
