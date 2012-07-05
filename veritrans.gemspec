@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
 
 	s.rubyforge_project = "veritrans"
 
-	s.files      = %w[bin/veritrans lib/veritrans lib/veritrans.rb lib/veritrans/client.rb lib/veritrans/config.rb lib/veritrans/demo_client.rb lib/veritrans/demo_data.rb lib/veritrans/hash_generator.rb lib/veritrans/post_data.rb lib/veritrans/version.rb]
+	s.files      = %w[config/veritrans.yml bin/veritrans lib/veritrans lib/veritrans.rb lib/veritrans/client.rb lib/veritrans/config.rb lib/veritrans/hash_generator.rb lib/veritrans/post_data.rb lib/veritrans/version.rb]
 
 	s.test_files = []
 

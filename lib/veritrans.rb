@@ -11,8 +11,7 @@ module Veritrans
 end
 
 require 'veritrans/hash_generator'
-require 'veritrans/demo_data'
 require 'veritrans/post_data'
+require 'veritrans/version'
 require 'veritrans/config'
 require 'veritrans/client'
-require 'veritrans/demo_client'
