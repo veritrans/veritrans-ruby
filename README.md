@@ -9,11 +9,16 @@ Ruby Wrapper for preparinng data to submit to veritrans server and get token for
 
     require 'veritrans'
     client = Veritrans::Client.new
-    client.order_id   = "dummy#{(0...12).map{65.+(rand(25))}.join}"
-    client.session_id = "session#{(0...12).map{65.+(rand(25))}.join}"
+    client.order_id     = "dummy#{(0...12).map{65.+(rand(25))}.join}"
+    client.session_id   = "session#{(0...12).map{65.+(rand(25))}.join}"
     client.gross_amount = "10"
     client.commodity    = [
-      {"COMMODITY_ID" => "IDxx1", "COMMODITY_UNIT" => "10", "COMMODITY_NUM" => "1", "COMMODITY_NAME1" => "Waterbotle", "COMMODITY_NAME2" => "Waterbottle in Indonesian"}
+      {"COMMODITY_ID"    => "IDxx1",
+       "COMMODITY_UNIT"  => "10",
+       "COMMODITY_NUM"   => "1", 
+       "COMMODITY_NAME1" => "Waterbotle", 
+       "COMMODITY_NAME2" => "Waterbottle in Indonesian"
+      }
     ]
     client.shipping_flag         = "1"
     client.shipping_first_name   = "Sam"
