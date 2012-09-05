@@ -1,3 +1,5 @@
+require "yaml"
+
 # :nodoc:
 module Veritrans
 
@@ -24,7 +26,7 @@ module Veritrans
 
     def Config.included(mod)
       class <<self
-        @@config_env = "development"
+        @@config_env = ::Object.const_defined?(:Rails) ? Rails.env : "development"
         @@config = YAML.load_file("./config/veritrans.yml")
       end
 

@@ -78,6 +78,10 @@ module Veritrans
       return Client.config["server_host"] ? Client.config["server_host"] : Config::SERVER_HOST
     end
 
+    def redirect_url
+      "#{server_host}/web1/paymentStart.action"
+    end
+
     # :nodoc:
     def merchant_id
       return Client.config["merchant_id"]
