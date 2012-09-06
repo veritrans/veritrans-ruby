@@ -10,7 +10,7 @@ development:
   # Error return url - define by merchant
   error_payment_return_url: "http://localhost/error"
   # Server Host 
-  server_host: "http://192.168.10.250:80"
+  # server_host: "http://192.168.10.250:80"
 
 production:
   merchant_id: "sample1"
@@ -18,5 +18,5 @@ production:
   finish_payment_return_url: "http://localhost/finish"
   unfinish_payment_return_url: "http://localhost/unfinish"
   error_payment_return_url: "http://localhost/error"
-  server_host: "http://192.168.10.250:80"
+  # server_host: "http://192.168.10.250:80"
   

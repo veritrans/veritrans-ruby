@@ -1,0 +1,34 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://payments.veritrans.co.id/web1/commodityRegist.action
+    body:
+      encoding: UTF-8
+      string: CUSTOMER_SPECIFICATION_FLAG=0&ERROR_PAYMENT_RETURN_URL=http%3A%2F%2Flocalhost%2Ferror&FINISH_PAYMENT_RETURN_URL=http%3A%2F%2Flocalhost%2Ffinish&GROSS_AMOUNT=10&MERCHANTHASH=281e46e656f9d1c627a5d320f82921ee13af3bf751984b420e7099a9f0550a72676753fe8340f4381d70227ecc03f7f2ff3b2266a7594b1ab9c5a2a79a6237e7&MERCHANT_ID=sample1&ORDER_ID=81797068&SESSION_ID=89718576&SETTLEMENT_TYPE=01&SHIPPING_ADDRESS1=Buaran%20I&SHIPPING_ADDRESS2=Pulogadung&SHIPPING_CITY=Jakarta&SHIPPING_COUNTRY_CODE=IDN&SHIPPING_FIRST_NAME=Sam&SHIPPING_FLAG=1&SHIPPING_LAST_NAME=Anthony&SHIPPING_METHOD=N&SHIPPING_PHONE=0123456789123&SHIPPING_POSTAL_CODE=16954&UNFINISH_PAYMENT_RETURN_URL=http%3A%2F%2Flocalhost%2Funfinish&REPEAT_LINE=1&COMMODITY_ID=IDxx1&COMMODITY_NAME1=Waterbotle&COMMODITY_NAME2=Waterbottle%20in%20Indonesian&COMMODITY_NUM=1&COMMODITY_UNIT=10
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 06 Sep 2012 07:01:27 GMT
+      Set-Cookie:
+      - JSESSIONID=91AD3DBCD504E1AF68CBE2B350078A03; Path=/web1; Secure; HttpOnly
+      Content-Type:
+      - text/html;charset=UTF-8
+      Content-Length:
+      - '131'
+    body:
+      encoding: US-ASCII
+      string: ! "TOKEN_MERCHANT=FI06SsaC7kzanHsENigDk9y4KTSLt9DhFT7uu1e4mYMEcJcAoL\r\nTOKEN_BROWSER=sUK9EYWq8JE5nsrTkI0X1NgQ2jqqlJOyViYfHGeWnOjZTYMLRT"
+    http_version: 
+  recorded_at: Thu, 06 Sep 2012 07:01:27 GMT
+recorded_with: VCR 2.0.1

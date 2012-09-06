@@ -47,7 +47,7 @@ module Veritrans
         commodity = @commodity.collect do |data|
           uri = Addressable::URI.new
           uri.query_values = data
-          uri.query        
+          uri.query
         end
       end
 
@@ -61,13 +61,9 @@ module Veritrans
         req.url(Config::REQUEST_KEY_URL)
         req.body = query_string
       end.env
-      puts query_string
+      # puts query_string
 
-      @resp.delete(:ssl)
-      @resp.delete(:request)
-      @resp.delete(:response)
-      @resp.delete(:request_headers)
-      @resp.delete(:parallel_manager)
+      delete_keys
       @resp[:url] = @resp[:url].to_s
 
       @token = parse_body(@resp[:body])
@@ -85,6 +81,21 @@ module Veritrans
     # :nodoc:
     def merchant_id
       return Client.config["merchant_id"]
+    end
+
+    # :nodoc:
+    def merchant_id= new_merchant_id
+      Client.config["merchant_id"] = new_merchant_id
+    end
+
+    # :nodoc:
+    def merchant_hash_key
+      return Client.config["merchant_hash_key"]
+    end
+
+    # :nodoc:
+    def merchant_hash_key= new_merchant_hash_key
+      Client.config["merchant_hash_key"] = new_merchant_hash_key
     end
 
     # :nodoc:
@@ -111,7 +122,7 @@ module Veritrans
 
     def merchanthash
       # Generate merchant hash code
-      return HashGenerator::generate(merchant_id, settlement_type, order_id, gross_amount);
+      return HashGenerator::generate(merchant_id, merchant_hash_key, settlement_type, order_id, gross_amount);
     end
 
     def parse_body(body)
@@ -131,6 +142,14 @@ module Veritrans
         params[key.upcase] = value if value 
       end
       return params
+    end
+
+    def delete_keys
+      @resp.delete(:ssl)
+      @resp.delete(:request)
+      @resp.delete(:response)
+      @resp.delete(:request_headers)
+      @resp.delete(:parallel_manager)
     end
 
   end
