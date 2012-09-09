@@ -16,7 +16,3 @@ gem "rake"
 # Using multipart-post (1.1.5) 
 # Using faraday (0.8.1) 
 # Using bundler (1.1.4) 
-
-spec.add_dependency('addressable')
-spec.add_dependency('faraday')
-spec.add_dependency('rake')
