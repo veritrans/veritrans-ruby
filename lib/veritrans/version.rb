@@ -14,17 +14,17 @@ module Veritrans
 
 			# :nodoc:
 			def major
-				0
+				1
 			end
 
 			# :nodoc:
 			def minor
-				1
+				0
 			end
 
 			# :nodoc:
 			def patch
-				1
+				0
 			end
 
 			# :nodoc:
