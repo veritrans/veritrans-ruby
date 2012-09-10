@@ -38,12 +38,7 @@ class VeritransController < ApplicationController
     client.country_code  = "IDN"
     client.postal_code   = "16954"
     client.phone         = "0123456789123"
-
-    if params["sample_cc_info"]
-      client.card_no       = "4111111111111111"
-      client.card_exp_date = "11/14"
-    end
-    client.email = "sam.anthony@gmail.com" # notification email
+    client.email         = "sam.anthony@gmail.com" # pay-notification email
 
     client.get_keys
     @client = client
@@ -89,7 +84,7 @@ class VeritransController < ApplicationController
   #      "vResultCode"=>"C001000000000000",
   #      "sessionId"=>"session837985748788668181718189"}
   def finish
-    # logic after success transaction accured
+    # logic after success transaction occured
 
     puts "ffffffffffffff"
     puts params.inspect
@@ -104,7 +99,7 @@ class VeritransController < ApplicationController
   #      "vResultCode"=>"NH13000000000000",
   #      "sessionId"=>"session837985748788668181718189"}
   def error
-    # logic after error transaction accured
+    # logic after error transaction occured
 
     puts "eeeeeeeeeeeeee"
     puts params.inspect
