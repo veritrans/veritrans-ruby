@@ -1,0 +1,13 @@
+<h1 align="center">Go to select payment options</h1>
+ 
+<%= form_tag(@client.redirect_url, :name => "form_auto_post") do -%>
+	<input type="hidden" name="MERCHANT_ID" value="<%= @client.merchant_id %>"> 
+	<input type="hidden" name="ORDER_ID" value="<%= @client.order_id %>">
+	<input type="hidden" name="TOKEN_BROWSER" value="<%= @client.token["TOKEN_BROWSER"] %>">
+	<table border="1" align="center" width="80%" cellpadding="10" bgcolor="#FFFFCC">
+	</table>
+	<br><br>
+	<div align="center">
+	<input type="submit" value="submit">
+	</div>
+<% end %>

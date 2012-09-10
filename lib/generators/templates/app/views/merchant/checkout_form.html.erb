@@ -1,0 +1,48 @@
+<%= form_tag('/confirm', :id =>"cart_form") do -%>
+  <table border=1>
+    <tbody>
+      <tr>
+        <th>Product Image</th>
+        <th>Product Info</th>
+        <th>Price</th>
+        <th align="center">Qty</th>
+        <th>Total Price</th>
+      </tr>
+      <tr>
+        <td><img src="/assets/esprit.png" title="Esprit"></td>
+        <td>Red Esprint</td>
+        <td align="right">Rp 500,000</td>
+        <td align="center">4</td>
+        <td align="right">Rp 2,000,000</td>
+      </tr>
+      <tr>
+        <td><img src="/assets/tablet.jpg" title="Tablet"></td>
+        <td>Android Tablet</td>
+        <td align="right">Rp 2,500,000</td>
+        <td align="center">2</td>
+        <td align="right">Rp 5,000,000</td>
+      </tr>
+      <tr class="subtotal">
+        <td colspan="3">
+          <input name="sample_cc_info" checked="checked" type="checkbox"/>
+          CreditCard Info - 
+          <input class="checkout" name="commit" type="submit" value="Checkout">
+        </td>
+        <td><strong>Subtotal:</strong></td>
+        <td align="right"><strong>Rp 7,000,000</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+	<input type="hidden" name="commodity[][COMMODITY_ID]"    value="Espirit"/>
+	<input type="hidden" name="commodity[][COMMODITY_UNIT]"  value="500000"/>
+	<input type="hidden" name="commodity[][COMMODITY_NUM]"   value="4"/>
+	<input type="hidden" name="commodity[][COMMODITY_NAME1]" value="Espirit"/>
+
+	<input type="hidden" name="commodity[][COMMODITY_ID]"    value="Tablet"/>
+	<input type="hidden" name="commodity[][COMMODITY_UNIT]"  value="2500000"/>
+	<input type="hidden" name="commodity[][COMMODITY_NUM]"   value="2"/>
+	<input type="hidden" name="commodity[][COMMODITY_NAME1]" value="Tablet"/>
+
+	<input type="hidden" name="gross_amount"                 value="7000000"/>
+<% end %>

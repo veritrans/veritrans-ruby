@@ -1,0 +1,15 @@
+development:
+  merchant_id: "sample1"
+  merchant_hash_key: "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz0123456789012345678901"
+  unfinish_payment_return_url: "http://192.168.10.219/cancel_pay"
+  finish_payment_return_url: "http://192.168.10.219/finish"
+  error_payment_return_url: "http://192.168.10.219/error"
+  # server_host: "http://192.168.10.250:80"
+
+production:
+  merchant_id: "sample2"
+  merchant_hash_key: "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz0123456789012345678901"
+  unfinish_payment_return_url: "http://192.168.10.219/cancel_pay"
+  finish_payment_return_url: "http://192.168.10.219/finish"
+  error_payment_return_url: "http://192.168.10.219/error"
+  # server_host: "http://192.168.10.250:80"
