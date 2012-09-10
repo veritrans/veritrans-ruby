@@ -57,7 +57,7 @@ class VeritransController < ApplicationController
   # post-redirection from Veritrans to Merchants Web
   # Ex: {"orderId"  =>"dummy877684698685878869896765",
   #      "sessionId"=>"session837985748788668181718189"}
-  def cancel_pay
+  def cancel
     # logic after user cancel the transaction
 
     puts "cccccccccccccc"
@@ -72,7 +72,7 @@ class VeritransController < ApplicationController
   #      "TOKEN_MERCHANT"=>"dYWRjRr2ZbJEqMQaqDLIaWeoLl1Tuk3g7g3T1gKGrE5ibYJoZ4",
   #      "vResultCode"=>"C001000000000000",
   #      "orderId"=>"dummy877684698685878869896765"}
-  def notification
+  def pay
     # logic to check:
     # 1.validate request
     # 2.update db if valid 

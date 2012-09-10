@@ -1,7 +1,7 @@
 class MerchantController < ApplicationController
 
   # show checkout-form 
-  def checkout_form
+  def checkout
   end
   
 end
