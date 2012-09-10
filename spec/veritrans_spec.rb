@@ -26,7 +26,7 @@ describe Veritrans::Client,Faraday::Connection do
   
 
   it '.hash_generator' do
-     client.send(:merchanthash).must_equal("d05d80ceb9c4a9c8e2aabaa1b69dd43888c0cb21ac508b039acffbe6116d3bd1d00bf9d6f6f14d782587bf78f0314d1035d42139ef081e7fb5098f7463395bea")
+     client.send(:merchanthash).must_equal("13bbc9e66f2a698e5a258961457ab59e7a514ef1355fba8cc5fd4156405725bc8a31328470e21dca9dc195bb3babdcf6019d5fdef349c6b317676a59dea980a6")
   end
 
   it '#getkeys' do
