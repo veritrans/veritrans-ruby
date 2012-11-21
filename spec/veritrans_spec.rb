@@ -14,7 +14,7 @@ describe Veritrans::Client,Faraday::Connection do
 	end
 
   let(:client) {
-		client = Veritrans::Client.new #.greet('Alice').must_equal('hello, Alice')
+		client = Veritrans::Client.new 
 		client.order_id     = "1234"
 		client.session_id   = "3456"
 		client.gross_amount = "10"

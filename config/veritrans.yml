@@ -4,7 +4,8 @@ development:
   finish_payment_return_url: "http://localhost/finish"
   unfinish_payment_return_url: "http://localhost/cancel"
   error_payment_return_url: "http://localhost/error"
-  # server_host: "http://192.168.10.250:80"
+  server_key: "2a8f3674-71cf-42af-aa56-b872b8924f72"
+  server_host: "http://veritrans.dev"
 
 production:
   merchant_id: "production_id"
@@ -12,4 +13,6 @@ production:
   finish_payment_return_url: "http://mydomain/finish"
   unfinish_payment_return_url: "http://mydomain/cancel"
   error_payment_return_url: "http://mydomain/error"
+  server_key: "2a8f3674-71cf-42af-aa56-b872b8924f72"
+  server_host: "http://veritrans.dev"
   # server_host: "http://192.168.10.250:80"

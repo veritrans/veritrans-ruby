@@ -11,6 +11,7 @@ end
 gem "addressable"
 gem "faraday"
 gem "rake"
+gem "base64"
 
 # Using addressable (2.2.8) 
 # Using multipart-post (1.1.5) 

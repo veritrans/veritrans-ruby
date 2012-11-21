@@ -116,7 +116,8 @@ module Veritrans
       :order_id, 
       :session_id, 
       :merchanthash,
-      :card_capture_flag
+      :card_capture_flag,
+      :promo_id
     ]
 
     # +:merchant_id,+ 

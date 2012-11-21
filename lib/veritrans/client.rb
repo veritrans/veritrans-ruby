@@ -54,7 +54,6 @@ module Veritrans
       uri = Addressable::URI.new
       uri.query_values = params
       query_string = "#{uri.query}&REPEAT_LINE=#{@commodity.length}&#{commodity.join('&')}"
-      # puts query_string
 
       conn = Faraday.new(:url => server_host)
       @resp = conn.post do |req|

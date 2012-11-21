@@ -19,7 +19,7 @@ module Veritrans
 
 			# :nodoc:
 			def minor
-				0
+				1
 			end
 
 			# :nodoc:

@@ -39,6 +39,7 @@ class VeritransController < ApplicationController
     client.postal_code   = "16954"
     client.phone         = "0123456789123"
     client.email         = "sam.anthony@gmail.com" # pay-notification email
+  # client.promo_id      = "PROMO_MERCHANT_NAME" #if there is a join-promo w/ CC issuer
 
     client.get_keys
     @client = client
