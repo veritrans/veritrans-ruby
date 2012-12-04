@@ -1,0 +1,47 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: http://2a8f3674-71cf-42af-aa56-b872b8924f72:@veritrans.dev/vtdirect-rest/v1/tokens
+    body:
+      encoding: UTF-8
+      string: ! '{"server_key":"2a8f3674-71cf-42af-aa56-b872b8924f72","token_id":"Jlomia5ycElw5t6QsTexJQ==","order_id":"order_5","order_items":[{"id":"10","price":100,"qty":1,"name1":"Mie","name2":"Goreng"},{"id":"11","price":100,"qty":1,"name1":"Mie","name2":"Kuah"}],"gross_amount":200,"email":"echo.khannedy@gmail.com","shipping_address":{"first_name":"Sam","last_name":"Anthony","address1":"Buaran
+        I","address2":"Pulogadung","city":"Jakarta","country_code":"IDN","postal_code":"16954","phone":"0123456789123"},"billing_address":{"first_name":"Sam","last_name":"Anthony","address1":"Buaran
+        I","address2":"Pulogadung","city":"Jakarta","country_code":"IDN","postal_code":"16954","phone":"0123456789123"}}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Type:
+      - text/html; charset=utf-8
+      Content-Length:
+      - '784'
+      X-Request-Id:
+      - f0b85de5e9b461d20eacca6462b33598
+      X-Runtime:
+      - '0.016115'
+      Connection:
+      - keep-alive
+    body:
+      encoding: US-ASCII
+      string: ! "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\"
+        />\n  <title>Action Controller: Exception caught</title>\n  <style>\n    body
+        { background-color: #fff; color: #333; }\n\n    body, p, ol, ul, td {\n      font-family:
+        helvetica, verdana, arial, sans-serif;\n      font-size:   13px;\n      line-height:
+        18px;\n    }\n\n    pre {\n      background-color: #eee;\n      padding: 10px;\n
+        \     font-size: 11px;\n      white-space: pre-wrap;\n    }\n\n    a { color:
+        #000; }\n    a:visited { color: #666; }\n    a:hover { color: #fff; background-color:#000;
+        }\n  </style>\n</head>\n<body>\n\n<h1>Routing Error</h1>\n<p><pre>No route
+        matches [POST] &quot;/vtdirect-rest/v1/tokens&quot;</pre></p>\n<p>\n  Try
+        running <code>rake routes</code> for more information on available routes.\n</p>\n\n</body>\n</html>\n"
+    http_version: 
+  recorded_at: Thu, 22 Nov 2012 10:45:44 GMT
+recorded_with: VCR 2.0.1

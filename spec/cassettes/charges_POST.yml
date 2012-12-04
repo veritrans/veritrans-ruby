@@ -2,10 +2,10 @@
 http_interactions:
 - request:
     method: post
-    uri: http://2a8f3674-71cf-42af-aa56-b872b8924f72:@veritrans.dev/charges
+    uri: http://c0b44171-d7fe-4cf5-8b15-06049fc9980c:@veritrans.dev/charges
     body:
       encoding: UTF-8
-      string: ! '{"server_key":"2a8f3674-71cf-42af-aa56-b872b8924f72","token_id":"Jlomia5ycElw5t6QsTexJQ==","order_id":"order_5","order_items":[{"id":"10","price":100,"qty":1,"name1":"Mie","name2":"Goreng"},{"id":"11","price":100,"qty":1,"name1":"Mie","name2":"Kuah"}],"gross_amount":200,"email":"echo.khannedy@gmail.com","shipping_address":{"first_name":"Sam","last_name":"Anthony","address1":"Buaran
+      string: ! '{"token_id":"t7VBkvh3MjAUIOAbIwbrzA==","order_id":"order_5","order_items":[{"id":"10","price":100,"qty":1,"name1":"Mie","name2":"Goreng"},{"id":"11","price":100,"qty":1,"name1":"Mie","name2":"Kuah"}],"gross_amount":200,"email":"echo.khannedy@gmail.com","shipping_address":{"first_name":"Sam","last_name":"Anthony","address1":"Buaran
         I","address2":"Pulogadung","city":"Jakarta","country_code":"IDN","postal_code":"16954","phone":"0123456789123"},"billing_address":{"first_name":"Sam","last_name":"Anthony","address1":"Buaran
         I","address2":"Pulogadung","city":"Jakarta","country_code":"IDN","postal_code":"16954","phone":"0123456789123"}}'
     headers:
@@ -31,9 +31,9 @@ http_interactions:
       Cache-Control:
       - max-age=0, private, must-revalidate
       X-Request-Id:
-      - e88edb505259a31b60f1fbf6d6d45171
+      - 068f3dd64e215dd70bdcea6b23709e4a
       X-Runtime:
-      - '0.010424'
+      - '0.073556'
       Connection:
       - close
     body:
@@ -41,5 +41,5 @@ http_interactions:
       string: ! "{\n  \"data\":    {},\n  \"code\":    \"VD??\",\n  \"status\":  \"success\",\n
         \ \"message\": \"Success charges.\"\n}"
     http_version: 
-  recorded_at: Wed, 21 Nov 2012 10:08:39 GMT
+  recorded_at: Tue, 04 Dec 2012 09:16:25 GMT
 recorded_with: VCR 2.0.1

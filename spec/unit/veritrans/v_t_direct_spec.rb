@@ -26,7 +26,7 @@ describe Veritrans::VTDirect do
              postal_code: "16954",
              phone: "0123456789123"           
            }
-      @client.token_id    = "Jlomia5ycElw5t6QsTexJQ=="
+      @client.token_id    = "t7VBkvh3MjAUIOAbIwbrzA=="
       @client.order_id    = "order_5"
       @client.order_items = [
               {
@@ -55,7 +55,6 @@ describe Veritrans::VTDirect do
         end
       end
     end
-    # @client.charges
   end
 
   describe "#server_host" do
@@ -72,7 +71,32 @@ describe Veritrans::VTDirect do
     end
   end
 
-  describe "#redirect_url" do
+  describe "#tokens_url" do
+    it "return charges url from config" do
+      Veritrans::Client.config["tokens_url"] = "/token"
+      @client.tokens_url.must_equal("/token")
+    end
+
+    it "return charges url from constants" do
+      old_value = Veritrans::Client.config["tokens_url"]
+      Veritrans::Client.config["tokens_url"] = nil
+      @client.tokens_url.must_equal("/vtdirect-rest/v1/tokens")
+      Veritrans::Client.config["tokens_url"] = old_value
+    end
+  end
+
+  describe "#charges_url" do
+    it "return charges url from config" do
+      Veritrans::Client.config["charges_url"] = "/charges"
+      @client.charges_url.must_equal("/charges")
+    end
+
+    it "return charges url from constants" do
+      old_value = Veritrans::Client.config["charges_url"]
+      Veritrans::Client.config["charges_url"] = nil
+      @client.charges_url.must_equal("/vtdirect-rest/v1/charges")
+      Veritrans::Client.config["charges_url"] = old_value
+    end
   end
 
   describe "#common method from config" do
@@ -93,9 +117,6 @@ describe Veritrans::VTDirect do
         Veritrans::Client.config[key] = old_value
       end
     end
-  end
-
-  describe "#token from instance" do 
   end
 
 end

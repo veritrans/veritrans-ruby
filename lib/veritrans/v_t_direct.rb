@@ -64,21 +64,41 @@ module Veritrans
     #
     def charges
       # conn = Faraday.new(:url => 'http://veritrans.dev/charges')
-      parms = prepare_params([:server_key]+@@attr).to_json
+      parms = prepare_params(@@attr).to_json
       basic = Base64.encode64("#{server_key}:")
-      conn  = Faraday.new(:url => server_host)
+      copt  = {:url => server_host}
+      copt[:ssl] = { :ca_path => VTDirect.config["ca_path"] } if VTDirect.config["ca_path"] #"/usr/lib/ssl/certs"
+      conn  = Faraday.new( copt )
       @resp = conn.post do |req|
-        req.url('/charges')
+        req.url(charges_url)
         req.headers['Content-Type']  = 'application/json'
         req.headers['Authorization'] = "Basic #{basic}"
         req.body = parms
       end.env
+      puts ">>>>#{parms}<<<<"
+      puts ">>>>#{conn}<<<<"
+      puts ">>>>#{@resp}<<<<"
       @data = @resp[:body]
     end
 
     # :nodoc:
+    # def ca_path
+    #   return VTDirect.config["ca_path"] ? VTDirect.config["ca_path"] : Config::CA_PATH
+    # end
+
+    # :nodoc:
     def server_host
       return VTDirect.config["server_host"] ? VTDirect.config["server_host"] : Config::SERVER_HOST
+    end
+
+    # :nodoc:
+    def tokens_url
+      return Client.config["tokens_url"] ? Client.config["tokens_url"] : Config::TOKENS_URL
+    end
+
+    # :nodoc:
+    def charges_url
+      return Client.config["charges_url"] ? Client.config["charges_url"] : Config::CHARGES_URL
     end
 
     # :nodoc:
@@ -97,7 +117,7 @@ module Veritrans
       params = {}
       arg.flatten.each do |key|
         value = self.send(key)
-        params[key.downcase] = value if value 
+        params[key.to_s.downcase] = value if value 
       end
       return params
     end

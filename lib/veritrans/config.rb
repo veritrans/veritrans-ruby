@@ -12,8 +12,17 @@ module Veritrans
     # Request Key Url - use in #get_keys - defined in gem - no change!
     REQUEST_KEY_URL      = "/web1/commodityRegist.action"
 
+    # Request Key Url - use in #get_keys - defined in gem - no change!
+    TOKENS_URL            = "/vtdirect-rest/v1/tokens"
+
+    # Request Key Url - use in #get_keys - defined in gem - no change!
+    CHARGES_URL          = "/vtdirect-rest/v1/charges"
+
     # Payment Redirect Url - defined in gem - no change!
     PAYMENT_REDIRECT_URL = "/web1/deviceCheck.action"
+
+    # CA_PATH
+    # CA_PATH = "/usr/lib/ssl/certs"
     
     # :nodoc:
     CUSTOMER_SPECIFICATION_FLAG = '0' #Billing same as shipping address '1' Different, manually input in Veritrans-web
