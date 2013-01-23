@@ -63,7 +63,6 @@ module Veritrans
     #   vt_direct.charges
     #
     def charges
-      # conn = Faraday.new(:url => 'http://veritrans.dev/charges')
       parms = prepare_params(@@attr).to_json
       basic = Base64.encode64("#{server_key}:")
       copt  = {:url => server_host}
@@ -75,10 +74,11 @@ module Veritrans
         req.headers['Authorization'] = "Basic #{basic}"
         req.body = parms
       end.env
-      puts ">>>>#{parms}<<<<"
-      puts ">>>>#{conn}<<<<"
-      puts ">>>>#{@resp}<<<<"
       @data = @resp[:body]
+    end
+
+    def void
+      api_call(void_url)
     end
 
     # :nodoc:
@@ -102,6 +102,11 @@ module Veritrans
     end
 
     # :nodoc:
+    def void_url
+      return Client.config["void_url"] ? Client.config["void_url"] : Config::VOID_URL
+    end
+
+    # :nodoc:
     def server_key
       return VTDirect.config["server_key"]
     end
@@ -112,6 +117,21 @@ module Veritrans
     end
 
     private
+
+    def api_call(url)
+      parms = prepare_params(@@attr).to_json
+      basic = Base64.encode64("#{server_key}:")
+      copt  = {:url => server_host}
+      copt[:ssl] = { :ca_path => VTDirect.config["ca_path"] } if VTDirect.config["ca_path"] #"/usr/lib/ssl/certs"
+      conn  = Faraday.new( copt )
+      @resp = conn.post do |req|
+        req.url(url)
+        req.headers['Content-Type']  = 'application/json'
+        req.headers['Authorization'] = "Basic #{basic}"
+        req.body = parms
+      end.env
+      @data = @resp[:body]
+    end
 
     def prepare_params(*arg)
       params = {}
