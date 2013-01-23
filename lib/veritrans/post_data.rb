@@ -55,7 +55,7 @@ module Veritrans
       :postal_code,
       :phone,
       :email,
-      :customer_specification_flag
+      :customer_specification_flag # billing_address_different_with_shipping_address
     ]
 
     # +:shipping_flag,
@@ -69,7 +69,7 @@ module Veritrans
     # +:shipping_phone,
     # +:shipping_method,
     Shipping =[
-      :shipping_flag,
+      :shipping_flag, # required_shipping_address
       :shipping_first_name,
       :shipping_last_name,
       :shipping_address1,
@@ -102,11 +102,16 @@ module Veritrans
     # +:commodity_name2+ 
     PurchaseParam =[
       :commodity_id,
-      :commodity_unit,
-      :commodity_num,
+      :commodity_unit, # commodity_qty
+      :commodity_num,  # commodity_price
       :commodity_name1,
       :commodity_name2 
     ]
+
+    # AliasesParam = {
+    #     :commodity_unit => :commodity_qty,
+    #     :commodity_num  => :commodity_price
+    # }
 
     # +:order_id,+
     # +:session_id,+

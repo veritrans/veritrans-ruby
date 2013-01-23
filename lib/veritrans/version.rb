@@ -19,12 +19,12 @@ module Veritrans
 
 			# :nodoc:
 			def minor
-				1
+				2
 			end
 
 			# :nodoc:
 			def patch
-				3
+				0
 			end
 
 			# :nodoc:

@@ -41,12 +41,26 @@ module Veritrans
     def get_keys
       init_instance
 
+      if customer_specification_flag == "0" && shipping_flag == "0"
+        raise "required_shipping_address must be '1'"
+      end
+
       params = prepare_params(PostData::ServerParam,PostData::PostParam)
 
       if @commodity.class == Array
         commodity = @commodity.collect do |data|
+          if data.keys.index "COMMODITY_QTY"
+            data["COMMODITY_NUM"] = data["COMMODITY_QTY"]
+            data.delete "COMMODITY_QTY"
+          end
+          if data.keys.index "COMMODITY_PRICE"
+            data["COMMODITY_UNIT"] = data["COMMODITY_PRICE"]
+            data.delete "COMMODITY_PRICE"
+          end
+          # puts "data #{data.inspect}"
           uri = Addressable::URI.new
           uri.query_values = data
+          puts "@@@@@@@@@@@@ #{uri.query}"
           uri.query
         end
       end
@@ -115,6 +129,26 @@ module Veritrans
     # :nodoc:
     def token
       return @token
+    end
+
+    # :nodoc:
+    def billing_address_different_with_shipping_address
+      @customer_specification_flag
+    end
+
+    # :nodoc:
+    def billing_address_different_with_shipping_address=(flag)
+      @customer_specification_flag = customer_specification_flag
+    end
+
+    # :nodoc:
+    def required_shipping_address
+      @shipping_flag
+    end
+
+    # :nodoc:
+    def required_shipping_address=(flag)
+      @shipping_flag = flag
     end
 
     private
