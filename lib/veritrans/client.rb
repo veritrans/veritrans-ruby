@@ -57,10 +57,8 @@ module Veritrans
             data["COMMODITY_UNIT"] = data["COMMODITY_PRICE"]
             data.delete "COMMODITY_PRICE"
           end
-          # puts "data #{data.inspect}"
           uri = Addressable::URI.new
           uri.query_values = data
-          puts "@@@@@@@@@@@@ #{uri.query}"
           uri.query
         end
       end

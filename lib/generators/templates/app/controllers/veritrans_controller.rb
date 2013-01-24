@@ -27,19 +27,20 @@ class VeritransController < ApplicationController
     client.gross_amount = params["gross_amount"]
     client.commodity    = params["commodity"]
 
-    client.customer_specification_flag = "1" #'1':Different Address with shipping
-    client.shipping_flag = "0"               #'0':Not required shipping address
+    client.billing_address_different_with_shipping_address = "1" #'1':Different Address with shipping
+    client.required_shipping_address = "1"                       #'0':Not required shipping address
 
-    client.first_name    = "Sam"
-    client.last_name     = "Anthony"
-    client.address1      = "Buaran I" 
-    client.address2      = "Pulogadung"
-    client.city          = "Jakarta"
-    client.country_code  = "IDN"
-    client.postal_code   = "16954"
-    client.phone         = "0123456789123"
-    client.email         = "sam.anthony@gmail.com" # pay-notification email
-  # client.promo_id      = "PROMO_MERCHANT_NAME" #if there is a join-promo w/ CC issuer
+    client.shipping_first_name   = "Sam"
+    client.shipping_last_name    = "Anthony"
+    client.shipping_address1     = "Buaran I" 
+    client.shipping_address2     = "Pulogadung"
+    client.shipping_city         = "Jakarta"
+    client.shipping_country_code = "IDN"
+    client.shipping_postal_code  = "16954"
+    client.shipping_phone        = "0123456789123"
+
+    client.email    = "sam.anthony@gmail.com" # pay-notification email
+  # client.promo_id = "PROMO_MERCHANT_NAME" #if there is a join-promo w/ CC issuer
 
     client.get_keys
     @client = client
