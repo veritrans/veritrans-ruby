@@ -10,14 +10,14 @@ Ruby Wrapper prepare-data for submiting to veritrans server and get token for fu
 
 Given you already have cart ready for checkout
 
-** create a veritrans instance & order information**
+**create a veritrans instance & order information**
 
     require 'veritrans'
     client = Veritrans::Client.new
     client.order_id     = "your_unique_order_id"
     client.session_id   = "your_application_session_id"
 
-** set the commodity & gross amount**
+**set the commodity & gross amount**
 
     client.commodity    = [
       {"COMMODITY_ID"    => "ID001",
