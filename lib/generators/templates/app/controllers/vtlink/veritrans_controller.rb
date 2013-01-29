@@ -1,4 +1,4 @@
-class VeritransController < ApplicationController
+class Vtlink::VeritransController < ApplicationController
 
   # post action after user submit checkout-form 
   # Ex POST:

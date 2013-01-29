@@ -30,7 +30,7 @@ Description:
   - config/routes.rb
 DESC
         def create_controller_file
-          acts = "app/controllers/"
+          acts = "app/controllers/vtlink/"
           path = __FILE__.sub(__FILE__.split('/').pop,"templates/#{acts}")
           create_file("#{acts}merchant_controller.rb", IO.read("#{path}merchant_controller.rb"))
           create_file("#{acts}veritrans_controller.rb",IO.read("#{path}veritrans_controller.rb"))
@@ -41,11 +41,11 @@ DESC
           path = __FILE__.sub(__FILE__.split('/').pop,"templates/#{acts}")
           create_file("#{acts}layout_auto_post.html.erb",IO.read("#{path}layout_auto_post.html.erb" ))
 
-          acts = "app/views/merchant/"
+          acts = "app/views/vtlink/merchant/"
           path = __FILE__.sub(__FILE__.split('/').pop,"templates/#{acts}")
           create_file("#{acts}checkout.html.erb",IO.read("#{path}checkout.html.erb" ))
 
-          acts = "app/views/veritrans/"
+          acts = "app/views/vtlink/veritrans/"
           path = __FILE__.sub(__FILE__.split('/').pop,"templates/#{acts}")
           create_file("#{acts}confirm.html.erb", IO.read("#{path}confirm.html.erb"))
           create_file("#{acts}cancel.html.erb",  IO.read("#{path}cancel.html.erb" ))
@@ -60,12 +60,14 @@ DESC
         end
 
         def update_routes
-          route("match 'checkout' => 'merchant#checkout', :via => :get  # show checkout form")
-          route("match 'confirm'  => 'veritrans#confirm', :via => :post # pay-confirmation autosubmit to veritrans server")
-          route("match 'cancel'   => 'veritrans#cancel',  :via => :post # canceling transaction redirect back to merchant-web")
-          route("match 'pay'      => 'veritrans#pay',     :via => :post # server to server pay-notification to merchant-web")
-          route("match 'finish'   => 'veritrans#finish',  :via => :post # successfull transaction redirect back to merchant-web")
-          route("match 'error'    => 'veritrans#error',   :via => :post # error transaction redirect back to merchant-web")
+          route("end")
+          route("  match '/' => 'merchant#checkout', :via => :get  # show checkout form")
+          route("  match 'confirm'  => 'veritrans#confirm', :via => :post # pay-confirmation autosubmit to veritrans server")
+          route("  match 'cancel'   => 'veritrans#cancel',  :via => :post # canceling transaction redirect back to merchant-web")
+          route("  match 'pay'      => 'veritrans#pay',     :via => :post # server to server pay-notification to merchant-web")
+          route("  match 'finish'   => 'veritrans#finish',  :via => :post # successfull transaction redirect back to merchant-web")
+          route("  match 'error'    => 'veritrans#error',   :via => :post # error transaction redirect back to merchant-web")
+          route("namespace :vtlink do")
         end
  
         hook_for :test_framework
