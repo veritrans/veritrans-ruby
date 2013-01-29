@@ -6,14 +6,14 @@ class VeritransController < ApplicationController
   #  "commodity"=>[
   #    {
   #    "COMMODITY_ID"    => "Espirit", 
-  #    "COMMODITY_UNIT"  => "500000",
-  #    "COMMODITY_NUM"   => "4",
+  #    "COMMODITY_QTY"   => "4",
+  #    "COMMODITY_PRICE" => "500000",
   #    "COMMODITY_NAME1" => "Espirit"
   #    },
   #    {
   #    "COMMODITY_ID"    => "Tablet", 
-  #    "COMMODITY_UNIT"  => "2500000",
-  #    "COMMODITY_NUM"   => "2",
+  #    "COMMODITY_QTY"   => "2",
+  #    "COMMODITY_PRICE" => "2500000",
   #    "COMMODITY_NAME1" => "Tablet"
   #    }]}
   # Return from get_keys: 

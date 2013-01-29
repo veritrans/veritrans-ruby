@@ -8,11 +8,26 @@
 
         desc <<DESC
 Description:
+  Copy veritrans.yml template need for veritrans weblinktype payment:
+  - config/veritrans.yml 
+DESC
+
+        def create_or_update_config_files
+          path = __FILE__.sub(__FILE__.split('/').pop,'templates/config/')
+          create_file("config/veritrans.yml",IO.read("#{path}veritrans.yml"))
+        end
+
+      end
+
+      class SampleGenerator < ::Rails::Generators::Base
+
+        desc <<DESC
+Description:
   Copy templates need for veritrans weblinktype payment:
-  0. app/controllers/merchant_controller.rb + views
-  1. app/controllers/veritrans_controller.rb + views
-  2. config/veritrans.yml 
-  3. config/routes.rb
+  - app/controllers/merchant_controller.rb + views
+  - app/controllers/veritrans_controller.rb + views
+  - config/veritrans.yml 
+  - config/routes.rb
 DESC
         def create_controller_file
           acts = "app/controllers/"
