@@ -1,87 +1,103 @@
-# Veritrans Weblink Type Ruby integration library
+# VT-Link Type Ruby integration library
 
-Ruby Wrapper prepare-data for submiting to veritrans server and get token for further process
-
-## How to use 
-
-**Installation**
+## Installation
 
      $ gem install veritrans
 
-Given you already have cart ready for checkout
+## How to use (Rails)
 
-**create a veritrans instance & order information**
+###Add veritrans to Gemfile
+    gem 'veritrans'
 
-    require 'veritrans'
-    client = Veritrans::Client.new
-    client.order_id     = "your_unique_order_id"
-    client.session_id   = "your_application_session_id"
+    bundle install
 
-**set the commodity & gross amount**
+###Generate veritrans.yml
+    rails g veritrans:install
+
+###Edit merchant info in config/veritrans.yml file
+    development:
+      merchant_id: "test_id"
+      merchant_hash_key: "abcdefghijklmnopqrstuvwxyz"
+      finish_payment_return_url: "http://localhost/finish"
+      unfinish_payment_return_url: "http://localhost/cancel"
+      server_host: "http://veritrans.dev"
+      charges_url: "/charges"
+      token_url:   "/tokens"
+
+##STEP 1 : Requesting key
+Given you already have cart ready for checkout.
+We create a veritrans instance
+
+    @client = Veritrans::Client.new
+    @client.order_id                 = "your_unique_order_id"
+    @client.session_id               = "your_application_session_id"
+    @client.billing_address_different_with_shipping_address = 1
+    @client.required_shipping_address = 0    
+    
+    
+dont forget to set your commodity
 
     client.commodity    = [
-      {"COMMODITY_ID"    => "ID001",
-       "COMMODITY_UNIT"  => "10",
-       "COMMODITY_NUM"   => "1", 
-       "COMMODITY_NAME1" => "Waterbotle", 
-       "COMMODITY_NAME2" => "Waterbottle in Indonesian"
+      {"COMMODITY_ID"    => "sku1",
+       "COMMODITY_PRICE"  => "10000",
+       "COMMODITY_QTY"   => "1", 
+       "COMMODITY_NAME1" => "Kaos", 
+       "COMMODITY_NAME2" => "T-Shirt"
+      },
+      {"COMMODITY_ID"    => "sku1",
+       "COMMODITY_PRICE"  => "20000",
+       "COMMODITY_QTY"   => "1", 
+       "COMMODITY_NAME1" => "Kaos", 
+       "COMMODITY_NAME2" => "Pants"
       }
     ]
-    client.gross_amount = "10"
+    client.gross_amount = "30000"
 
-**set the shipping address**
+request for a key
 
-    client.shipping_flag         = "1"
-    client.shipping_first_name   = "Sam"
-    client.shipping_last_name    = "Anthony"
-    client.shipping_address1     = "Buaran I" 
-    client.shipping_address2     = "Pulogadung"
-    client.shipping_city         = "Jakarta"
-    client.shipping_country_code = "IDN"
-    client.shipping_postal_code  = "16954"
-    client.shipping_phone        = "0123456789123"
-    client..shipping_method      = "N"
+    # get keys from Veritrans
+    @client.get_keys
 
+     # save the merchant token
+     if @client.token["ERROR_MESSAGE"]
+        # error accoured
+     else        
+       @order.token_merchant = @client.token["TOKEN_MERCHANT"]
+       @order.save   
+     end
+       
 
-**set email notification**
+##STEP 2 : Redirect user to Veritrans payment page
 
-    client.email = "sam.anthony@gmail.com"
-
-**request for a key**
-
-    client.get_keys
-
-for complete demo you can check-out sample-code on veritrans-ruby-sample-cart
-
-
-## Sample Rails-app
-
-This gem can provide a sample checkout in new rails app.
-
-**create new rails app**
-
-    rails new sample-cart
-
-**add "veritrans" gem to Gemfile**
-
-    gem 'veritrans', '1.2.0'
-
-**bundle update**
+Prepare the FORM to redirect the customer 
     
-    bundle 
+    <%= form_tag(@client.redirect_url, :name => "form_auto_post") do -%>
+      <input type="hidden" name="MERCHANT_ID" value="<%= @client.merchant_id %>"> 
+      <input type="hidden" name="ORDER_ID" value="<%= @client.order_id %>">
+      <input type="hidden" name="TOKEN_BROWSER" value="<%= @client.token["TOKEN_BROWSER"] %>">
+      <div align="center">
+      <input type="submit" value="submit">
+      </div>
+    <% end %>
 
-**create sample checkout**
+##STEP 3 : Responding Veritrans Payment Notification
+After the payment is completed Veritrans will contact Merchant's web server.
+As a Merchant, you need to response this query. Validate request from veritrans, make sure it comes from veritrans not from hacker
 
-    rails g veritrans:sample
+     # Assume that we wave Order model to keep our order data
+     @order = Order.find(param["orderId"])
 
-**update file 'config/veritrans.yml'**
-
-    development:
-       merchant_id: "your_merchant_id"
-       merchant_hash_key: "your_merchant_hash_key"
-
-**now you can test yout rails app**
-
-    rails s
-
+     # Server to Server post-notification(action) from Veritrans to Merchants Server 
+     # Ex: {"mErrMsg"=>"",
+     #      "mStatus"=>"success",
+     #       "TOKEN_MERCHANT"=>"dYWRjRr2ZbJEqMQaqDLIaWeoLl1Tuk3g7g3T1gKGrE5ibYJoZ4",
+     #      "vResultCode"=>"C001000000000000",
+     #      "orderId"=>"dummy877684698685878869896765"}
+        
+     #Verify that token merchant is exactly the same with what comes from veritrans
+      if @order.token_merchant == params["TOKEN_MERCHANT"]
+        @order.paid!
+      else
+         # you can log for invalid notification
+      end         
 
