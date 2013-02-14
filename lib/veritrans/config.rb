@@ -38,8 +38,24 @@ module Veritrans
 
     def Config.included(mod)
       class <<self
+        template = {
+          'merchant_id' => nil,
+          'merchant_hash_key' => nil,
+          'finish_payment_return_url' => nil,
+          'unfinish_payment_return_url' => nil,
+          'error_payment_return_url' => nil,
+          'server_key' => nil,
+          'server_host' => nil,
+          'charges_url' => nil,
+          'token_url' => nil
+        }
         @@config_env = ::Object.const_defined?(:Rails) ? Rails.env : "development"
-        @@config = File.exists?("./config/veritrans.yml") ? YAML.load_file("./config/veritrans.yml") : nil
+        @@config = File.exists?("./config/veritrans.yml") ? YAML.load_file("./config/veritrans.yml") : {}
+        @@config['development'] = {} if !@@config['development']
+        @@config['production' ] = {} if !@@config['production']
+        @@config['development'] = template.clone.merge(@@config['development'])
+        @@config['production']  = template.clone.merge(@@config['production'])
+        #@@config['production' ].merge!(template)
       end
 
       mod.instance_eval <<CODE
