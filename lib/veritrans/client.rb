@@ -17,10 +17,10 @@ module Veritrans
       self.customer_specification_flag = Config::CUSTOMER_SPECIFICATION_FLAG 
       self.settlement_type             = Config::SETTLEMENT_TYPE_CARD
 
-      if block_given?
-        yield(self) #self.instance_eval(&block)
-        return self.get_keys
-      end
+      # if block_given?
+      #   yield(self) #self.instance_eval(&block)
+      #   return self.get_keys
+      # end
     end
 
     #
@@ -40,38 +40,73 @@ module Veritrans
     #
     def get_keys
       init_instance
-
+      
       if customer_specification_flag == "0" && shipping_flag == "0"
         raise "required_shipping_address must be '1'"
       end
 
       params = prepare_params(PostData::ServerParam,PostData::PostParam)
+# binding.pry
+
+# {"commodity_id"=>10,
+#  "commodity_num"=>"100000",
+#  "commodity_qty"=>"8",
+#  "commodity_name1"=>"tshirt",
+#  "commodity_name2"=>"tshirt"}
 
       if @commodity.class == Array
-        commodity = @commodity.collect do |data|
-          if data.keys.index "COMMODITY_QTY"
-            data["COMMODITY_NUM"] = data["COMMODITY_QTY"]
-            data.delete "COMMODITY_QTY"
+        commodity = @commodity.collect do |data|          
+          if data.keys.index "commodity_id"
+            data["item_id[]"] = data["commodity_id"]
+            data.delete "commodity_id"
           end
-          if data.keys.index "COMMODITY_PRICE"
-            data["COMMODITY_UNIT"] = data["COMMODITY_PRICE"]
-            data.delete "COMMODITY_PRICE"
+
+          if data.keys.index "commodity_num"
+            data["price[]"] = data["commodity_num"]
+            data.delete "commodity_num"
           end
+
+          if data.keys.index "commodity_qty"
+            data["quantity[]"] = data["commodity_qty"]
+            data.delete "commodity_qty"
+          end
+
+          if data.keys.index "commodity_name1"
+            data["item_name1[]"] = data["commodity_name1"]
+            data.delete "commodity_name1"
+          end
+
+          if data.keys.index "commodity_name2"
+            data["item_name2[]"] = data["commodity_name2"]
+            data.delete "commodity_name2"
+          end
+
+          
+          
+          # FIXME
           uri = Addressable::URI.new
           uri.query_values = data
+          
+          # binding.pry
+          # data
           uri.query
         end
       end
 
+
       uri = Addressable::URI.new
       uri.query_values = params
-      query_string = "#{uri.query}&REPEAT_LINE=#{@commodity.length}&#{commodity.join('&')}"
-
+      # query_string = "#{uri.query}&REPEAT_LINE=#{@commodity.length}&#{commodity.join('&')}"
+      query_string = "#{uri.query}&repeat_line=#{@commodity.length}&#{commodity.join('&')}"
+      p query_string
+      p '#########################'
+# binding.pry
       conn = Faraday.new(:url => server_host)
       @resp = conn.post do |req|
         req.url(Config::REQUEST_KEY_URL)
         req.body = query_string
       end.env
+      
       # puts query_string
 
       delete_keys
@@ -170,7 +205,7 @@ module Veritrans
       params = {}
       arg.flatten.each do |key|
         value = self.send(key)
-        params[key.upcase] = value if value 
+        params[key.downcase] = value if value 
       end
       return params
     end
