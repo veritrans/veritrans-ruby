@@ -78,7 +78,8 @@ module Veritrans
       :shipping_country_code,
       :shipping_postal_code,
       :shipping_phone,
-      :shipping_method
+      :shipping_method,
+      :shipping_email
     ]
 
     # +:lang_enable_flag,+
