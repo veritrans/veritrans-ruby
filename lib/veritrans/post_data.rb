@@ -78,7 +78,11 @@ module Veritrans
       :shipping_country_code,
       :shipping_postal_code,
       :shipping_phone,
+<<<<<<< HEAD
       :shipping_method,
+=======
+      :shipping_method
+>>>>>>> 1125032c72371a389f5d4ab72eb01b289cbfae7a
       :shipping_email
     ]
 
