@@ -188,7 +188,7 @@ module Veritrans
 
     def merchanthash
       # Generate merchant hash code
-      return HashGenerator::generate(merchant_id, merchant_hash_key, settlement_type, order_id, gross_amount);
+      return HashGenerator::generate(merchant_id, merchant_hash_key, settlement_type, order_id);
     end
 
     def parse_body(body)

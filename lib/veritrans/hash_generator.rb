@@ -12,8 +12,8 @@ module Veritrans
     # * <tt>[String]settlement_method</tt> - '01' Credit Card
     # * <tt>[String]order_id</tt> 
     # * <tt>[String]amount</tt> 
-    def self.generate(merchant_id, merchant_hash_key, settlement_method, order_id, amount)
-      Digest::SHA512.hexdigest("#{merchant_hash_key},#{merchant_id},#{settlement_method},#{order_id},#{amount}")
+    def self.generate(merchant_id, merchant_hash_key, settlement_method, order_id)
+      Digest::SHA512.hexdigest("#{merchant_hash_key},#{merchant_id},#{settlement_method},#{order_id}")
     end
   end
 end
