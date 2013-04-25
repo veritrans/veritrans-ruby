@@ -46,69 +46,49 @@ module Veritrans
       end
 
       params = prepare_params(PostData::ServerParam,PostData::PostParam)
-# binding.pry
-
-# {"commodity_id"=>10,
-#  "commodity_num"=>"100000",
-#  "commodity_qty"=>"8",
-#  "commodity_name1"=>"tshirt",
-#  "commodity_name2"=>"tshirt"}
-
-      if @commodity.class == Array
-        commodity = @commodity.collect do |data|          
-          if data.keys.index "commodity_id"
-            data["item_id[]"] = data["commodity_id"]
-            data.delete "commodity_id"
+      
+      commodity = @commodity.collect do |data|                
+        data.keys.map do |key|          
+          if key.downcase == "commodity_id"
+            data["item_id[]"] = data[key]            
           end
-
-          if data.keys.index "commodity_num"
-            data["price[]"] = data["commodity_num"]
-            data.delete "commodity_num"
-          end
-
-          if data.keys.index "commodity_qty"
-            data["quantity[]"] = data["commodity_qty"]
-            data.delete "commodity_qty"
-          end
-
-          if data.keys.index "commodity_name1"
-            data["item_name1[]"] = data["commodity_name1"]
-            data.delete "commodity_name1"
-          end
-
-          if data.keys.index "commodity_name2"
-            data["item_name2[]"] = data["commodity_name2"]
-            data.delete "commodity_name2"
-          end
-
           
-          
-          # FIXME
-          uri = Addressable::URI.new
-          uri.query_values = data
-          
-          # binding.pry
-          # data
-          uri.query
-        end
+          if key.downcase == "commodity_num"
+            data["price[]"] = data[key]
+          end
+
+          if key.downcase == "commodity_qty"
+            data["quantity[]"] = data[key]
+          end
+
+          if key.downcase == "commodity_name1"
+            data["item_name1[]"] = data[key]
+          end
+
+          if key.downcase == "commodity_name2"
+            data["item_name2[]"] = data[key]
+          end
+
+          data.delete key
+        end        
+
+        # construct commodity
+        orders_uri = Addressable::URI.new
+        orders_uri.query_values = data
+        # return list of commodity as query string format
+        orders_uri.query
       end
-
-
+      
       uri = Addressable::URI.new
       uri.query_values = params
-      # query_string = "#{uri.query}&REPEAT_LINE=#{@commodity.length}&#{commodity.join('&')}"
-      query_string = "#{uri.query}&repeat_line=#{@commodity.length}&#{commodity.join('&')}"
-      p query_string
-      p '#########################'
-# binding.pry
+      query_string = "#{uri.query}&repeat_line=#{commodity.length}&#{commodity.join('&')}"
+    
       conn = Faraday.new(:url => server_host)
       @resp = conn.post do |req|
         req.url(Config::REQUEST_KEY_URL)
         req.body = query_string
       end.env
       
-      # puts query_string
-
       delete_keys
       @resp[:url] = @resp[:url].to_s
 
@@ -203,10 +183,13 @@ module Veritrans
 
     def prepare_params(*arg)
       params = {}
+      # extract keys from post data
       arg.flatten.each do |key|
+        # retrieve value from client configuration
         value = self.send(key)
         params[key.downcase] = value if value 
       end
+      
       return params
     end
 
