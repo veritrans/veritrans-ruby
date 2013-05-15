@@ -136,7 +136,8 @@ module Veritrans
       :merchanthash,
       :finish_payment_return_url,
       :unfinish_payment_return_url,
-      :error_payment_return_url
+      :error_payment_return_url,
+      :vespa
     ]
 
     # Params are the combination of this group:

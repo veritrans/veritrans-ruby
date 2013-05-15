@@ -53,11 +53,11 @@ module Veritrans
             data["item_id[]"] = data[key]            
           end
           
-          if key.downcase == "commodity_num"
+          if key.downcase == "commodity_unit"
             data["price[]"] = data[key]
           end
 
-          if key.downcase == "commodity_qty"
+          if key.downcase == "commodity_num"
             data["quantity[]"] = data[key]
           end
 
@@ -162,6 +162,10 @@ module Veritrans
     # :nodoc:
     def required_shipping_address=(flag)
       @shipping_flag = flag
+    end
+
+    def vespa
+      return true
     end
 
     private
