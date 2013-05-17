@@ -46,9 +46,14 @@ module Veritrans
       end
 
       params = prepare_params(PostData::ServerParam,PostData::PostParam)
+
+      if !params[:promo_bins].blank?
+        params.merge!({ "promo_bins[]" => params[:promo_bins]})
+        params.delete :promo_bins
+      end
       
-      commodity = @commodity.collect do |data|                
-        data.keys.map do |key|          
+      commodity = @commodity.collect do |data|
+        data.keys.map do |key|
           if key.downcase == "commodity_id"
             data["item_id[]"] = data[key]            
           end
@@ -78,7 +83,7 @@ module Veritrans
         # return list of commodity as query string format
         orders_uri.query
       end
-      
+
       uri = Addressable::URI.new
       uri.query_values = params
       query_string = "#{uri.query}&repeat_line=#{commodity.length}&#{commodity.join('&')}"
@@ -193,7 +198,6 @@ module Veritrans
         value = self.send(key)
         params[key.downcase] = value if value 
       end
-      
       return params
     end
 

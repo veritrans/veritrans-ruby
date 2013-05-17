@@ -123,7 +123,8 @@ module Veritrans
       :session_id, 
       :merchanthash,
       :card_capture_flag,
-      :promo_id
+      :promo_id,
+      :promo_bins
     ]
 
     # +:merchant_id,+ 
