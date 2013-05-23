@@ -138,7 +138,7 @@ module Veritrans
       :finish_payment_return_url,
       :unfinish_payment_return_url,
       :error_payment_return_url,
-      :vespa
+      :new_api
     ]
 
     # Params are the combination of this group:

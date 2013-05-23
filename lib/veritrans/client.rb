@@ -169,7 +169,7 @@ module Veritrans
       @shipping_flag = flag
     end
 
-    def vespa
+    def new_api
       return true
     end
 
