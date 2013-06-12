@@ -13,13 +13,13 @@ module Veritrans
     REQUEST_KEY_URL      = "/web1/commodityRegist.action"
 
     # Request Key Url - use in #get_keys - defined in gem - no change!
-    TOKENS_URL            = "/vtdirect-rest/v1/tokens"
+    TOKENS_URL            = "/vtdirect/v1/tokens"
 
     # Charges Url - use in #get_keys - defined in gem - no change!
-    CHARGES_URL          = "/vtdirect-rest/v1/charges"
+    CHARGES_URL          = "/vtdirect/v1/charges"
 
     # Void Url - use in #get_keys - defined in gem - no change!
-    VOID_URL             = "/vtdirect-rest/v1/void"
+    VOID_URL             = "/vtdirect/v1/void"
 
     # Payment Redirect Url - defined in gem - no change!
     PAYMENT_REDIRECT_URL = "/web1/deviceCheck.action"

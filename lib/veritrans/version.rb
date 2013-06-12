@@ -24,7 +24,7 @@ module Veritrans
 
 			# :nodoc:
 			def patch
-				1
+				2
 			end
 
 			# :nodoc:
