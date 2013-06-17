@@ -124,7 +124,8 @@ module Veritrans
       :merchanthash,
       :card_capture_flag,
       :promo_id,
-      :promo_bins
+      :promo_bins,
+      :enable_3d_secure
     ]
 
     # +:merchant_id,+ 
