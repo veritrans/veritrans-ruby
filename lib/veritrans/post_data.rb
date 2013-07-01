@@ -26,13 +26,17 @@ module Veritrans
     # +:previous_customer_flag,+
     # +:customer_status,+
     Payment =[
-      :settlement_type, 
+      :settlement_type,
+      :payment_type, 
       :gross_amount,
       :card_no,
       :card_exp_date, # mm/yy
       :customer_id,
       :previous_customer_flag,
       :customer_status,
+      :installment,
+      :installment_type,
+      :bank
     ]
 
     # +:first_name,+
