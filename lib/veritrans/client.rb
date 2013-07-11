@@ -51,6 +51,11 @@ module Veritrans
         params.merge!({ "promo_bins[]" => params[:promo_bins]})
         params.delete :promo_bins
       end
+
+      if !params[:point_banks].blank?
+        params.merge!({ "point_banks[]" => params[:point_banks]})
+        params.delete :point_banks
+      end
       
       commodity = @commodity.collect do |data|
         data.keys.map do |key|
