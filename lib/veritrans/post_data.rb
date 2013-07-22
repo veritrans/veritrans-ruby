@@ -36,7 +36,7 @@ module Veritrans
       :customer_status,
       :installment,
       :installment_type,
-      :installment_bank,
+      :installment_banks,
       :point,
       :point_banks
     ]
