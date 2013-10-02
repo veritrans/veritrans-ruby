@@ -37,6 +37,7 @@ module Veritrans
       :installment,
       :installment_type,
       :installment_banks,
+      :installment_terms,
       :point,
       :point_banks
     ]
