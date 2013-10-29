@@ -63,7 +63,7 @@ module Veritrans
       end
 
       if !params[:installment_terms].blank?
-        params.merge!({ "installment_terms" => params[:installment_terms].to_json})
+        params.merge!({ "installment_terms" => params[:installment_terms].to_json })
         params.delete :installment_terms
       end
       

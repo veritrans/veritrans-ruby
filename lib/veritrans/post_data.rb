@@ -34,11 +34,11 @@ module Veritrans
       :customer_id,
       :previous_customer_flag,
       :customer_status,
-      :installment,
+      # :installment,
       :installment_type,
       :installment_banks,
       :installment_terms,
-      :point,
+      # :point,
       :point_banks
     ]
 
