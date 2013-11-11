@@ -7,7 +7,7 @@ module Veritrans
   module Config
 
     # server Veritrans - defined in gem - no change!
-    SERVER_HOST          = 'https://payments.veritrans.co.id' #'http://192.168.10.250:80'
+    SERVER_HOST = "https://vtweb.veritrans.co.id"
 
     # Request Key Url - use in #get_keys - defined in gem - no change!
     REQUEST_KEY_URL      = "/web1/commodityRegist.action"

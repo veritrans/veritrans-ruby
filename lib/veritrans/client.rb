@@ -17,10 +17,10 @@ module Veritrans
       self.customer_specification_flag = Config::CUSTOMER_SPECIFICATION_FLAG 
       self.settlement_type             = Config::SETTLEMENT_TYPE_CARD
 
-      if block_given?
-        yield(self) #self.instance_eval(&block)
-        return self.get_keys
-      end
+      # if block_given?
+      #   yield(self) #self.instance_eval(&block)
+      #   return self.get_keys
+      # end
     end
 
     #
@@ -40,40 +40,75 @@ module Veritrans
     #
     def get_keys
       init_instance
-
+      
       if customer_specification_flag == "0" && shipping_flag == "0"
         raise "required_shipping_address must be '1'"
       end
 
       params = prepare_params(PostData::ServerParam,PostData::PostParam)
 
-      if @commodity.class == Array
-        commodity = @commodity.collect do |data|
-          if data.keys.index "COMMODITY_QTY"
-            data["COMMODITY_NUM"] = data["COMMODITY_QTY"]
-            data.delete "COMMODITY_QTY"
+      if !params[:promo_bins].blank?
+        params.merge!({ "promo_bins[]" => params[:promo_bins]})
+        params.delete :promo_bins
+      end
+
+      if !params[:point_banks].blank?
+        params.merge!({ "point_banks[]" => params[:point_banks]})
+        params.delete :point_banks
+      end
+
+      if !params[:installment_banks].blank?
+        params.merge!({ "installment_banks[]" => params[:installment_banks]})
+        params.delete :installment_banks
+      end
+
+      if !params[:installment_terms].blank?
+        params.merge!({ "installment_terms" => params[:installment_terms].to_json })
+        params.delete :installment_terms
+      end
+      
+      commodity = @commodity.collect do |data|
+        data.keys.map do |key|
+          if key.downcase == "commodity_id"
+            data["item_id[]"] = data[key]            
           end
-          if data.keys.index "COMMODITY_PRICE"
-            data["COMMODITY_UNIT"] = data["COMMODITY_PRICE"]
-            data.delete "COMMODITY_PRICE"
+          
+          if key.downcase == "commodity_unit"
+            data["price[]"] = data[key]
           end
-          uri = Addressable::URI.new
-          uri.query_values = data
-          uri.query
-        end
+
+          if key.downcase == "commodity_num"
+            data["quantity[]"] = data[key]
+          end
+
+          if key.downcase == "commodity_name1"
+            data["item_name1[]"] = data[key]
+          end
+
+          if key.downcase == "commodity_name2"
+            data["item_name2[]"] = data[key]
+          end
+
+          data.delete key
+        end        
+
+        # construct commodity
+        orders_uri = Addressable::URI.new
+        orders_uri.query_values = data
+        # return list of commodity as query string format
+        orders_uri.query
       end
 
       uri = Addressable::URI.new
       uri.query_values = params
-      query_string = "#{uri.query}&REPEAT_LINE=#{@commodity.length}&#{commodity.join('&')}"
-
+      query_string = "#{uri.query}&repeat_line=#{commodity.length}&#{commodity.join('&')}"
+    
       conn = Faraday.new(:url => server_host)
       @resp = conn.post do |req|
         req.url(Config::REQUEST_KEY_URL)
         req.body = query_string
       end.env
-      # puts query_string
-
+      
       delete_keys
       @resp[:url] = @resp[:url].to_s
 
@@ -149,11 +184,15 @@ module Veritrans
       @shipping_flag = flag
     end
 
+    def new_api
+      return true
+    end
+
     private
 
     def merchanthash
       # Generate merchant hash code
-      return HashGenerator::generate(merchant_id, merchant_hash_key, settlement_type, order_id, gross_amount);
+      return HashGenerator::generate(merchant_id, merchant_hash_key, settlement_type, order_id);
     end
 
     def parse_body(body)
@@ -168,9 +207,11 @@ module Veritrans
 
     def prepare_params(*arg)
       params = {}
+      # extract keys from post data
       arg.flatten.each do |key|
+        # retrieve value from client configuration
         value = self.send(key)
-        params[key.upcase] = value if value 
+        params[key.downcase] = value if value 
       end
       return params
     end

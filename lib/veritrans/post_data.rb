@@ -26,13 +26,20 @@ module Veritrans
     # +:previous_customer_flag,+
     # +:customer_status,+
     Payment =[
-      :settlement_type, 
+      :settlement_type,
+      :payment_type, 
       :gross_amount,
       :card_no,
       :card_exp_date, # mm/yy
       :customer_id,
       :previous_customer_flag,
       :customer_status,
+      # :installment,
+      :installment_type,
+      :installment_banks,
+      :installment_terms,
+      # :point,
+      :point_banks
     ]
 
     # +:first_name,+
@@ -78,7 +85,8 @@ module Veritrans
       :shipping_country_code,
       :shipping_postal_code,
       :shipping_phone,
-      :shipping_method
+      :shipping_method,
+      :shipping_email
     ]
 
     # +:lang_enable_flag,+
@@ -122,7 +130,9 @@ module Veritrans
       :session_id, 
       :merchanthash,
       :card_capture_flag,
-      :promo_id
+      :promo_id,
+      :promo_bins,
+      :enable_3d_secure
     ]
 
     # +:merchant_id,+ 
@@ -135,7 +145,8 @@ module Veritrans
       :merchanthash,
       :finish_payment_return_url,
       :unfinish_payment_return_url,
-      :error_payment_return_url
+      :error_payment_return_url,
+      :new_api
     ]
 
     # Params are the combination of this group:
