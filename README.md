@@ -1,4 +1,4 @@
-# VT-Link Type Ruby integration library
+# VT-Web Ruby integration library
 
 ## Installation
 
