@@ -132,7 +132,9 @@ module Veritrans
       :card_capture_flag,
       :promo_id,
       :promo_bins,
-      :enable_3d_secure
+      :enable_3d_secure,
+      :bank,
+      :mandiri_clickpay
     ]
 
     # +:merchant_id,+ 
