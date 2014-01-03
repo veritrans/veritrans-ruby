@@ -67,6 +67,11 @@ module Veritrans
         params.delete :installment_terms
       end
       
+      if !params[:payment_methods].blank?
+        params.merge!({ "payment_methods[]" => params[:payment_methods]})
+        params.delete :payment_methods
+      end
+      
       commodity = @commodity.collect do |data|
         data.keys.map do |key|
           if key.downcase == "commodity_id"
