@@ -39,7 +39,8 @@ module Veritrans
       :installment_banks,
       :installment_terms,
       # :point,
-      :point_banks
+      :point_banks,
+      :payment_methods
     ]
 
     # +:first_name,+
@@ -133,8 +134,7 @@ module Veritrans
       :promo_id,
       :promo_bins,
       :enable_3d_secure,
-      :bank,
-      :mandiri_clickpay
+      :bank
     ]
 
     # +:merchant_id,+ 
