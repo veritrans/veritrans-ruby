@@ -134,7 +134,8 @@ module Veritrans
       :promo_id,
       :promo_bins,
       :enable_3d_secure,
-      :bank
+      :bank,
+      :version
     ]
 
     # +:merchant_id,+ 
@@ -147,8 +148,7 @@ module Veritrans
       :merchanthash,
       :finish_payment_return_url,
       :unfinish_payment_return_url,
-      :error_payment_return_url,
-      :new_api
+      :error_payment_return_url
     ]
 
     # Params are the combination of this group:

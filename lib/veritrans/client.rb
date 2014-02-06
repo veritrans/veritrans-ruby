@@ -117,7 +117,11 @@ module Veritrans
       delete_keys
       @resp[:url] = @resp[:url].to_s
 
-      @token = parse_body(@resp[:body])
+      if version.to_i == 1
+        @token = JSON.parse(@resp[:body])
+      else        
+        @token = parse_body(@resp[:body])
+      end
     end
 
     # :nodoc:
@@ -194,12 +198,16 @@ module Veritrans
     end
 
     private
-
+    # Generate merchant hash code
     def merchanthash
-      # Generate merchant hash code
-      return HashGenerator::generate(merchant_id, merchant_hash_key, settlement_type, order_id);
+      if version.to_i == 1    
+        return HashGenerator::generate(merchant_hash_key, merchant_id, order_id);
+      else
+        return Digest::SHA512.hexdigest("#{merchant_hash_key},#{merchant_id},01,#{order_id},#{gross_amount}")
+      end
     end
 
+    # deprecated
     def parse_body(body)
       arrs = body.split("\r\n")
       arrs = arrs[-2,2] if arrs.length > 1
