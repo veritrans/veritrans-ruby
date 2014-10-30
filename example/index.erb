@@ -1,0 +1,88 @@
+<h3>Veritrans sinatra app</h3>
+
+<p>
+  Charge request VT-Web <a href="/charge_vtweb">click to see payment page</a>
+</p>
+
+<hr>
+<br>
+
+<p>
+  <script src="//api.sandbox.veritrans.co.id/v2/assets/js/veritrans.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.payment/1.0.2/jquery.payment.js"></script>
+
+  Charge request VT-Direct
+</p>
+
+<form action="/charge_vtdirect" method="post" id="card_form">
+  <input type="hidden" name="token_id" id="card_token">
+  <fieldset>
+    <legend>Credit card</legend>
+    <p>
+      <label>Amount, Rp.</label>
+      <input type="text" name="gross_amount" id="gross_amount" value="30000">
+    </p>
+    <p>
+      <label>Card number</label>
+      <input type="text" id="card_number" style="width: 150px" value="4011 1111 1111 1112">
+    </p>
+    <p>
+      <label>Security Code</label>
+      <input type="text" id="card_cvc" style="width: 30px" placeholder="cvc" value="123">
+    </p>
+    <p>
+      <label> Expiration date</label>
+      <input type="text" id="card_exp" placeholder="MM / YY" value="12 / 16">
+    </p>
+  </fieldset>
+
+  <input id="submit_btn" type="submit">
+</form>
+
+<style>
+  label { display: inline-block; min-width: 100px; }
+</style>
+
+<script type="text/javascript">
+  // set Veritrans settings
+  Veritrans.url = "<%= Veritrans.config.api_host %>/v2/token";
+  Veritrans.client_key = "<%= Veritrans.config.client_key %>";
+
+  function createTokenData() {
+    return {
+      // Optional params:
+      // secure: true
+      // bank: 'MANDIRI'
+
+      card_number: $('#card_number').val(),
+      card_cvv: $('#card_cvc').val(),
+      card_exp_month: $('#card_exp').val().match(/(\d+) \//)[1],
+      card_exp_year: '20' + $('#card_exp').val().match(/\/ (\d+)/)[1],
+      gross_amount: $('#gross_amount').val()
+    };
+  }
+
+  $(document).ready(function () {
+    $('#card_number').payment('formatCardNumber');
+    $('#card_cvc').payment('formatCardCVC');
+    $('#card_exp').payment('formatCardExpiry');
+
+    $('#card_form').on('submit', function (event) {
+      var form = this;
+      $('#submit_btn').attr('disabled', true).val("Processing ...");
+      event.preventDefault();
+
+      Veritrans.token(createTokenData, function (data, pay) {
+        console.log('Token data:', data, pay);
+        if (data.token_id) {
+          $('#card_token').val(data.token_id);
+          form.submit();
+        } else {
+          alert(data.validation_messages.join("\n"));
+          $('#submit_btn').removeAttr('disabled').removeAttr("value");
+        }
+      });
+    })
+  });
+</script>
