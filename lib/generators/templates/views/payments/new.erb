@@ -1,0 +1,6 @@
+<h3>New payment</h3>
+
+<%= link_to "Pay via VT-Web", payments_path(type: 'vtweb'), data: {method: 'post'} %>
+
+<%= render "shared/credit_card_form" %>
+<%= render "shared/veritrans_include" %>

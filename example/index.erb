@@ -33,7 +33,7 @@
           <a onclick="$('#card_number').val('4511 1111 1111 1117')">challenge</a>
           <a onclick="$('#card_number').val('4611 1111 1111 1116')">Deny by FDS</a>
           <a onclick="$('#card_number').val('4911 1111 1111 1113')">Deny by bank</a>
-          <a href="http://docs.veritrans.co.id/sandbox/card_list.html" target="_blaknk">documentation</a>
+          <a href="http://docs.veritrans.co.id/sandbox/card_list.html" target="_blank">documentation</a>
         </small>
       </p>
       <p>
@@ -92,8 +92,8 @@
       $('#submit_btn').attr('disabled', true).val("Processing ...");
       event.preventDefault();
 
-      Veritrans.token(createTokenData, function (data, pay) {
-        console.log('Token data:', data, pay);
+      Veritrans.token(createTokenData, function (data) {
+        console.log('Token data:', data);
         // if we get url then it's 3d-secure transaction
         // so we need to open that page
         // this callback function will be called again after user confirm 3d-secure

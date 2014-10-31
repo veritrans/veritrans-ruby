@@ -48,6 +48,10 @@ module Veritrans
     end
 
     def make_request(url, method, params, auth_header = nil)
+      if !config.server_key || config.server_key == ''
+        raise "Please add server_key to config/veritrans.yml"
+      end
+
       method = method.to_s.upcase
       logger.info "Veritrans: #{method} #{url} #{_json_encode(params)}"
 
@@ -72,7 +76,7 @@ module Veritrans
 
       response = request.send(method.downcase.to_sym, options.merge(path: URI.parse(url).path))
 
-      logger.info "Veritrans: got #{Time.now - s_time}sec #{response.status} #{response.body}"
+      logger.info "Veritrans: got #{(Time.now - s_time).round(3)} sec #{response.status} #{response.body}"
 
       Result.new(response, url, options, Time.now - s_time)
 

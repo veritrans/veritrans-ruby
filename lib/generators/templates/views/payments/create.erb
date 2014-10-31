@@ -1,0 +1,15 @@
+<strong>
+  <% if @result.success? %><span style="color: green"><% end %>
+    <%= @result.status_message %>
+  </span>
+</strong>
+
+<br>
+
+<code>
+  <pre>
+<%= @result.response.body %>
+  </pre>
+</code>
+
+<%= link_to "Go back", :new_payment %>

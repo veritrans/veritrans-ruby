@@ -31,11 +31,21 @@ module Veritrans
       @api_host = value
     end
 
-    def load_yml(filename)
-      yml_file, yml_section = filename.split('#')
+    def load_config(filename)
+      yml_file, yml_section = filename.to_s.split('#')
       config_data = YAML.load(File.read(yml_file))
 
+      if defined?(Rails) && !yml_section
+        yml_section = Rails.env.to_s
+      end
+
       apply(yml_section ? config_data[yml_section] : config_data)
+    end
+
+    alias :load_yml :load_config
+
+    def inspect
+      "<Veritrans::Config @api_host=#{@api_host.inspect} @server_key=#{@server_key.inspect} @client_key=#{@client_key.inspect}>"
     end
 
     private

@@ -20,7 +20,12 @@ module Veritrans
 
     alias_method :setup, :config
 
+    def logger=(value)
+      @logger = value
+    end
+
     def logger
+      return @logger if @logger
       if defined?(Rails)
         Rails.logger
       else
@@ -35,4 +40,3 @@ module Veritrans
 
   end
 end
-
