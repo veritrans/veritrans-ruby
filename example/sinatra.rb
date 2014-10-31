@@ -1,5 +1,7 @@
 $:.push(File.expand_path("../../lib", __FILE__))
 
+require 'json'
+
 require 'veritrans'
 require 'sinatra'
 
@@ -44,9 +46,31 @@ get "/charge_vtweb" do
     payment_type: "VTWEB",
     transaction_details: {
       order_id: generate_order_id,
-      gross_amount: 30_000
+      gross_amount: params[:gross_amount]
     }
   )
 
   erb :response
+end
+
+post "/webhook" do
+  post_body = request.body.read
+  request_data = JSON.parse(post_body)
+
+  #puts "Recieved #{post_body.size} bytes"
+  #puts post_body
+
+  verified_data = Veritrans.status(request_data['transaction_id'])
+
+  if verified_data.status_code != 404
+    puts "--- Transaction callback ---"
+    puts "Payment:        #{verified_data.data[:order_id]}"
+    puts "Payment type:   #{verified_data.data[:payment_type]}"
+    puts "Payment status: #{verified_data.data[:transaction_status]}"
+    puts "Fraud status:   #{verified_data.data[:fraud_status]}" if verified_data.data[:fraud_status]
+    puts "Payment amount: #{verified_data.data[:gross_amount]}"
+    puts "--- Transaction callback ---"
+  end
+
+  return "ok"
 end

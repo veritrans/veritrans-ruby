@@ -51,6 +51,8 @@ module Veritrans
       method = method.to_s.upcase
       logger.info "Veritrans: #{method} #{url} #{_json_encode(params)}"
 
+      # Add authentication and content type
+      # Docs http://docs.veritrans.co.id/sandbox/introduction.html
       options = {
         :body => _json_encode(params),
         :headers => {
@@ -62,7 +64,7 @@ module Veritrans
 
       if method == "GET"
         options.delete(:body)
-        options[:query] = params.to_query
+        options[:query] = URI.encode_www_form(params)
       end
 
       s_time = Time.now

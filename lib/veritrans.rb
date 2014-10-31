@@ -25,12 +25,14 @@ module Veritrans
         Rails.logger
       else
         unless @log
+          require 'logger'
           @log = Logger.new(STDOUT)
           @log.level = Logger::INFO
         end
         @log
       end
     end
+
   end
 end
 

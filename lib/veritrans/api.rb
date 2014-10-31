@@ -1,9 +1,21 @@
-# Veritrans
+# Veritrans API methods
 
 module Veritrans
   module Api
 
     # POST /v2/charge { payment_type: "vtlink" }
+    # Docs http://docs.veritrans.co.id/vtdirect/integration_cc.html#step2
+    # Docs http://docs.veritrans.co.id/sandbox/charge.html
+    #
+    # Example:
+    # Veritrans.charge(
+    #   payment_type: "credit_card",
+    #   credit_card: { token_id: "<token from client>" },
+    #   transaction_details: {
+    #     order_id: "order_123",
+    #     gross_amount: 100_000
+    #   }
+    # )
     def charge(payment_type, data = nil)
       if payment_type.kind_of?(Hash) && data.nil?
         data = payment_type
@@ -33,30 +45,37 @@ module Veritrans
     end
 
     # POST /v2/{id}/cancel
-    def cancel(payment_id, options)
+    # Docs http://docs.veritrans.co.id/sandbox/other_commands.html
+    def cancel(payment_id, options = {})
       post(config.api_host + "/v2/#{payment_id}/cancel", options)
     end
 
     # POST /v2/{id}/approve
-    def approve(payment_id, options)
+    # Docs http://docs.veritrans.co.id/sandbox/other_commands.html
+    def approve(payment_id, options = {})
       post(config.api_host + "/v2/#{payment_id}/approve", options)
     end
 
     # GET /v2/{id}/status
+    # Docs http://docs.veritrans.co.id/sandbox/other_commands.html
     def status(order_id)
       get(config.api_host + "/v2/#{order_id}/status")
     end
 
     # POST /v2/capture
-    def capture(payment_id, gross_amount, options)
+    # Docs http://docs.veritrans.co.id/sandbox/other_features.html
+    def capture(payment_id, gross_amount, options = {})
       post(config.api_host + "/v2/capture", options.merge(transaction_id: payment_id, gross_amount: gross_amount))
     end
 
+    # GET /v2/{id}/transcript
+    def transcript(order_id)
+      get(config.api_host + "/v2/#{order_id}/transcript")
+    end
+
     # POST /v2/charge { payment_type: "vtlink" }
-    def create_vtlink(data, options)
-      raise ":server_key option is required" unless options[:server_key]
+    def create_vtlink(data)
       data = data.dup
-      data[:server_key] = options[:server_key]
       data[:payment_type] = "vtlink"
       post(config.api_host + "/v2/charge", data)
     end

@@ -1,0 +1,45 @@
+body {
+  max-width: 900px;
+  margin: 0 auto;
+}
+a {
+  color: #00E;
+}
+a:hover, a:focus {
+  color: #00E;
+}
+
+header {
+  background: #F5FAFC;
+  padding: 3px 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+section {
+  padding: 1em 0;
+}
+
+section + section {
+  border-top: 1px solid #ccc;
+}
+
+label {
+  display: inline-block; min-width: 100px;
+}
+.card-numbers {
+  margin-left: 100px;
+}
+.card-numbers a {
+  text-decoration: none;
+  border-bottom: 1px dotted #88f;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.card-numbers a[href] {
+  text-decoration: underline;
+  border: none;
+}
+
+fieldset {
+  margin: 25px 0 12px;
+}
