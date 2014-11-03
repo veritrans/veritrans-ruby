@@ -1,19 +1,5 @@
 class PaymentsController < ApplicationController
-
-  def make_payment
-    @paymentKlass = Struct.new("Payment", :amount, :token_id, :order_id, :credit_card_secure) do
-      extend ActiveModel::Naming
-      include ActiveModel::Conversion
-
-      def persisted?; false; end
-
-      def self.name
-        "Payment"
-      end
-    end
-
-    @paymentKlass.new(100_000, '', "testing-#{rand.round(4)}-#{Time.now.to_i}", false)
-  end
+  skip_before_filter :verify_authenticity_token, only: [:receive_webhook]
 
   def new
     @payment = make_payment
@@ -42,6 +28,51 @@ class PaymentsController < ApplicationController
         gross_amount: params[:payment][:amount].presence || @payment.amount
       }
     )
+  end
+
+  def receive_webhook
+    Veritrans.file_logger.info("Callback for order: " +
+      "#{params[:order_id]} #{params[:transaction_status]}\n" +
+      post_body + "\n"
+    )
+
+    verified_data = Veritrans.status(params[:transaction_id])
+
+    if verified_data.status_code != 404
+      puts "--- Transaction callback ---"
+      puts "Payment:        #{verified_data.data[:order_id]}"
+      puts "Payment type:   #{verified_data.data[:payment_type]}"
+      puts "Payment status: #{verified_data.data[:transaction_status]}"
+      puts "Fraud status:   #{verified_data.data[:fraud_status]}" if verified_data.data[:fraud_status]
+      puts "Payment amount: #{verified_data.data[:gross_amount]}"
+      puts "--- Transaction callback ---"
+
+      render text: "ok"
+    else
+      Veritrans.file_logger.info("Callback verification failed for order: " +
+        "#{params[:order_id]} #{params[:transaction_status]}}\n" +
+        verified_data.body + "\n"
+      )
+
+      render text: "ok", :status => :not_found
+    end
+
+  end
+
+  private
+  def make_payment
+    @paymentKlass = Struct.new("Payment", :amount, :token_id, :order_id, :credit_card_secure) do
+      extend ActiveModel::Naming
+      include ActiveModel::Conversion
+
+      def persisted?; false; end
+
+      def self.name
+        "Payment"
+      end
+    end
+
+    @paymentKlass.new(100_000, '', "testing-#{rand.round(4)}-#{Time.now.to_i}", false)
   end
 
 end

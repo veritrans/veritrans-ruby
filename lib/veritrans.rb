@@ -4,6 +4,9 @@ require 'veritrans/client'
 require 'veritrans/api'
 require 'veritrans/result'
 
+if defined?(::Rails)
+  require 'veritrans/events'
+end
 
 module Veritrans
   extend Veritrans::Client
@@ -20,10 +23,9 @@ module Veritrans
 
     alias_method :setup, :config
 
-    def logger=(value)
-      @logger = value
-    end
-
+    # General logger
+    # for rails apps it's === Rails.logger
+    # for non-rails apps it's logging to stdout
     def logger
       return @logger if @logger
       if defined?(Rails)
@@ -36,6 +38,32 @@ module Veritrans
         end
         @log
       end
+    end
+
+    def logger=(value)
+      @logger = value
+    end
+
+    # Logger to file, only important information
+    # For rails apps it will write log to RAILS_ROOT/log/veritrans.log
+    def file_logger
+      if !@file_logger
+        if defined?(Rails) && Rails.root
+          @file_logger = Logger.new(Rails.root.join("log/veritrans.log").to_s)
+        else
+          @file_logger = Logger.new("/dev/null")
+        end
+      end
+
+      @file_logger
+    end
+
+    def file_logger=(value)
+      @file_logger = value
+    end
+
+    def events
+      Veritrans::Events if defined?(Veritrans::Events)
     end
 
   end

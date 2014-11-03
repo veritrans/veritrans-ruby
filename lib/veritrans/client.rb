@@ -27,6 +27,21 @@ module Veritrans
       end
     end
 
+    # This is proxy method for make_request to save request and response to logfile
+    def request_with_logging(method, url, params)
+      short_url = url.sub(config.api_host, '')
+      file_logger.info("Perform #{short_url} \nSending: " + _json_encode(params))
+
+      result = make_request(method, url, params)
+
+      if result.status_code < 300
+        file_logger.info("Success #{short_url} \nGot: " + _json_encode(result.data) + "\n")
+      else
+        file_logger.warn("Failed #{short_url} \nGot: " + _json_encode(result.data) + "\n")
+      end
+
+      result
+    end
 
     private
 
@@ -36,18 +51,18 @@ module Veritrans
     end
 
     def get(url, params = {})
-      make_request(url, :get, params)
+      make_request(:get, url, params)
     end
 
-    def delete(url, params, auth_header = nil)
-      make_request(url, :delete, params, auth_header)
+    def delete(url, params)
+      make_request(:delete, url, params)
     end
 
-    def post(url, params, auth_header = nil)
-      make_request(url, :post, params, auth_header)
+    def post(url, params)
+      make_request(:post, url, params)
     end
 
-    def make_request(url, method, params, auth_header = nil)
+    def make_request(method, url, params, auth_header = nil)
       if !config.server_key || config.server_key == ''
         raise "Please add server_key to config/veritrans.yml"
       end

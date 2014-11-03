@@ -41,19 +41,19 @@ module Veritrans
       data[:item_details]         = data.delete(:items)       if data[:items]
       data[:customer_details]     = data.delete(:customer)    if data[:customer]
 
-      post(config.api_host + "/v2/charge", data)
+      request_with_logging(:post, config.api_host + "/v2/charge", data)
     end
 
     # POST /v2/{id}/cancel
     # Docs http://docs.veritrans.co.id/sandbox/other_commands.html
     def cancel(payment_id, options = {})
-      post(config.api_host + "/v2/#{payment_id}/cancel", options)
+      request_with_logging(:post, config.api_host + "/v2/#{payment_id}/cancel", options)
     end
 
     # POST /v2/{id}/approve
     # Docs http://docs.veritrans.co.id/sandbox/other_commands.html
     def approve(payment_id, options = {})
-      post(config.api_host + "/v2/#{payment_id}/approve", options)
+      request_with_logging(:post, config.api_host + "/v2/#{payment_id}/approve", options)
     end
 
     # GET /v2/{id}/status
@@ -77,12 +77,12 @@ module Veritrans
     def create_vtlink(data)
       data = data.dup
       data[:payment_type] = "vtlink"
-      post(config.api_host + "/v2/charge", data)
+      request_with_logging(:post, config.api_host + "/v2/charge", data)
     end
 
     # DELETE /v2/vtlink/{id}
     def delete_vtlink(id, options)
-      delete(config.api_host + "/v2/vtlink/#{id}", options)
+      request_with_logging(:delete, config.api_host + "/v2/vtlink/#{id}", options)
     end
 
   end

@@ -6,29 +6,38 @@ Veritrans.setup do
   # config.client_key = ""
   # config.api_host = ""
 
-=begin
-  # Not implemented yet
-  events.subscribe 'payment.success' do |event|
-    # Define subscriber behavior based on the event object
-    event.class       #=> Veritrans::Event
-    event.type        #=> "payment.success"
-    event.data.object #=> #<Veritrans::Result:0x3fcb34c115f8>
-  end
+  # Veritrans::Events is rack application to handle http notifications from Veritrans
+  # To enable it, add in config/routes.rb
+  # mount Veritrans::Events.new => '/vt_events'
 
-  events.subscribe 'payment.failed' do |event|
-    # Define subscriber behavior based on the event object
-    event.class       #=> Veritrans::Event
-    event.type        #=> "payment.failed"
-    event.data.object #=> #<Veritrans::Result:0x3fcb34c115f8>
-  end
+  # All possible events:
+  #
+  # * payment.success     == ['authorize', 'capture', 'settlement']
+  # * payment.failed      == ['deny', 'canel', 'expire']
+  # * payment.challenge   # when payment.froud_status == 'challenge'
+  #
+  # * payment.authorize
+  # * payment.capture
+  # * payment.settlement
+  # * payment.deny
+  # * payment.canel
+  # * payment.expire
 
-  events.subscribe 'payment.challenge' do |event|
-    # Define subscriber behavior based on the event object
-    event.class       #=> Veritrans::Event
-    event.type        #=> "payment.challenge"
-    event.data.object #=> #<Veritrans::Result:0x3fcb34c115f8>
-  end
-
-=end
+  # events.subscribe 'payment.success' do |payment|
+  #   payment.mark_paid!
+  # end
+  # 
+  # events.subscribe 'payment.failed' do |payment|
+  #   payment.mark_failed!
+  # end
+  # 
+  # events.subscribe 'payment.challenge' do |payment|
+  #   payment.mark_challenge!
+  # end
+  # 
+  # events.subscribe /.+/ do |payment, event_name|
+  #   p "Event: #{event_name}"
+  #   p payment
+  # end
 
 end

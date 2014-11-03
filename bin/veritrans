@@ -1,57 +1,66 @@
-require File.expand_path(
-        File.join(File.dirname(__FILE__),%w[.. lib veritrans]))
-wpath=  File.dirname(__FILE__).gsub(/bin$/,'')
+#!/usr/bin/env ruby
 
-def howto_veritrans
-puts <<END
+$:.push(File.expand_path("../../lib", __FILE__))
 
-How to Veritrans:
-~~~~~~~~~~~~~~~~~~~~~~~
-syntax:
-veritrans -irb
+require 'optparse'
+require "veritrans/version"
 
-example:
-  veritrans -irb              #=> Start IRB 
+OPERATIONS = %w(testhook)
 
-Enjoy... 
-END
+CONFIG = {}
+option_parser = OptionParser.new do |opts|
+  opts.banner = "Veritrans #{Veritrans::VERSION}"
+                "Usage: veritrans testhook [options] {url}\n" +
+                "  -o specify order id"
+
+  opts.on("-h", "--help", "Show help") do
+    puts option_parser.help
+    exit
+  end
+
+  opts.on("-o [ORDER_ID]", "--order [ORDER_ID]", "Select order") do |order|
+    CONFIG[:order] = order
+  end
+
+  opts.on("-c [PATH]", "--config [PATH]", "Path to config (defualt .)") do |config|
+    CONFIG[:config_path] = config
+  end
+
+  opts.separator <<-EOS
+
+Supported commands:
+
+ testhook [url]          Send testing webhook to specified url
+
+Example:
+ veritrans testhook http://localhost:3000/vt_events
+ veritrans testhook -o my-order-1 -c ~/path/to/veritrans.yml http://localhost:3000/vt_events
+
+EOS
 
 end
 
-arg = ARGV 
-if arg.size==0
-	howto_veritrans
-	exit
-end
+option_parser.parse!
 
-if arg.select{|x|x=='-irb'} != []
-  ARGV.reject!{|x|x=='-irb'}
-  
-  require 'irb'
-  puts <<EOF
-example:
-require 'veritrans'
+op = ARGV.shift
 
-client = Veritrans::Client.new
-client.order_id   = "#{(0...4).map{65.+(rand(25))}.join}"
-client.session_id = "#{(0...4).map{65.+(rand(25))}.join}"
-client.gross_amount = "10"
-client.commodity    = [
-  {"COMMODITY_ID" => "IDxx1", "COMMODITY_UNIT" => "10", "COMMODITY_NUM" => "1", "COMMODITY_NAME1" => "Waterbotle", "COMMODITY_NAME2" => "Waterbottle in Indonesian"}
-]
-client.shipping_flag         = "1"
-client.shipping_first_name   = "Sam"
-client.shipping_last_name    = "Anthony"
-client.shipping_address1     = "Buaran I" 
-client.shipping_address2     = "Pulogadung"
-client.shipping_city         = "Jakarta"
-client.shipping_country_code = "IDN"
-client.shipping_postal_code  = "16954"
-client.shipping_phone        = "0123456789123"
-client.shipping_method       = "N"
-client.get_keys
-client
-EOF
+if OPERATIONS.include?(op)
+  require 'veritrans'
+  require 'veritrans/cli'
 
-  IRB.start 
+  begin
+    case op
+      when "testhook" then
+        Veritrans::CLI.test_webhook(ARGV)
+    end
+
+  #rescue ArgumentError => ex
+  #  puts ex.message
+  rescue Exception => e
+    puts "Uh oh, I didn't expect this:"
+    puts e.message
+    puts e.backtrace.join("\n")
+  end
+else
+  puts option_parser.help
 end

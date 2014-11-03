@@ -14,7 +14,13 @@ Description:
 
     def copy_controller
       copy_file "payments_controller.rb", "app/controllers/payments_controller.rb"
-      route "resources :payments"
+
+      route "resources :payments do\n" +
+          "    collection do\n" +
+          "      post :receive_webhook\n" +
+          "    end\n" +
+          "  end"
+
       copy_file "views/payments/new.erb", "app/views/payments/new.erb"
       copy_file "views/payments/create.erb", "app/views/payments/create.erb"
     end

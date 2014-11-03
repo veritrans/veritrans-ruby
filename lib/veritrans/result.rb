@@ -41,7 +41,7 @@ module Veritrans
 
     # Docs http://docs.veritrans.co.id/sandbox/status_code.html
     def status_code
-      @data[:status_code]
+      @data[:status_code].to_i
     end
 
     def status_message
@@ -62,6 +62,20 @@ module Veritrans
 
     def body
       response.body
+    end
+
+    def method_missing(method_name, *args)
+      if args.size == 0 && @data && @data.has_key?(method_name)
+        return @data[method_name]
+      else
+        super
+      end
+    end
+
+    def inspect
+      time_ms = (@time * 1000).round
+      data = @data.inspect.gsub(/:([^\s]+)=>/, "\\1: ")
+      "#<Veritrans::Result:#{object_id} ^^ http_status: #{@status} time: #{time_ms}ms ^^ data: #{data}>"
     end
   end
 end
