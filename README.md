@@ -18,9 +18,14 @@ gem 'veritrans'
 
     rails g veritrans:install
 
-### Edit merchant info in config/veritrans.yml file
+### Create simple payment form (optional)
+
+    rails g veritrans:payment_form
+
+### Edit api keys in config/veritrans.yml
 
 ```yml
+# config/veritrans.yml
 development:
   client_key: # your api client key
   server_key: # your api client key
@@ -149,9 +154,9 @@ We provide many payment channels to receive money, but API is almost same.
 
 For VT-Web in only one request, and payment page will have all available payment options.
 
-For VT-Direct you have to specify payment method.
+For VT-Direct you have to specify payment method (token required only for credit card transactions).
 
-```
+```ruby
 @result = Veritrans.charge(
   payment_type: "bank_transfer",
   bank_transfer: { bank: 'permata' },
@@ -175,9 +180,13 @@ First you should set callback url in our dashboard https://my.sandbox.veritrans.
 In development mode please read our [Testing webhooks tutorial](https://github.com/Paxa/veritrans-ruby/blob/new_api/testing_webhooks.md)
 
 
-Simply:
+For rails:
 
 ```ruby
+# config/routes.rb
+match "/payments/receive_webhook" => "payments#receive_webhook", via: [:post]
+
+# app/controllers/payments_controller.rb
 def receive_webhook
   verified_data = Veritrans.status(params[:transaction_id])
 
@@ -194,7 +203,6 @@ def receive_webhook
   else
     render text: "ok", :status => :not_found
   end
-
 end
 ```
 
