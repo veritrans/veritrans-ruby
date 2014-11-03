@@ -6,98 +6,224 @@
 
 ## How to use (Rails)
 
-###Add veritrans to Gemfile
-    gem 'veritrans'
+### Add veritrans to Gemfile
+
+```ruby
+gem 'veritrans'
+```
 
     bundle install
 
-###Generate veritrans.yml
+### Generate veritrans.yml
+
     rails g veritrans:install
 
-###Edit merchant info in config/veritrans.yml file
-    development:
-      merchant_id: "test_id"
-      merchant_hash_key: "abcdefghijklmnopqrstuvwxyz"
-      finish_payment_return_url: "http://localhost/finish"
-      unfinish_payment_return_url: "http://localhost/cancel"
-      server_host: "http://veritrans.dev"
-      charges_url: "/charges"
-      token_url:   "/tokens"
+### Edit merchant info in config/veritrans.yml file
 
-##STEP 1 : Requesting key
-Given you already have cart ready for checkout.
-We create a veritrans instance
+```yml
+development:
+  client_key: # your api client key
+  server_key: # your api client key
+```
 
-    @client = Veritrans::Client.new
-    @client.order_id                 = "your_unique_order_id"
-    @client.session_id               = "your_application_session_id"
-    @client.billing_address_different_with_shipping_address = 1
-    @client.required_shipping_address = 0    
-    
-    
-dont forget to set your commodity
+## STEP 1: Process credit cards
 
-    client.commodity    = [
-      {"COMMODITY_ID"    => "sku1",
-       "COMMODITY_PRICE"  => "10000",
-       "COMMODITY_QTY"   => "1", 
-       "COMMODITY_NAME1" => "Kaos", 
-       "COMMODITY_NAME2" => "T-Shirt"
-      },
-      {"COMMODITY_ID"    => "sku1",
-       "COMMODITY_PRICE"  => "20000",
-       "COMMODITY_QTY"   => "1", 
-       "COMMODITY_NAME1" => "Kaos", 
-       "COMMODITY_NAME2" => "Pants"
+
+#### VT-Web
+
+*If you want to use VT-Web, add `payment_type: "VTWEB"`*
+
+```ruby
+@result = Veritrans.charge(
+  payment_type: "VTWEB",
+  transaction_details: {
+    order_id: "my-unique-order-id",
+    gross_amount: 100_000
+  }
+)
+
+redirect_to @result.redirect_url
+```
+
+#### VT-Direct
+
+It's little more complicated, because credit_card is sensitive data,
+you need put credit card number in our safe storage first using `veritrans.js` library, then send received token to with other payment details.
+
+We don't want you to send credit card number to your server, especially for websites not using https.
+
+File: "app/views/shared/_veritrans_include.erb"
+
+```html
+<script src="//api.sandbox.veritrans.co.id/v2/assets/veritrans.js"></script>
+
+<script type="text/javascript">
+  Veritrans.url = "<%= Veritrans.config.api_host %>/v2/token";
+  Veritrans.client_key = "<%= Veritrans.config.client_key %>";
+</script>
+```
+
+Payment form:
+```html
+<form action="/charge_vtdirect" method="post" id="card_form">
+  <input type="hidden" name="token_id" id="card_token">
+  <input type="hidden" id="gross_amount" value="30000">
+  <p>
+    <label for="card_number">Card number</label>
+    <input type="text" id="card_number" style="width: 150px" value="4811 1111 1111 1114">
+  </p>
+  <p>
+    <label for="card_cvc">Security Code</label>
+    <input type="text" id="card_cvc" style="width: 30px" placeholder="cvc" value="123">
+  </p>
+  <p>
+    <label for="card_exp">Expiration date</label>
+    <input type="text" id="card_exp" placeholder="MM / YY" value="12 / 16">
+  </p>
+  <input id="submit_btn" type="submit">
+</form>
+<iframe id="3d-secure-iframe" style="display: none; width: 500px; height: 600px"></iframe>
+```
+
+Sending "get-token" request:
+
+```js
+$(document).ready(function () {
+  // function to prepare our credit card data before send
+  function createTokenData() {
+    return {
+      card_number: $('#card_number').val(),
+      card_cvv: $('#card_cvc').val(),
+      card_exp_month: $('#card_exp').val().match(/(\d+) \//)[1],
+      card_exp_year: '20' + $('#card_exp').val().match(/\/ (\d+)/)[1],
+      gross_amount: $('#gross_amount').val(),
+      secure: true
+    };
+  }
+  // Add custom event for form submition
+  $('#card_form').on('submit', function (event) {
+    var form = this;
+    event.preventDefault();
+
+    Veritrans.token(createTokenData, function (data) {
+      console.log('Token data:', data);
+      // when you making 3D-secure transaction,
+      // this callback function will be called again after user confirm 3d-secure
+      // but you can also redirect on server side
+      if (data.redirect_url) {
+        // if we get url then it's 3d-secure transaction
+        // so we need to open that page
+        $('#3d-secure-iframe').attr('src', data.redirect_url).show();
+      // if no redirect_url and we have token_id then just make charge request
+      } else if (data.token_id) {
+        $('#card_token').val(data.token_id);
+        form.submit();
+      // if no redirect_url and no token_id, then it should be error
+      } else {
+        alert(data.validation_messages ? data.validation_messages.join("\n") : data.status_message);
       }
-    ]
-    client.gross_amount = "30000"
+    });
+  });
+});
+```
 
-request for a key
+On a server side:
 
-    # get keys from Veritrans
-    @client.get_keys
+```ruby
+@result = Veritrans.charge(
+  payment_type: "credit_card",
+  credit_card: { token_id: params[:token_id] },
+  transaction_details: {
+    order_id: @payment.order_id,
+    gross_amount: @payment.amount
+  }
+)
+if @result.success?
+  puts "Success"
+end
+```
 
-     # save the merchant token
-     if @client.token["ERROR_MESSAGE"]
-        # error accoured
-     else        
-       @order.token_merchant = @client.token["TOKEN_MERCHANT"]
-       @order.save   
-     end
-       
+## STEP 2: Process not credit cards
 
-##STEP 2 : Redirect user to Veritrans payment page
+We provide many payment channels to receive money, but API is almost same.
 
-Prepare the FORM to redirect the customer 
-    
-    <%= form_tag(@client.redirect_url, :name => "form_auto_post") do -%>
-      <input type="hidden" name="MERCHANT_ID" value="<%= @client.merchant_id %>"> 
-      <input type="hidden" name="ORDER_ID" value="<%= @client.order_id %>">
-      <input type="hidden" name="TOKEN_BROWSER" value="<%= @client.token["TOKEN_BROWSER"] %>">
-      <div align="center">
-      <input type="submit" value="submit">
-      </div>
-    <% end %>
+For VT-Web in only one request, and payment page will have all available payment options.
 
-##STEP 3 : Responding Veritrans Payment Notification
-After the payment is completed Veritrans will contact Merchant's web server.
-As a Merchant, you need to response this query. Validate request from veritrans, make sure it comes from veritrans not from hacker
+For VT-Direct you have to specify payment method.
 
-     # Assume that we wave Order model to keep our order data
-     @order = Order.find(param["orderId"])
+```
+@result = Veritrans.charge(
+  payment_type: "bank_transfer",
+  bank_transfer: { bank: 'permata' },
+  transaction_details: {
+    order_id: @payment.order_id,
+    gross_amount: @payment.amount
+  }
+)
+puts "Please send money to account no. #{@result.permata_va_number} in bank Permata"
+```
 
-     # Server to Server post-notification(action) from Veritrans to Merchants Server 
-     # Ex: {"mErrMsg"=>"",
-     #      "mStatus"=>"success",
-     #       "TOKEN_MERCHANT"=>"dYWRjRr2ZbJEqMQaqDLIaWeoLl1Tuk3g7g3T1gKGrE5ibYJoZ4",
-     #      "vResultCode"=>"C001000000000000",
-     #      "orderId"=>"dummy877684698685878869896765"}
-        
-     #Verify that token merchant is exactly the same with what comes from veritrans
-      if @order.token_merchant == params["TOKEN_MERCHANT"]
-        @order.paid!
-      else
-         # you can log for invalid notification
-      end         
+See [our documentation](http://docs.veritrans.co.id/sandbox/charge.html) for other available options.
 
+
+## STEP 3: Receive notification callback
+
+For every transaction success and failed we will send you HTTP POST notification (aka webhook)
+
+First you should set callback url in our dashboard https://my.sandbox.veritrans.co.id/settings/vtweb_configuration
+
+In development mode please read our [Testing webhooks tutorial](https://github.com/Paxa/veritrans-ruby/blob/new_api/testing_webhooks.md)
+
+
+Simply:
+
+```ruby
+def receive_webhook
+  verified_data = Veritrans.status(params[:transaction_id])
+
+  if verified_data.status_code != 404
+    puts "--- Transaction callback ---"
+    puts "Payment:        #{verified_data.data[:order_id]}"
+    puts "Payment type:   #{verified_data.data[:payment_type]}"
+    puts "Payment status: #{verified_data.data[:transaction_status]}"
+    puts "Fraud status:   #{verified_data.data[:fraud_status]}" if verified_data.data[:fraud_status]
+    puts "Payment amount: #{verified_data.data[:gross_amount]}"
+    puts "--- Transaction callback ---"
+
+    render text: "ok"
+  else
+    render text: "ok", :status => :not_found
+  end
+
+end
+```
+
+#### Veritrans::Events
+
+Other option to handle callbacks is our rack-based handler
+
+```ruby
+# config/routes.rb
+mount Veritrans::Events.new => '/vt_events'
+
+# config/initalizers/veritrans.rb
+Veritrans.setup do
+  config.server_key = "..."
+  config.client_key = "..."
+
+  events.subscribe('payment.success') do |payment|
+    Payment.find_by(order_id: payment.order_id).mark_paid!(payment.masked_card)
+  end
+
+  events.subscribe('payment.failed', 'payment.challenge') do |payment|
+    Payment.find_by(order_id: payment.order_id) ...
+  end
+end
+```
+
+
+[Veritrans sandbox login]:https://my.sandbox.veritrans.co.id/register
+[Veritrans sandbox registration]:https://my.sandbox.veritrans.co.id/register
+[Veritrans registration]:https://my.veritrans.co.id/register
+[Veritrans documentation]:http://docs.veritrans.co.id/
+[Technical support]:mailto:support@veritrans.co.id
