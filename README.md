@@ -1,4 +1,4 @@
-# VT-Web Ruby integration library
+# Veritrans ruby library
 
 ## Installation
 
@@ -229,9 +229,29 @@ Veritrans.setup do
 end
 ```
 
+#### Logging
 
-[Veritrans sandbox login]:https://my.sandbox.veritrans.co.id/register
-[Veritrans sandbox registration]:https://my.sandbox.veritrans.co.id/register
-[Veritrans registration]:https://my.veritrans.co.id/register
-[Veritrans documentation]:http://docs.veritrans.co.id/
-[Technical support]:mailto:support@veritrans.co.id
+By default gem veritrans will show information via rails' logger. And in addition save important information to `RAILS_APP/config/veritrans.log`
+
+It's configurable.
+
+```ruby
+Veritrans.logger = Logger.new("/my/logs/veritrans.log")
+Veritrans.file_logger = Logger.new("/my/important_logs/veritrans.log")
+```
+
+`Veritrans.file_logger` save information about:
+
+* "charge", "cancel", "approve" api calls
+* Validation errors for "charge", "cancel", "approve"
+* Received http notifications
+* Errors and exception while processing http notifications
+
+
+#### Get help
+
+* [Veritrans sandbox login](https://my.sandbox.veritrans.co.id/register)
+* [Veritrans sandbox registration](https://my.sandbox.veritrans.co.id/register)
+* [Veritrans registration](https://my.veritrans.co.id/register)
+* [Veritrans documentation](http://docs.veritrans.co.id)
+* Technical support [support@veritrans.co.id](mailto:support@veritrans.co.id)
