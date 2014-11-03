@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.test_files = []
 
   s.require_paths = ["lib"] 
-  #s.executables   = ["veritrans"]
+  s.executables   = ["veritrans"]
   #s.add_runtime_dependency "addressable"
   #s.add_runtime_dependency "faraday"
   s.add_runtime_dependency "excon", "~> 0.20"
