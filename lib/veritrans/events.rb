@@ -24,6 +24,8 @@
 # * payment.deny
 # * payment.canel
 # * payment.expire
+#
+# * error
 
 # For sinatra you can use Rack::URLMap
 #
@@ -71,6 +73,7 @@ module Veritrans
 
         return send_text("ok", 200)
       else
+        Veritrans::Events.dispatch("error", request_data)
         Veritrans.file_logger.info("Callback verification failed:" +
           "#{request_data['order_id']} #{request_data['transaction_status']}}\n" +
           verified_data.body + "\n"
@@ -84,6 +87,7 @@ module Veritrans
         error.message +
         error.backtrace.join("\n") + "\n"
       )
+      Veritrans::Events.dispatch("error", verified_data || request_data || post_body)
       return send_text("Server error:\n#{error.message}", 500)
     end
 
