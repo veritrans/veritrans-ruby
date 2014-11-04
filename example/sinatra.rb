@@ -46,7 +46,7 @@ get "/charge_vtweb" do
     payment_type: "VTWEB",
     transaction_details: {
       order_id: generate_order_id,
-      gross_amount: params[:gross_amount]
+      gross_amount: 100_000
     }
   )
 

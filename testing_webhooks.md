@@ -7,6 +7,20 @@ It can be success transaction, can be failed transaction, and when transaction s
 
 Now you can set webhook url at https://my.sandbox.veritrans.co.id/settings/vtweb_configuration
 
+## Veritrans command line tool
+
+You can send testing request from command line:
+
+```bash
+gem install veritrans
+
+# Send default data, payment which not exists
+veritrans testhook http://localhost:3000/vt_events
+
+# Get fetch real payment information and send
+veritrans testhook -o my-order-1 -c ~/path/to/veritrans.yml http://localhost:3000/vt_events
+```
+
 ## Test locally
 
 Most of computers don't have public ip address, in that case you can't simply receive http requests on your computer.
