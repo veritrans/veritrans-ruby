@@ -250,6 +250,7 @@ Veritrans.file_logger = Logger.new("/my/important_logs/veritrans.log")
 
 #### Get help
 
+* [Veritrans gem reference](https://github.com/Paxa/veritrans-ruby/blob/new_api/api_reference.md)
 * [Veritrans sandbox login](https://my.sandbox.veritrans.co.id/register)
 * [Veritrans sandbox registration](https://my.sandbox.veritrans.co.id/register)
 * [Veritrans registration](https://my.veritrans.co.id/register)
