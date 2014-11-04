@@ -108,7 +108,11 @@ q = Veritrans.charge({
       city: "Subang",
       postal_code: "41271",
     },
-  }
+  },
+  # optional
+  custom_field1: "age: 25",
+  custom_field2: "new_year_promo",
+  custom_field3: "submerchant_id: 23"
 });
 
 q.class # => Veritrans::Result
