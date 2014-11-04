@@ -1,29 +1,25 @@
-require 'simplecov'
-SimpleCov.start do
-  add_filter "/spec/"
-  add_filter "/lib/generators/"
-end
 
-require 'minitest/spec'
-require 'minitest/autorun'
-require 'turn'
+$:.push(File.expand_path("../../lib", __FILE__))
 
-Turn.config do |c|
- c.format  = :dotted
- c.natural = true
- c.trace   = 2
-end
-
+require 'rspec'
+require 'veritrans'
+require 'rails'
+require 'webmock'
 require 'vcr'
 
 VCR.configure do |c|
-  c.cassette_library_dir = 'spec/cassettes'
-  c.hook_into :webmock
+  c.cassette_library_dir = 'spec/fixtures'
+  c.hook_into :webmock # or :fakeweb
 end
 
-unless defined?(SPEC_HELPER_LOADED)
-  SPEC_HELPER_LOADED = true
-  require "rubygems"
-  require "veritrans"
-end
+RSpec.configure do |config|
+  config.mock_with :rspec
 
+  config.expect_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
+
+  config.mock_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
+end

@@ -1,5 +1,7 @@
 # Veritrans API methods
 
+require 'uri'
+
 module Veritrans
   module Api
 
@@ -47,19 +49,19 @@ module Veritrans
     # POST /v2/{id}/cancel
     # Docs http://docs.veritrans.co.id/sandbox/other_commands.html
     def cancel(payment_id, options = {})
-      request_with_logging(:post, config.api_host + "/v2/#{payment_id}/cancel", options)
+      request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/cancel", options)
     end
 
     # POST /v2/{id}/approve
     # Docs http://docs.veritrans.co.id/sandbox/other_commands.html
     def approve(payment_id, options = {})
-      request_with_logging(:post, config.api_host + "/v2/#{payment_id}/approve", options)
+      request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/approve", options)
     end
 
     # GET /v2/{id}/status
     # Docs http://docs.veritrans.co.id/sandbox/other_commands.html
-    def status(order_id)
-      get(config.api_host + "/v2/#{order_id}/status")
+    def status(payment_id)
+      get(config.api_host + "/v2/#{URI.escape(payment_id)}/status")
     end
 
     # POST /v2/capture
@@ -77,7 +79,7 @@ module Veritrans
 
     # DELETE /v2/vtlink/{id}
     def delete_vtlink(id, options)
-      request_with_logging(:delete, config.api_host + "/v2/vtlink/#{id}", options)
+      request_with_logging(:delete, config.api_host + "/v2/vtlink/#{URI.escape(id)}", options)
     end
 
   end
