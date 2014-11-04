@@ -68,11 +68,6 @@ module Veritrans
       post(config.api_host + "/v2/capture", options.merge(transaction_id: payment_id, gross_amount: gross_amount))
     end
 
-    # GET /v2/{id}/transcript
-    def transcript(order_id)
-      get(config.api_host + "/v2/#{order_id}/transcript")
-    end
-
     # POST /v2/charge { payment_type: "vtlink" }
     def create_vtlink(data)
       data = data.dup

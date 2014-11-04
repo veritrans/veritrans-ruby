@@ -45,12 +45,6 @@ please use our [documentation](http://docs.veritrans.co.id/sandbox/introduction.
       <td>POST</td>
       <td>api.veritrans.co.id/v2/{id}/capture</td>
     </tr>
-    <tr>
-      <td><a href="#transcript">Veritrans.transcript(id)</a></td>
-      <td>Transcript Transaction</td>
-      <td>GET</td>
-      <td>api.veritrans.co.id/v2/{id}/transcript</td>
-    </tr>
   </tbody>
 </table>
 
@@ -218,78 +212,4 @@ This API method is only for merchants who have pre-authorise feature (can be req
 ```ruby
 q = Veritrans.capture("testing-0.2072-1415086078", 101_000)
 q.success? # => true
-```
-
-
-### <a name="transcript"></a> Transcript
-
-Return transaction changes history, in plain text format.
-
-```ruby
-q = Veritrans.transcript("testing-0.0501-1415086808")
-q.body #=> "..."
-```
-
-The result example:
-
-```
-==================================================================
-receive new charge request
-==================================================================
-2014/11/04 07:41:58
-==================================================================
-{
-  "payment_type" : "credit_card",
-  "credit_card" : {
-    "token_id" : "451111-1117-138203b5-d9d0-437c-8969-c11551cbfce3"
-  },
-  "transaction_details" : {
-    "order_id" : "testing-0.0501-1415086808",
-    "gross_amount" : "100000"
-  }
-}
-==================================================================
-
-==================================================================
-send transaction to FDS
-==================================================================
-2014/11/04 07:41:58
-==================================================================
-{
-  "order_datetime" : "2014-11-04 07:41:58",
-  "amount" : 100000,
-  "transaction_id" : "808863410b0e",
-  ...
-}
-==================================================================
-
-
-==================================================================
-get response from FDS
-==================================================================
-2014/11/04 07:41:58
-==================================================================
-{
-  "red_request_id" : "1415086918375",
-  "order_transaction_id" : "808863410b0e",
-  "status_code" : "-",
-  "response_date" : "04/11/2014",
-  "response_time" : "07:41:58",
-  ....
-}
-==================================================================
-
-
-==================================================================
-send sale request to BANK BNI
-==================================================================
-2014/11/04 07:41:58
-==================================================================
-{
-  "mid" : "100000937",
-  "tid" : "11111114",
-  "gross_amount" : 10000000
-}
-==================================================================
-
 ```
