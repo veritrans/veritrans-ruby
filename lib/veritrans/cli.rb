@@ -15,6 +15,10 @@ end
 
 module Veritrans
   module CLI
+    # can't find order
+    class OrderNotFound < Exception; end
+    class AuthenticationError < Exception; end
+
     extend self
 
     def test_webhook(args)
@@ -100,7 +104,12 @@ module Veritrans
         return response
       else
         puts red("Error")
-        raise ArgumentError, "Can not find order with id=#{order_id} (#{response.status_message})"
+
+        if response.status_code == 401
+          raise AuthenticationError, "Can not find order with id=#{order_id} (#{response.status_message})"
+        else
+          raise OrderNotFound, "Can not find order with id=#{order_id} (#{response.status_message})"
+        end
       end
     end
 
@@ -126,7 +135,7 @@ module Veritrans
         puts
       end
 
-      JSON.pretty_generate(data)
+      JSON.dump(JSON.pretty_generate(data))
     end
 
     def colorize(str, color_code)

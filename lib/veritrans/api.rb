@@ -61,6 +61,10 @@ module Veritrans
     # GET /v2/{id}/status
     # Docs http://docs.veritrans.co.id/sandbox/other_commands.html
     def status(payment_id)
+      if !payment_id || payment_id == ""
+        raise ArgumentError, "parameter payment_id can not be bank"
+      end
+
       get(config.api_host + "/v2/#{URI.escape(payment_id)}/status")
     end
 

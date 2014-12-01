@@ -55,10 +55,10 @@ end
 
 post "/webhook" do
   post_body = request.body.read
-  request_data = JSON.parse(post_body)
+  request_data = Veritrans.decode_notification_json(post_body)
 
   #puts "Recieved #{post_body.size} bytes"
-  #puts post_body
+  #p request_data
 
   verified_data = Veritrans.status(request_data['transaction_id'])
 

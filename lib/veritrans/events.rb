@@ -39,8 +39,9 @@ module Veritrans
     def call(env)
       Veritrans.logger.info "Receive notification callback"
 
-      post_body = env['RAW_POST_DATA']
-      request_data = JSON.parse(post_body)
+      post_body = env["rack.input"].read
+      env["rack.input"].rewind
+      request_data = Veritrans.decode_notification_json(post_body)
 
       Veritrans.file_logger.info("Callback for order: " +
         "#{request_data['order_id']} #{request_data['transaction_status']}\n" +
@@ -83,7 +84,7 @@ module Veritrans
 
     rescue Object => error
       Veritrans.file_logger.info("Callback proccesing failed. \n" +
-        "RAW_POST_DATA: #{env['RAW_POST_DATA']}\n" +
+        "RAW_POST_DATA: #{env["rack.input"].read}\n" +
         error.message +
         error.backtrace.join("\n") + "\n"
       )

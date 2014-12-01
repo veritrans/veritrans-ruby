@@ -54,8 +54,10 @@ if OPERATIONS.include?(op)
         Veritrans::CLI.test_webhook(ARGV)
     end
 
-  #rescue ArgumentError => ex
-  #  puts ex.message
+  rescue Veritrans::CLI::OrderNotFound, Veritrans::CLI::AuthenticationError => ex
+    puts ex.message
+  rescue ArgumentError => ex
+    puts ex.message
   rescue Exception => e
     puts "Uh oh, I didn't expect this:"
     puts e.message
