@@ -1,2 +1,4 @@
-# Ignore coverage folder
 coverage
+rails_example*
+.DS_Store
+

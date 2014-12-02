@@ -1,0 +1,106 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.sandbox.veritrans.co.id/v2/charge
+    body:
+      encoding: UTF-8
+      string: '{"payment_type":"permata","transaction_details":{"order_id":1415110696,"gross_amount":100000}}'
+    headers:
+      User-Agent:
+      - Veritrans ruby gem 2.0.0beta
+      Authorization:
+      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.5.13
+      Date:
+      - Tue, 04 Nov 2014 14:19:48 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '381'
+      Connection:
+      - keep-alive
+      Cache-Control:
+      - no-cache
+      Pragma:
+      - no-cache
+      Expires:
+      - Wed, 31 Dec 1969 17:00:00 GMT
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "status_code" : "201",
+          "status_message" : "Success, PERMATA VA transaction is successful",
+          "transaction_id" : "d8757b8a-b97e-4881-9f55-69f6db6f4006",
+          "order_id" : "1415110696",
+          "payment_type" : "bank_transfer",
+          "transaction_time" : "2014-11-04 21:20:07",
+          "transaction_status" : "pending",
+          "permata_va_number" : "8778990000000023",
+          "gross_amount" : "100000.00"
+        }
+    http_version: 
+  recorded_at: Tue, 04 Nov 2014 14:18:17 GMT
+- request:
+    method: post
+    uri: https://api.sandbox.veritrans.co.id/v2/1415110696/cancel
+    body:
+      encoding: UTF-8
+      string: "{}"
+    headers:
+      User-Agent:
+      - Veritrans ruby gem 2.0.0beta
+      Authorization:
+      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.5.13
+      Date:
+      - Tue, 04 Nov 2014 14:19:48 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '323'
+      Connection:
+      - keep-alive
+      Cache-Control:
+      - no-cache
+      Pragma:
+      - no-cache
+      Expires:
+      - Wed, 31 Dec 1969 17:00:00 GMT
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "status_code" : "200",
+          "status_message" : "Success, transaction is canceled",
+          "transaction_id" : "d8757b8a-b97e-4881-9f55-69f6db6f4006",
+          "order_id" : "1415110696",
+          "payment_type" : "bank_transfer",
+          "transaction_time" : "2014-11-04 21:20:07",
+          "transaction_status" : "cancel",
+          "gross_amount" : "100000.00"
+        }
+    http_version: 
+  recorded_at: Tue, 04 Nov 2014 14:18:17 GMT
+recorded_with: VCR 2.9.3

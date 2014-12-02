@@ -1,0 +1,50 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.sandbox.veritrans.co.id/v2/charge
+    body:
+      encoding: UTF-8
+      string: '{"payment_type":"VTWEB","transaction_details":{"order_id":"2014-11-04
+        20:58:14 +0700","gross_amount":100000}}'
+    headers:
+      User-Agent:
+      - excon/0.40.0
+      Authorization:
+      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.5.13
+      Date:
+      - Tue, 04 Nov 2014 13:59:46 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '217'
+      Connection:
+      - keep-alive
+      Cache-Control:
+      - no-cache
+      Pragma:
+      - no-cache
+      Expires:
+      - Wed, 31 Dec 1969 17:00:00 GMT
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "status_code" : "201",
+          "status_message" : "OK, success do VTWeb transaction, please go to redirect_url",
+          "redirect_url" : "https://vtweb.sandbox.veritrans.co.id/v2/vtweb/f523ecff-34e7-4791-a558-3f579f731b75"
+        }
+    http_version: 
+  recorded_at: Tue, 04 Nov 2014 13:58:15 GMT
+recorded_with: VCR 2.9.3

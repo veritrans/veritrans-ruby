@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="/style.css">
+
+<header>
+  <h3>Veritrans sinatra app</h3>
+</header>
+
+<% if @result.redirect_url %>
+  <section>
+    <p>Here's redirect url <a href='<%= @result.redirect_url %>'><%= @result.redirect_url %></a> </p>
+  </section>
+<% end %>
+
+<section>
+  <strong>
+    Veritrans response:
+    <% if @result.success? %>
+      <span style="color: green">success</span>
+    <% end %>
+  </strong>
+
+  <code>
+    <pre>
+<%= @result.response.body %>
+    </pre>
+  </code>
+
+  <a href="/">Go back</a>
+</section>

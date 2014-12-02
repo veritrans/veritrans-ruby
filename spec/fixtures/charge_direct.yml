@@ -1,0 +1,56 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.sandbox.veritrans.co.id/v2/charge
+    body:
+      encoding: UTF-8
+      string: '{"payment_type":"permata","transaction_details":{"order_id":"2014-11-04
+        21:06:32 +0700","gross_amount":100000}}'
+    headers:
+      User-Agent:
+      - Veritrans ruby gem 2.0.0beta
+      Authorization:
+      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.5.13
+      Date:
+      - Tue, 04 Nov 2014 14:08:04 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '396'
+      Connection:
+      - keep-alive
+      Cache-Control:
+      - no-cache
+      Pragma:
+      - no-cache
+      Expires:
+      - Wed, 31 Dec 1969 17:00:00 GMT
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "status_code" : "201",
+          "status_message" : "Success, PERMATA VA transaction is successful",
+          "transaction_id" : "3544730a-e5ca-46b6-9512-233c37670500",
+          "order_id" : "2014-11-04 21:06:32 +0700",
+          "payment_type" : "bank_transfer",
+          "transaction_time" : "2014-11-04 21:08:23",
+          "transaction_status" : "pending",
+          "permata_va_number" : "8778990000000019",
+          "gross_amount" : "100000.00"
+        }
+    http_version: 
+  recorded_at: Tue, 04 Nov 2014 14:06:33 GMT
+recorded_with: VCR 2.9.3

@@ -1,0 +1,118 @@
+<link rel="stylesheet" href="/style.css">
+
+<header>
+  <h3>Veritrans sinatra app</h3>
+</header>
+
+<section>
+  <p>
+    Charge request VT-Web <a href="/charge_vtweb">click to see payment page</a>
+  </p>
+</section>
+
+<section>
+  <p>
+    Charge request VT-Direct
+  </p>
+
+  <form action="/charge_vtdirect" method="post" id="card_form">
+    <input type="hidden" name="token_id" id="card_token">
+    <fieldset>
+      <legend>Credit card</legend>
+      <p>
+        <label for="gross_amount">Amount, Rp.</label>
+        <input type="text" name="gross_amount" id="gross_amount" value="30000">
+      </p>
+      <p>
+        <label for="card_number">Card number</label>
+        <input type="text" id="card_number" style="width: 150px" value="4811 1111 1111 1114">
+        <br>
+        <small style="margin-left: 100px" class="card-numbers">
+          <a onclick="$('#card_number').val('4811 1111 1111 1114')">success Visa</a>
+          <a onclick="$('#card_number').val('5810 1111 1111 1112')">success MasterCard</a>
+          <a onclick="$('#card_number').val('4511 1111 1111 1117')">challenge</a>
+          <a onclick="$('#card_number').val('4611 1111 1111 1116')">Deny by FDS</a>
+          <a onclick="$('#card_number').val('4911 1111 1111 1113')">Deny by bank</a>
+          <a href="http://docs.veritrans.co.id/sandbox/card_list.html" target="_blank">documentation</a>
+        </small>
+      </p>
+      <p>
+        <label for="card_cvc">Security Code</label>
+        <input type="text" id="card_cvc" style="width: 30px" placeholder="cvc" value="123">
+      </p>
+      <p>
+        <label for="card_exp">Expiration date</label>
+        <input type="text" id="card_exp" placeholder="MM / YY" value="12 / 16">
+      </p>
+
+      <p>
+        <label for="card_secure">3D-secure</label>
+        <input type="checkbox" id="card_secure">
+      </p>
+
+    </fieldset>
+
+    <input id="submit_btn" type="submit">
+  </form>
+</section>
+
+<script src="//api.sandbox.veritrans.co.id/v2/assets/veritrans.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.payment/1.0.2/jquery.payment.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/0.9.9/jquery.magnific-popup.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/0.9.9/magnific-popup.css">
+
+<script type="text/javascript">
+  // set Veritrans settings
+  Veritrans.url = "<%= Veritrans.config.api_host %>/v2/token";
+  Veritrans.client_key = "<%= Veritrans.config.client_key %>";
+
+  function createTokenData() {
+    return {
+      // Optional params:
+      // secure: true
+      // bank: 'MANDIRI'
+
+      card_number: $('#card_number').val(),
+      card_cvv: $('#card_cvc').val(),
+      card_exp_month: $('#card_exp').val().match(/(\d+) \//)[1],
+      card_exp_year: '20' + $('#card_exp').val().match(/\/ (\d+)/)[1],
+      gross_amount: $('#gross_amount').val(),
+      secure: $('#card_secure')[0].checked
+    };
+  }
+
+  $(document).ready(function () {
+    $('#card_number').payment('formatCardNumber');
+    $('#card_cvc').payment('formatCardCVC');
+    $('#card_exp').payment('formatCardExpiry');
+
+    $('#card_form').on('submit', function (event) {
+      var form = this;
+      $('#submit_btn').attr('disabled', true).val("Processing ...");
+      event.preventDefault();
+
+      Veritrans.token(createTokenData, function (data) {
+        console.log('Token data:', data);
+        // if we get url then it's 3d-secure transaction
+        // so we need to open that page
+        // this callback function will be called again after user confirm 3d-secure
+        // you can also redirect on server side
+        if (data.redirect_url) {
+          $.magnificPopup.open({
+            items: { type: 'iframe', src: data.redirect_url }
+          });
+          $.magnificPopup.instance.content.find('iframe').height(590);
+        // if no redirect_url and we have token_id then just make charge request
+        } else if (data.token_id) {
+          $('#card_token').val(data.token_id);
+          form.submit();
+        // if no redirect_url and no token_id, then it should be error
+        } else {
+          alert(data.validation_messages ? data.validation_messages.join("\n") : data.status_message);
+          $('#submit_btn').removeAttr('disabled').removeAttr("value");
+        }
+      });
+    });
+  });
+</script>

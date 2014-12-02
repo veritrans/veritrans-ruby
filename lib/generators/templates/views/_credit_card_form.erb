@@ -1,0 +1,42 @@
+<%= form_for @payment, html: {class: "veritrans-payment-form"} do |f| %>
+  <%= f.hidden_field :token_id %>
+  <input type="submit" style="display: none">
+  <p>
+    <%= f.label :amount %>
+    <%= f.number_field :amount %>
+  </p>
+
+  <p>
+    <%= label_tag :credit_card_number %>
+    <%= text_field_tag :credit_card_number, '4811 1111 1111 1114', name: nil, size: 25 %>
+  </p>
+  <p>
+    <button onclick="$('#credit_card_number').val('5810 1111 1111 1112'); return false">success MasterCard</button>
+    <button onclick="$('#credit_card_number').val('4811 1111 1111 1114'); return false">success Visa</button>
+    <button onclick="$('#credit_card_number').val('4511 1111 1111 1117'); return false">challenge</button>
+    <button onclick="$('#credit_card_number').val('4611 1111 1111 1116'); return false">Deny by FDS</button>
+    <button onclick="$('#credit_card_number').val('4911 1111 1111 1113'); return false">Deny by bank</button>
+    <a href="http://docs.veritrans.co.id/sandbox/card_list.html" target="_blank">documentation</a>
+  </p>
+
+  <p>
+    <%= label_tag :credit_card_cvv %>
+    <%= text_field_tag :credit_card_cvv, '123', name: nil %>
+  </p>
+
+  <p>
+    <%= label_tag :credit_card_expire %>
+    <%= text_field_tag :credit_card_expire, '12 / 16', placeholder: "MM / YY", name: nil %>
+  </p>
+
+  <p>
+    <%= f.label :credit_card_secure, "3D-secure" %>
+    <%= f.check_box :credit_card_secure %>
+  </p>
+
+  <p>
+    <%= f.submit "Pay via VT-Direct" %>
+  </p>
+<% end %>
+
+<iframe id="3d-secure-iframe" style="display: none; width: 500px; height: 600px"></iframe>

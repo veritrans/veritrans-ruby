@@ -1,0 +1,46 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.sandbox.veritrans.co.id/v2/not-exists/status
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Veritrans ruby gem 2.0.0beta
+      Authorization:
+      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.5.13
+      Date:
+      - Tue, 04 Nov 2014 14:11:31 GMT
+      Content-Type:
+      - application/json
+      Connection:
+      - keep-alive
+      Cache-Control:
+      - no-cache
+      Pragma:
+      - no-cache
+      Expires:
+      - Wed, 31 Dec 1969 17:00:00 GMT
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "status_code" : "404",
+          "status_message" : "The requested resource is not found"
+        }
+    http_version: 
+  recorded_at: Tue, 04 Nov 2014 14:10:00 GMT
+recorded_with: VCR 2.9.3
