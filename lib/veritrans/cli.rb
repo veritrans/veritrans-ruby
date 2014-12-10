@@ -132,7 +132,6 @@ module Veritrans
         order_info = get_order_info(CONFIG[:order])
         order_data = order_info.data.except(:status_message, :signature_key)
         data = data.except(:fraud_status, :masked_card).merge(order_data)
-        puts
       end
 
       JSON.dump(JSON.pretty_generate(data))
