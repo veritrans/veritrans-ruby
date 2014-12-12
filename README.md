@@ -5,7 +5,7 @@
 ### Add veritrans to Gemfile
 
 ```ruby
-gem 'veritrans', '2.0.0beta'
+gem 'veritrans'
 ```
 
     bundle install
