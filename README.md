@@ -1,15 +1,11 @@
 # Veritrans ruby library
 
-## Installation
-
-     $ gem install veritrans
-
 ## How to use (Rails)
 
 ### Add veritrans to Gemfile
 
 ```ruby
-gem 'veritrans'
+gem 'veritrans', '2.0.0beta'
 ```
 
     bundle install
@@ -53,14 +49,14 @@ redirect_to @result.redirect_url
 #### VT-Direct
 
 It's little more complicated, because credit_card is sensitive data,
-you need put credit card number in our safe storage first using `veritrans.js` library, then send received token to with other payment details.
+you need put credit card number in our safe storage first using `veritrans.min.js` library, then send received token to with other payment details.
 
 We don't want you to send credit card number to your server, especially for websites not using https.
 
 File: "app/views/shared/_veritrans_include.erb"
 
 ```html
-<script src="//api.sandbox.veritrans.co.id/v2/assets/veritrans.js"></script>
+<script src="//api.sandbox.veritrans.co.id/v2/assets/veritrans.min.js"></script>
 
 <script type="text/javascript">
   Veritrans.url = "<%= Veritrans.config.api_host %>/v2/token";
@@ -246,7 +242,6 @@ Veritrans.file_logger = Logger.new("/my/important_logs/veritrans.log")
 * Validation errors for "charge", "cancel", "approve"
 * Received http notifications
 * Errors and exception while processing http notifications
-
 
 #### Get help
 
