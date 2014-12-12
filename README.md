@@ -1,5 +1,7 @@
 # Veritrans ruby library
 
+[![Build Status](https://travis-ci.org/veritrans/veritrans-ruby.svg?branch=master)](https://travis-ci.org/veritrans/veritrans-ruby)
+
 ## Installation
 
      $ gem install veritrans

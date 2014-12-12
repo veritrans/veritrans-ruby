@@ -10,6 +10,9 @@ require 'rails'
 require 'webmock/rspec'
 require 'vcr'
 
+GEM_ROOT = File.expand_path("../..", __FILE__)
+ENV['RAILS_ENV'] = 'development'
+
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/fixtures'
   c.hook_into :webmock # or :fakeweb
