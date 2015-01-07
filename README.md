@@ -1,12 +1,10 @@
 # Veritrans ruby library
 
-## Installation
-
-     $ gem install veritrans
+[![Build Status](https://travis-ci.org/veritrans/veritrans-ruby.svg?branch=master)](https://travis-ci.org/veritrans/veritrans-ruby)
 
 ## How to use (Rails)
 
-### Add veritrans to Gemfile
+### Add gem veritrans to Gemfile
 
 ```ruby
 gem 'veritrans'
@@ -177,7 +175,7 @@ For every transaction success and failed we will send you HTTP POST notification
 
 First you should set callback url in our dashboard https://my.sandbox.veritrans.co.id/settings/vtweb_configuration
 
-In development mode please read our [Testing webhooks tutorial](https://github.com/Paxa/veritrans-ruby/blob/new_api/testing_webhooks.md)
+For testing in development phase please read our [Testing webhooks tutorial](https://github.com/Paxa/veritrans-ruby/blob/new_api/testing_webhooks.md) and [command line tool](#command-line-tool)
 
 
 For rails:
@@ -188,7 +186,10 @@ match "/payments/receive_webhook" => "payments#receive_webhook", via: [:post]
 
 # app/controllers/payments_controller.rb
 def receive_webhook
-  verified_data = Veritrans.status(params[:transaction_id])
+  post_body = request.body.read
+  callback_params = Veritrans.decode_notification_json(post_body)
+
+  verified_data = Veritrans.status(callback_params['transaction_id'])
 
   if verified_data.status_code != 404
     puts "--- Transaction callback ---"
@@ -205,6 +206,8 @@ def receive_webhook
   end
 end
 ```
+
+----
 
 #### Veritrans::Events
 
@@ -231,12 +234,12 @@ end
 
 #### Logging
 
-By default gem veritrans will show information via rails' logger. And in addition save important information to `RAILS_APP/config/veritrans.log`
+By default gem veritrans will show information via rails' logger. And in addition save important information to `RAILS_APP/log/veritrans.log`
 
 It's configurable.
 
 ```ruby
-Veritrans.logger = Logger.new("/my/logs/veritrans.log")
+Veritrans.logger = Rails.logger
 Veritrans.file_logger = Logger.new("/my/important_logs/veritrans.log")
 ```
 
@@ -246,6 +249,22 @@ Veritrans.file_logger = Logger.new("/my/important_logs/veritrans.log")
 * Validation errors for "charge", "cancel", "approve"
 * Received http notifications
 * Errors and exception while processing http notifications
+
+----
+
+#### Command line tool
+
+**Installation**
+
+    $ gem install veritrans
+
+**Usage**
+
+Testing http notification:
+
+    $ veritrans testhook http://localhost:3000/vt_events
+    $ veritrans testhook -o my-order-1 -c ~/path/to/veritrans.yml http://localhost:3000/vt_events
+
 
 
 #### Get help
