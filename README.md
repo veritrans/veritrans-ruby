@@ -1,5 +1,6 @@
 # Veritrans ruby library
 
+[![Gem Version](https://badge.fury.io/rb/veritrans.svg)](http://badge.fury.io/rb/veritrans)
 [![Build Status](https://travis-ci.org/veritrans/veritrans-ruby.svg?branch=master)](https://travis-ci.org/veritrans/veritrans-ruby)
 
 ## How to use (Rails)

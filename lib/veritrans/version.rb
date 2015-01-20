@@ -1,3 +1,3 @@
 module Veritrans
-  VERSION = "2.0.0beta"
+  VERSION = "2.0.1"
 end
