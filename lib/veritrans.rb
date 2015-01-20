@@ -66,17 +66,8 @@ module Veritrans
       Veritrans::Events if defined?(Veritrans::Events)
     end
 
-    # Note: Veritrans sending notification data as json, encoded twice
-    # so we should call JSON.parse twice
     def decode_notification_json(input)
-      if input.start_with?('"{') && input.end_with?('}"')
-        # ruby's JSON library can't excpect only hash or array. To decode string I wrap it in array.
-        request_data = Veritrans::Client._json_decode('[' + input + ']').first
-        return Veritrans::Client._json_decode(request_data)
-      else
-        # in case we will make it in expected way later
-        return Veritrans::Client._json_decode(input)
-      end
+      return Veritrans::Client._json_decode(input)
     end
 
   end

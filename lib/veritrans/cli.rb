@@ -134,7 +134,7 @@ module Veritrans
         data = data.except(:fraud_status, :masked_card).merge(order_data)
       end
 
-      JSON.dump(JSON.pretty_generate(data))
+      JSON.pretty_generate(data)
     end
 
     def colorize(str, color_code)
