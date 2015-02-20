@@ -32,14 +32,13 @@ class PaymentsController < ApplicationController
 
   def receive_webhook
     post_body = request.body.read
-    callback_params = Veritrans.decode_notification_json(post_body)
 
     Veritrans.file_logger.info("Callback for order: " +
-      "#{callback_params[:order_id]} #{callback_params[:transaction_status]}\n" +
+      "#{params[:order_id]} #{params[:transaction_status]}\n" +
       post_body + "\n"
     )
 
-    verified_data = Veritrans.status(callback_params["transaction_id"])
+    verified_data = Veritrans.status(params["transaction_id"])
 
     if verified_data.status_code != 404
       puts "--- Transaction callback ---"
@@ -53,7 +52,7 @@ class PaymentsController < ApplicationController
       render text: "ok"
     else
       Veritrans.file_logger.info("Callback verification failed for order: " +
-        "#{callback_params[:order_id]} #{callback_params[:transaction_status]}}\n" +
+        "#{params[:order_id]} #{params[:transaction_status]}}\n" +
         verified_data.body + "\n"
       )
 

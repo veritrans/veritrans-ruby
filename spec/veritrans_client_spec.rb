@@ -8,6 +8,38 @@ describe Veritrans do
     end
   end
 
+  it "should use Veritrans.http_options", vcr: false do
+    Veritrans::Config.stub(:http_options) do
+      { omit_default_port: true }
+    end
+
+    api_request = nil
+    stub_request(:any, /.*/).to_return(lambda { |request|
+      api_request = request
+      {body: request.body}
+    })
+
+    result = Veritrans.request_with_logging(:get, Veritrans.config.api_host + "/ping", {})
+
+    api_request.headers["Host"].should == "api.sandbox.veritrans.co.id"
+  end
+
+  it "should use Veritrans.http_options to attach hedaers", vcr: false do
+    Veritrans::Config.stub(:http_options) do
+      { headers: { "X-Rspec" => "ok" } }
+    end
+
+    api_request = nil
+    stub_request(:any, /.*/).to_return(lambda { |request|
+      api_request = request
+      {body: request.body}
+    })
+
+    result = Veritrans.request_with_logging(:get, Veritrans.config.api_host + "/ping", {})
+
+    api_request.headers["X-Rspec"].should == "ok"
+  end
+
   it "should send charge vt-web request" do
     VCR.use_cassette('charge_vtweb') do
       result = Veritrans.charge('vtweb', transaction: { order_id: Time.now.to_s, gross_amount: 100_000 } )

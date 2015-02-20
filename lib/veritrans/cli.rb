@@ -2,17 +2,6 @@ require 'json'
 require 'securerandom'
 require 'logger'
 
-class Hash
-  def except!(*keys)
-    keys.each { |key| delete(key) }
-    self
-  end
-
-  def except(*keys)
-    dup.except!(*keys)
-  end
-end
-
 module Veritrans
   module CLI
     # can't find order
@@ -134,7 +123,7 @@ module Veritrans
         data = data.except(:fraud_status, :masked_card).merge(order_data)
       end
 
-      JSON.dump(JSON.pretty_generate(data))
+      JSON.pretty_generate(data)
     end
 
     def colorize(str, color_code)

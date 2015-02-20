@@ -1,4 +1,5 @@
 coverage
 rails_example*
 .DS_Store
-
+tmp
+doc/

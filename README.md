@@ -1,5 +1,6 @@
 # Veritrans ruby library
 
+[![Gem Version](https://badge.fury.io/rb/veritrans.svg)](http://badge.fury.io/rb/veritrans)
 [![Build Status](https://travis-ci.org/veritrans/veritrans-ruby.svg?branch=master)](https://travis-ci.org/veritrans/veritrans-ruby)
 
 ## How to use (Rails)
@@ -67,6 +68,7 @@ File: "app/views/shared/_veritrans_include.erb"
 ```
 
 Payment form:
+
 ```html
 <form action="/charge_vtdirect" method="post" id="card_form">
   <input type="hidden" name="token_id" id="card_token">

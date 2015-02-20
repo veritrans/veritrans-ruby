@@ -49,7 +49,9 @@ please use our [documentation](http://docs.veritrans.co.id/sandbox/introduction.
 </table>
 
 
-### <a name="charge"></a> Charge
+<a name="charge"></a>
+
+### Charge
 
 Actually make transaction. But for vt-web create a redirect url, and for vt-link creates payment page
 
@@ -134,7 +136,8 @@ q.success? # => true
 ```
 
 
-### <a name="status"></a> Status
+<a name="status"></a>
+### Status
 
 Return current status of transaction.
 
@@ -158,7 +161,8 @@ q.data == {
 ```
 
 
-### <a name="cancel"></a> Cancel
+<a name="cancel"></a>
+### Cancel
 
 Cancel transaction, before it was settled. For credit card payments you can cancel it before we trigger settlement in bank.
 Usually we do settlement next day after payment happen, about 4pm.
@@ -185,7 +189,8 @@ q.data == {
 ```
 
 
-### <a name="approve"></a> Approve
+<a name="approve"></a>
+### Approve
 
 Some transactions marked as challenge. If challenge you can approve it or cancel it. Usual way is to use our dashboard web interface,
 but you also can do it programatically, via API
@@ -208,8 +213,8 @@ q.data == {
 }
 ```
 
-
-### <a name="capture"></a> Capture
+<a name="capture"></a>
+### Capture
 
 This API method is only for merchants who have pre-authorise feature (can be requested) and have pre-authorise payments.
 

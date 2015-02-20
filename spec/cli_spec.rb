@@ -15,8 +15,6 @@ describe Veritrans do
     end
 
     data = ActiveSupport::JSON.decode(@request.body)
-    data.class.should == String
-    data = ActiveSupport::JSON.decode(data)
 
     data["status_code"].should == "200"
     data["status_message"].should == "Veritrans payment notification"
@@ -74,8 +72,6 @@ describe Veritrans do
     end
 
     data = ActiveSupport::JSON.decode(@request.body)
-    data.class.should == String
-    data = ActiveSupport::JSON.decode(data)
 
     data["status_code"].should == "200"
     data["status_message"].should == "Veritrans payment notification"
