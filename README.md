@@ -68,6 +68,7 @@ File: "app/views/shared/_veritrans_include.erb"
 ```
 
 Payment form:
+
 ```html
 <form action="/charge_vtdirect" method="post" id="card_form">
   <input type="hidden" name="token_id" id="card_token">
