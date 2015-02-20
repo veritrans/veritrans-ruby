@@ -163,13 +163,23 @@ development:
     # Waiting for get token request in javascript...
     Timeout.timeout(30.seconds) do
       loop do
-        #print "W"
         break if current_path != "/payments/new"
         sleep 0.1
       end
     end
 
-    page.should have_content("Success, Credit Card transaction is successful")
+    Timeout.timeout(10.seconds) do
+      loop do
+        break if page.body =~ /<body>/
+        sleep 0.1
+      end
+    end
+
+    if page.body =~ /too many transactions/
+      page.should have_content("Merchant has sent too many transactions to the same card number")
+    else
+      page.should have_content("Success, Credit Card transaction is successful")
+    end
 
     created_order_id = ActiveSupport::JSON.decode(find("pre").text)["order_id"]
     #Capybara::Screenshot.screenshot_and_open_image
