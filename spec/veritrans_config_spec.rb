@@ -45,4 +45,15 @@ describe Veritrans::Config do
     data.should == {"client_key" => "test_client_key", "server_key" => "test_server_key"}
   end
 
+  it "should validate http_params type" do
+    expect {
+      Veritrans.config.http_options = nil
+    }.to raise_error(ArgumentError, "http_options should be a hash")
+  end
+
+  it "should validate http_params type" do
+    expect {
+      Veritrans.config.http_options = {foo: "bar", tcp_nodelay: true}
+    }.to raise_error(ArgumentError, /http_options contain unsupported keys: \[:foo\]/)
+  end
 end

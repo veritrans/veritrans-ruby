@@ -1,4 +1,5 @@
 require 'veritrans/version'
+require 'veritrans/core_extensions'
 require 'veritrans/config'
 require 'veritrans/client'
 require 'veritrans/api'

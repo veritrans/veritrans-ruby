@@ -70,10 +70,12 @@ module Veritrans
       method = method.to_s.upcase
       logger.info "Veritrans: #{method} #{url} #{_json_encode(params)}"
 
+      default_options = config.http_options || {}
+
       # Add authentication and content type
       # Docs http://docs.veritrans.co.id/sandbox/introduction.html
-      options = {
-        :body => _json_encode(params),
+      request_options = {
+        :path => URI.parse(url).path,
         :headers => {
           :Authorization => auth_header || basic_auth_header(config.server_key),
           :Accept => "application/json",
@@ -83,18 +85,25 @@ module Veritrans
       }
 
       if method == "GET"
-        options.delete(:body)
-        options[:query] = URI.encode_www_form(params)
+        request_options[:query] = URI.encode_www_form(params)
+      else
+        request_options[:body] = _json_encode(params)
       end
 
-      s_time = Time.now
-      request = Excon.new(url, read_timeout: 40, write_timeout: 40, connect_timeout: 40)
+      connection_options = {
+        read_timeout: 40,
+        write_timeout: 40,
+        connect_timeout: 40
+      }.deep_merge(default_options)
 
-      response = request.send(method.downcase.to_sym, options.merge(path: URI.parse(url).path))
+      s_time = Time.now
+      request = Excon.new(url, connection_options)
+
+      response = request.send(method.downcase.to_sym, request_options)
 
       logger.info "Veritrans: got #{(Time.now - s_time).round(3)} sec #{response.status} #{response.body}"
 
-      Result.new(response, url, options, Time.now - s_time)
+      Result.new(response, url, request_options, Time.now - s_time)
 
     rescue Excon::Errors::SocketError => error
       logger.info "PAPI: socket error, can not connect"

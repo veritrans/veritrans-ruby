@@ -1,4 +1,5 @@
 require 'yaml'
+require 'excon'
 
 module Veritrans
 
@@ -31,6 +32,34 @@ module Veritrans
       @api_host = value
     end
 
+    ##
+    # This will override http request settings for api calls
+    # Should be hash, it will be merged with connection options for every request
+    #
+    # Full list of options: https://github.com/excon/excon/blob/master/lib/excon/constants.rb
+    #
+    #   Veritrans.config.http_options = {tcp_nodelay: true, ssl_version: 'TLSv1'}
+    #
+    def http_options=(options)
+      unless options.is_a?(Hash)
+        raise ArgumentError, "http_options should be a hash"
+      end
+
+      # Validate allowed keys
+      diff = options.keys.map(&:to_sym) - Excon::VALID_CONNECTION_KEYS
+      if diff.size > 0
+        raise ArgumentError,
+          "http_options contain unsupported keys: #{diff.inspect}\n" +
+          "Supported keys are: #{Excon::VALID_CONNECTION_KEYS.inspect}"
+      end
+
+      @http_options = options
+    end
+
+    def http_options
+      @http_options
+    end
+
     def load_config(filename)
       yml_file, yml_section = filename.to_s.split('#')
       config_data = YAML.load(File.read(yml_file))
@@ -45,7 +74,11 @@ module Veritrans
     alias :load_yml :load_config
 
     def inspect
-      "<Veritrans::Config @api_host=#{@api_host.inspect} @server_key=#{@server_key.inspect} @client_key=#{@client_key.inspect}>"
+      "<Veritrans::Config " +
+        "@api_host=#{@api_host.inspect} " +
+        "@server_key=#{@server_key.inspect} " +
+        "@client_key=#{@client_key.inspect} " +
+        "@http_options=#{@http_options.inspect}>"
     end
 
     private
