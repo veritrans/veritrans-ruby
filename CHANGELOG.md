@@ -1,3 +1,8 @@
+### Version 2.0.2  (date: 20 Feb 2014)
+
+* Add feature to add default http options, via Veritrans.config.http_options
+* Start writing documentation in RDoc format
+
 ### Version 2.0.1  (date: 20 Jan 2014)
 
 * Fix confusing json format, we don't have it anymore.
