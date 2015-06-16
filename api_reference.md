@@ -1,7 +1,7 @@
 # API Reference
 
 Here is only reference for API of this gem, to see complete information
-please use our [documentation](http://docs.veritrans.co.id/sandbox/introduction.html)
+please use our [documentation](http://docs.veritrans.co.id/en/api/introduction.htmlu)
 
 
 <table>

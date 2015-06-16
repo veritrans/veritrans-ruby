@@ -204,7 +204,7 @@ For every transaction success and failed we will send you HTTP POST notification
 
 First you should set callback url in our dashboard https://my.sandbox.veritrans.co.id/settings/vtweb_configuration
 
-For testing in development phase please read our [Testing webhooks tutorial](https://github.com/Paxa/veritrans-ruby/blob/new_api/testing_webhooks.md) and [command line tool](#command-line-tool)
+For testing in development phase please read our [Testing webhooks tutorial](https://github.com/veritrans/veritrans-ruby/blob/new_api/testing_webhooks.md) and [command line tool](#command-line-tool)
 
 
 For rails:
@@ -298,9 +298,8 @@ Testing http notification:
 
 #### Get help
 
-* [Veritrans gem reference](https://github.com/Paxa/veritrans-ruby/blob/new_api/api_reference.md)
-* [Veritrans sandbox login](https://my.sandbox.veritrans.co.id/register)
+* [Veritrans gem reference](https://github.com/veritrans/veritrans-ruby/blob/new_api/api_reference.md)
+* [Veritrans sandbox login](https://my.sandbox.veritrans.co.id/login)
 * [Veritrans sandbox registration](https://my.sandbox.veritrans.co.id/register)
-* [Veritrans registration](https://my.veritrans.co.id/register)
 * [Veritrans documentation](http://docs.veritrans.co.id)
 * Technical support [support@veritrans.co.id](mailto:support@veritrans.co.id)
