@@ -31,7 +31,7 @@ module Veritrans
     end
 
     def success?
-      @data[:status_code] == '200' || @data[:status_code] == '201'
+      @data[:status_code] == '200' || @data[:status_code] == '201' || @data[:status_code] == '407'
     end
 
     # for VT-Link

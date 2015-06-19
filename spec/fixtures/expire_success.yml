@@ -1,0 +1,56 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.sandbox.veritrans.co.id/v2/af3fb136-c405-4103-9a36-5a6a9e2855a9/expire
+    body:
+      encoding: UTF-8
+      string: 'null'
+    headers:
+      User-Agent:
+      - Veritrans ruby gem 2.0.2
+      Authorization:
+      - Basic NjJiMTVhN2QtZTVmOC00YjNjLTllYWItY2E4MjdjYTM3ZjU1Og==
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Fri, 19 Jun 2015 06:21:11 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '339'
+      Connection:
+      - keep-alive
+      Cache-Control:
+      - no-cache
+      Pragma:
+      - no-cache
+      Expires:
+      - Wed, 31 Dec 1969 17:00:00 GMT
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains;
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "status_code" : "407",
+          "status_message" : "Success, transaction has expired",
+          "transaction_id" : "af3fb136-c405-4103-9a36-5a6a9e2855a9",
+          "order_id" : "e15dd6fa56-190615060748696",
+          "payment_type" : "bank_transfer",
+          "transaction_time" : "2015-06-19 13:09:05",
+          "transaction_status" : "expire",
+          "gross_amount" : "231231.00"
+        }
+    http_version: 
+  recorded_at: Fri, 19 Jun 2015 06:15:19 GMT
+recorded_with: VCR 2.9.3
