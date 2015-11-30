@@ -47,19 +47,19 @@ module Veritrans
     end
 
     # POST /v2/{id}/cancel
-    # Docs http://docs.veritrans.co.id/sandbox/other_commands.html
+    # Docs http://docs.veritrans.co.id/en/api/methods.html#Cancel
     def cancel(payment_id, options = {})
       request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/cancel", options)
     end
 
     # POST /v2/{id}/approve
-    # Docs http://docs.veritrans.co.id/sandbox/other_commands.html
+    # Docs http://docs.veritrans.co.id/en/api/methods.html#Approve
     def approve(payment_id, options = {})
       request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/approve", options)
     end
 
     # GET /v2/{id}/status
-    # Docs http://docs.veritrans.co.id/sandbox/other_commands.html
+    # Docs http://docs.veritrans.co.id/en/api/methods.html#Status
     def status(payment_id)
       if !payment_id || payment_id == ""
         raise ArgumentError, "parameter payment_id can not be bank"
@@ -69,9 +69,14 @@ module Veritrans
     end
 
     # POST /v2/capture
-    # Docs http://docs.veritrans.co.id/sandbox/other_features.html
+    # Docs http://docs.veritrans.co.id/en/api/methods.html#Capture
     def capture(payment_id, gross_amount, options = {})
       post(config.api_host + "/v2/capture", options.merge(transaction_id: payment_id, gross_amount: gross_amount))
+    end
+
+    # POST /v2/{id}/expire
+    def expire(id)
+      request_with_logging(:post, config.api_host + "/v2/#{URI.escape(id)}/expire", nil)
     end
 
     # POST /v2/charge { payment_type: "vtlink" }

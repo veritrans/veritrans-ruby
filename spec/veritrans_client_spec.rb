@@ -4,7 +4,7 @@ describe Veritrans do
     hide_const("Rails")
     Veritrans.logger = Logger.new("/dev/null")
     Veritrans.setup do
-      config.load_config "./example/veritrans.yml#development"
+      config.load_config "./spec/configs/real_key.yml"
     end
   end
 
@@ -112,4 +112,19 @@ describe Veritrans do
     end
   end
 
+  it "should send expire request" do
+    VCR.use_cassette('expire_success', record: :once) do
+      result = Veritrans.expire("af3fb136-c405-4103-9a36-5a6a9e2855a9")
+      result.success?.should == true
+      result.status_message.should == "Success, transaction has expired"
+    end
+  end
+
+  it "should send expire request" do
+    VCR.use_cassette('expire_failed', record: :once) do
+      result = Veritrans.expire("not-exists")
+      result.success?.should == false
+      result.status_message.should == "The requested resource is not found"
+    end
+  end
 end

@@ -67,7 +67,30 @@ File: "app/views/shared/_veritrans_include.erb"
 </script>
 ```
 
-Payment form:
+Payment form: (same as if you use `rails g veritrans:payment_form`)
+
+```erb
+<%= form_tag "/charge_vtdirect", id: "card_form" do %>
+  <%= hidden_field_tag :token_id, nil, id: "card_token" %>
+  <%= hidden_field_tag :gross_amount, 30000 %>
+  <p>
+    <%= label_tag "card_number", "Card number" %>
+    <%= text_field_tag :card_number, "4811 1111 1111 1114", name: nil, style: "width: 150px" %>
+  </p>
+  <p>
+    <%= label_tag "card_cvc", "Security Code" %>
+    <%= text_field_tag :card_cvc, "123", name: nil, style: "width: 30px", placeholder: "cvc" %>
+  </p>
+  <p>
+    <%= label_tag "card_exp", "Expiration date" %>
+    <%= text_field_tag :card_exp, "12 / 16", name: nil, placeholder: "MM / YY" %>
+  </p>
+  <%= submit_tag "Make payment", id: "submit_btn" %>
+<% end %>
+<iframe id="3d-secure-iframe" style="display: none; width: 500px; height: 600px"></iframe>
+```
+
+For sinatra:
 
 ```html
 <form action="/charge_vtdirect" method="post" id="card_form">
@@ -84,6 +107,10 @@ Payment form:
   <p>
     <label for="card_exp">Expiration date</label>
     <input type="text" id="card_exp" placeholder="MM / YY" value="12 / 16">
+  </p>
+  <p>
+    <label for="card_secure">3D-secure</label>
+    <input id="card_secure" name="card_secure" type="checkbox" value="1" />
   </p>
   <input id="submit_btn" type="submit">
 </form>
@@ -102,7 +129,7 @@ $(document).ready(function () {
       card_exp_month: $('#card_exp').val().match(/(\d+) \//)[1],
       card_exp_year: '20' + $('#card_exp').val().match(/\/ (\d+)/)[1],
       gross_amount: $('#gross_amount').val(),
-      secure: true
+      secure: $('#card_secure')[0].checked
     };
   }
   // Add custom event for form submition
@@ -177,7 +204,7 @@ For every transaction success and failed we will send you HTTP POST notification
 
 First you should set callback url in our dashboard https://my.sandbox.veritrans.co.id/settings/vtweb_configuration
 
-For testing in development phase please read our [Testing webhooks tutorial](https://github.com/Paxa/veritrans-ruby/blob/new_api/testing_webhooks.md) and [command line tool](#command-line-tool)
+For testing in development phase please read our [Testing webhooks tutorial](https://github.com/veritrans/veritrans-ruby/blob/new_api/testing_webhooks.md) and [command line tool](#command-line-tool)
 
 
 For rails:
@@ -271,9 +298,8 @@ Testing http notification:
 
 #### Get help
 
-* [Veritrans gem reference](https://github.com/Paxa/veritrans-ruby/blob/new_api/api_reference.md)
-* [Veritrans sandbox login](https://my.sandbox.veritrans.co.id/register)
+* [Veritrans gem reference](https://github.com/veritrans/veritrans-ruby/blob/new_api/api_reference.md)
+* [Veritrans sandbox login](https://my.sandbox.veritrans.co.id/login)
 * [Veritrans sandbox registration](https://my.sandbox.veritrans.co.id/register)
-* [Veritrans registration](https://my.veritrans.co.id/register)
 * [Veritrans documentation](http://docs.veritrans.co.id)
 * Technical support [support@veritrans.co.id](mailto:support@veritrans.co.id)

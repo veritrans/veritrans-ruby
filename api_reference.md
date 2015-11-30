@@ -1,7 +1,7 @@
 # API Reference
 
 Here is only reference for API of this gem, to see complete information
-please use our [documentation](http://docs.veritrans.co.id/sandbox/introduction.html)
+please use our [documentation](http://docs.veritrans.co.id/en/api/introduction.htmlu)
 
 
 <table>
@@ -44,6 +44,12 @@ please use our [documentation](http://docs.veritrans.co.id/sandbox/introduction.
       <td>Capture Authorise Transaction</td>
       <td>POST</td>
       <td>api.veritrans.co.id/v2/{id}/capture</td>
+    </tr>
+    <tr>
+      <td><a href="#expire">Veritrans.expire(id)</a></td>
+      <td>Expire Pending Transaction</td>
+      <td>POST</td>
+      <td>api.veritrans.co.id/v2/{id}/expire</td>
     </tr>
   </tbody>
 </table>
@@ -220,5 +226,17 @@ This API method is only for merchants who have pre-authorise feature (can be req
 
 ```ruby
 q = Veritrans.capture("testing-0.2072-1415086078", 101_000)
+q.success? # => true
+```
+
+<a name="expire"></a>
+### Expire
+
+You can expire pedning transactions. For examople if merchant choose to pay via ATM,
+then user change mind and want to pay with credit card.
+In this situation you better expire previous transaction, and you can use same order_id again
+
+```ruby
+q = Veritrans.expire("testing-0.2072-1415086078")
 q.success? # => true
 ```
