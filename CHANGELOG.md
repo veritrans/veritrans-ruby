@@ -1,3 +1,8 @@
+### Version 2.0.4  (date: 30 Nov 2015)
+
+* Show warning when can not find section in veritrans.yml
+* Test with different versions of rails
+
 ### Version 2.0.3  (date: 19 Jun 2015)
 
 * Implement expire api call
