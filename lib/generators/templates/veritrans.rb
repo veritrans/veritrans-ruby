@@ -1,5 +1,5 @@
 Veritrans.setup do
-  config.load_config Rails.root.join("config/veritrans.yml")
+  config.load_config Rails.root.join("config/veritrans.yml"), Rails.env
 
   # Or set it manually...
   # config.server_key = ""

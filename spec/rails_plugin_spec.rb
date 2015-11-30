@@ -209,4 +209,24 @@ development:
     result2.should =~ /body: ok/
   end
 
+  it "should print message if running in staging" do
+    # PREPARE APP
+    install_rails_in_tmp
+    File.open("#{@app_abs_path}/config/database.yml", 'a') {|f|
+      f.puts
+      f.puts("staging:")
+      f.puts("  adapter: sqlite3")
+      f.puts("  database: ':memory:'")
+    }
+
+    Bundler.with_clean_env do
+      ENV["RAILS_ENV"] = "staging"
+      Dir.chdir(@app_abs_path) do
+        stdout_str, stderr_str, status = Open3.capture3(%{./bin/rails r 'p :started'})
+        stderr_str.should include('Veritrans: Can not find section "staging"')
+        stderr_str.should include('Available sections: ["development"]')
+        stderr_str.should include('Veritrans: Using first section "development"')
+      end
+    end
+  end
 end

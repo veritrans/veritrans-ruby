@@ -92,12 +92,32 @@ module Veritrans
     #     config.load_yml "#{Rails.root.to_s}/config/veritrans.yml#development"
     #   end
     #
-    def load_config(filename)
-      yml_file, yml_section = filename.to_s.split('#')
+    def load_config(filename, yml_section = nil)
+      yml_file, file_yml_section = filename.to_s.split('#')
       config_data = YAML.load(File.read(yml_file))
 
+      yml_section ||= file_yml_section
       if defined?(Rails) && !yml_section
         yml_section = Rails.env.to_s
+      end
+
+      if yml_section && !config_data.has_key?(yml_section)
+        STDERR.puts "Veritrans: Can not find section #{yml_section.inspect} in file #{yml_file}"
+        STDERR.puts "           Available sections: #{config_data.keys}"
+
+        if config_data['development'] && config_data['development']['server_key']
+          new_section = 'development'
+        end
+
+        first_key = config_data.keys.first
+        if config_data[first_key]['server_key']
+          new_section = first_key
+        end
+
+        if new_section
+          STDERR.puts "Veritrans: Using first section #{new_section.inspect}"
+          yml_section = new_section
+        end
       end
 
       apply(yml_section ? config_data[yml_section] : config_data)
