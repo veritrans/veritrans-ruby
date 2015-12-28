@@ -3,3 +3,4 @@ rails_example*
 .DS_Store
 tmp
 doc/
+veritrans_credentials

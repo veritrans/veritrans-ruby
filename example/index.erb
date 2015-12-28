@@ -5,15 +5,75 @@
 </header>
 
 <section>
-  <p>
-    Charge request VT-Web <a href="/charge_vtweb">click to see payment page</a>
-  </p>
+  <h4>VT-Web</h4>
+  <form action="/charge_vtweb" method="GET" id="vtweb_form">
+    <fieldset>
+      <p>
+        <label>Language</label>
+        <select name="locale">
+          <option></option>
+          <option value="id">Indonesian</option>
+          <option value="en">English</option>
+        </select>
+      </p>
+
+      <div class="form-row">
+        <label>Payment Types</label>
+        <ul>
+          <% @payment_types = %w{CREDIT_CARD MANDIRI_CLICKPAY MANDIRI_BILL CIMB_CLICKS INDOMARET} %>
+          <% for type in @payment_types %>
+            <li>
+              <label>
+                <input type="checkbox" name="enabled_payments[]" value="<%= type %>">
+                <%= type.split("_").map(&:capitalize).join(' ') %>
+              </label>
+            </li>
+          <% end %>
+        </ul>
+        <br/>
+        <small class="types-hint">By default system will show all available types</small>
+      </div>
+
+      <p>
+        <label>Credit Card BIN promo</label>
+        <input type="text" name="bin_promo" placeholder="411111, 500000, bni, mandiri, 3111">
+        <br/>
+        <small class="bins-hint">
+          <a href="http://docs.veritrans.co.id/en/vtweb/other_features.html#bin-promo">See documentation</a>
+        </small>
+      </p>
+
+      <p>
+        <label>Credit Card 3D Secure</label>
+        <select name="credit_card_3d_secure">
+          <option></option>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </p>
+
+      <div class="form-row">
+        <label>Credit Card Installment</label>
+        <ul>
+          <li>
+            <label><input type="checkbox" name="installment[bni]">BNI</label>
+          </li>
+          <li>
+            <label><input type="checkbox" name="installment[mandiri]">Mandir</label>
+          </li>
+        </ul>
+      </div>
+
+    </fieldset>
+
+    <p>
+      <input type="submit" value="Create payment page">
+    <p>
+  </form>
 </section>
 
 <section>
-  <p>
-    Charge request VT-Direct
-  </p>
+  <h4>VT-Direct</h4>
 
   <form action="/charge_vtdirect" method="post" id="card_form">
     <input type="hidden" name="token_id" id="card_token">

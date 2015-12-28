@@ -6,7 +6,7 @@
 
 <% if @result.redirect_url %>
   <section>
-    <p>Here's redirect url <a href='<%= @result.redirect_url %>'><%= @result.redirect_url %></a> </p>
+    <p>Here's redirect url <a href='<%= @vtweb_url %>'><%= @vtweb_url %></a> </p>
   </section>
 <% end %>
 
@@ -23,6 +23,15 @@
 <%= @result.response.body %>
     </pre>
   </code>
+
+  <% if @cahrge_params %>
+    <strong>Request Body</strong>
+    <code>
+      <pre>
+<%= JSON.pretty_generate(@cahrge_params) %>
+      </pre>
+    </code>
+  <% end %>
 
   <a href="/">Go back</a>
 </section>

@@ -42,13 +42,55 @@ post "/charge_vtdirect" do
 end
 
 get "/charge_vtweb" do
-  @result = Veritrans.charge(
+  vtweb_options = {}
+
+  if params[:enabled_payments] && params[:enabled_payments].size > 0
+    vtweb_options[:enabled_payments] = params[:enabled_payments]
+  end
+
+  if params[:credit_card_3d_secure] && params[:credit_card_3d_secure] != ""
+    vtweb_options[:credit_card_3d_secure] = params[:credit_card_3d_secure] == "true"
+  end
+
+  if params[:bin_promo] && params[:bin_promo] != ""
+    vtweb_options[:credit_card_bins] = params[:bin_promo]
+  end
+
+  if params[:installment]
+    vtweb_options[:payment_options] = {
+      installment: {
+        required: true,
+        installment_terms: {}
+      }
+    }
+
+    if params[:installment]['bni']
+      vtweb_options[:payment_options][:installment][:installment_terms][:bni] = [3, 6, 12]
+    end
+
+    if params[:installment][:mandiri]
+      vtweb_options[:payment_options][:installment][:installment_terms][:mandiri] = [3, 6, 12]
+    end
+  end
+
+  @cahrge_params = {
     payment_type: "VTWEB",
+    vtweb: vtweb_options,
     transaction_details: {
       order_id: generate_order_id,
       gross_amount: 100_000
     }
-  )
+  }
+
+  @result = Veritrans.charge(@cahrge_params)
+
+  if @result.redirect_url
+    if params[:locale].to_s != ""
+      @vtweb_url = "#{@result.redirect_url}?locale=#{params[:locale]}"
+    else
+      @vtweb_url = @result.redirect_url
+    end
+  end
 
   erb :response
 end

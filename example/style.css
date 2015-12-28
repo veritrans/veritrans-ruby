@@ -1,6 +1,7 @@
 body {
   max-width: 900px;
   margin: 0 auto;
+  font-size: 16px;
 }
 a {
   color: #00E;
@@ -24,7 +25,9 @@ section + section {
 }
 
 label {
-  display: inline-block; min-width: 100px;
+  display: inline-block;
+  min-width: 100px;
+  vertical-align: top;
 }
 .card-numbers {
   margin-left: 100px;
@@ -42,4 +45,26 @@ label {
 
 fieldset {
   margin: 25px 0 12px;
+}
+
+
+#vtweb_form label {
+  min-width: 180px;
+}
+
+#vtweb_form ul {
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 0;
+  padding-left: 0px;
+}
+
+#vtweb_form ul li {
+  list-style-type: none;
+  margin-bottom: 1px;
+  font-size: 15px;
+}
+
+#vtweb_form small {
+  margin-left: 184px;
 }
