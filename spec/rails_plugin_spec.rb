@@ -6,11 +6,11 @@ require 'socket'
 describe "Rails plugin", vcr: false do
   include Capybara::DSL
 
-  MAIN_RAILS_VER = "4.1.9"
+  MAIN_RAILS_VER = "4.1.14"
   APP_DIR = "plugin_test"
   PLUGIN_DIR = File.expand_path("..", File.dirname(__FILE__))
 
-  RAILS_VERSIONS = ["4.0.13", "4.1.14", "4.2.5"]
+  RAILS_VERSIONS = ["4.0.13", "4.1.14", "4.2.5", "5.0.0.beta1"]
 
   before :all do
     FileUtils.mkdir_p("#{PLUGIN_DIR}/tmp")
@@ -153,6 +153,8 @@ development:
   end
 
   RAILS_VERSIONS.each do |rails_version|
+    next if rails_version.start_with?("5") && RUBY_VERSION < "2.2.2"
+
     it "should tests plugin (Rails #{rails_version})" do
       # PREPARE APP
       install_rails_in_tmp(rails_version)
