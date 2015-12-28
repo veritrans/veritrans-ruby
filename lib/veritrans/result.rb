@@ -39,7 +39,7 @@ module Veritrans
       @data[:status_code] == '201'
     end
 
-    # Docs http://docs.veritrans.co.id/sandbox/status_code.html
+    # Docs http://docs.veritrans.co.id/en/api/status_code.html
     def status_code
       @data[:status_code].to_i
     end

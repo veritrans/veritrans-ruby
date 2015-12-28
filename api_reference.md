@@ -240,3 +240,23 @@ In this situation you better expire previous transaction, and you can use same o
 q = Veritrans.expire("testing-0.2072-1415086078")
 q.success? # => true
 ```
+
+
+
+### `Veritrans::Result`
+
+```ruby
+result = Veritrans.charge(...)
+
+result.class # => Veritrans::Result
+```
+
+* `Veritrans::Result#success?` - `boolean`, base on `status_code` field in json
+* `Veritrans::Result#created?` - `boolean`, for VT-Link
+* `Veritrans::Result#status_code` - `integer`, e.g. 200, 402. Documentation http://docs.veritrans.co.id/en/api/status_code.html
+* `Veritrans::Result#status_message` - `string`, e.g. "OK, success do VTWeb transaction, please go to redirect_url"
+* `Veritrans::Result#redirect_url` - `string`, redirect URL for VT-Web and VT-Link
+* `Veritrans::Result#body` - `string`, raw HTTP request body
+* `Veritrans::Result#data` - `hash`, parsed json body as hash
+* `Veritrans::Result#response` - `Excon::Response` instance
+* `Veritrans::Result#method_mising` - acessing fields of `data`. E.g. `result.transction_status`, `result.masked_card`, `result.approval_code`
