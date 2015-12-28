@@ -32,7 +32,6 @@ if you able to see your application, then your IP is public.
 There are several tools to accept http requests if you can't do it directly.
 
 * npm localtunnel
-* gem [proxylocal](http://proxylocal.com/)
 * https://ngrok.com/
 * gem [ultrahook](http://www.ultrahook.com/)
 * gem [forward](https://forwardhq.com/)
@@ -48,7 +47,6 @@ Also you can collect requests online for further inspection.
 
 * http://requestb.in/
 * http://httpi.pe/
-* http://respondto.it/
 
 
 ## Trigger callback
