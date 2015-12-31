@@ -28,10 +28,17 @@ get "/" do
   erb :index
 end
 
+get "/recurring" do
+  erb :recurring
+end
+
 post "/charge_vtdirect" do
   @result = Veritrans.charge(
     payment_type: "credit_card",
-    credit_card: { token_id: params[:token_id] },
+    credit_card: {
+      token_id: params[:token_id],
+      recurring: params[:recurring] == "1"
+    },
     transaction_details: {
       order_id: generate_order_id,
       gross_amount: params[:gross_amount]
