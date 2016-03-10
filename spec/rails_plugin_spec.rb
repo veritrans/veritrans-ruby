@@ -10,7 +10,7 @@ describe "Rails plugin", vcr: false do
   APP_DIR = "plugin_test"
   PLUGIN_DIR = File.expand_path("..", File.dirname(__FILE__))
 
-  RAILS_VERSIONS = ["4.0.13", "4.1.14", "4.2.5", "5.0.0.beta1"]
+  RAILS_VERSIONS = ["4.0.13", "4.1.15", "4.2.6", "5.0.0.beta3"]
 
   before :all do
     FileUtils.mkdir_p("#{PLUGIN_DIR}/tmp")
@@ -70,7 +70,7 @@ describe "Rails plugin", vcr: false do
   end
 
   def generate_rails_app(rails_version)
-    gen = "rails _#{rails_version}_ new #{APP_DIR} -B -G --skip-spring -d sqlite3 --skip-turbolinks --skip-test-unit --no-rc"
+    gen = "rails _#{rails_version}_ new #{APP_DIR} -B -G --skip-spring -d sqlite3 --skip-turbolinks --skip-test-unit --skip-action-cable --no-rc --skip-puma --skip-listen"
     run_cmd(gen)
 
     gemfile_content = "
@@ -116,18 +116,26 @@ development:
       end
     end
 
-    Capybara.app_host = "http://localhost:#{@rails_port}"
+    Capybara.app_host = "http://127.0.0.1:#{@rails_port}"
 
     #puts "RAILS_DIR: #{@app_abs_path}"
 
-    while true
+    failed = 0
+    while failed < 10
       begin
         run_cmd("curl #{Capybara.app_host}/payments/new > /dev/null")
         break
       rescue Object => error
+        failed += 1
         p error
         puts "Retry"
+        sleep 0.3
       end
+    end
+
+    if failed == 10
+      puts `tail -100 #{@app_abs_path}/log/development.log`
+      raise Exception, "can not start rails server"
     end
   end
 
@@ -208,6 +216,10 @@ development:
       stub_const("CONFIG", {order: created_order_id, config_path: "#{@app_abs_path}/config/veritrans.yml"})
       result2 = capture_stdout do
         Veritrans::CLI.test_webhook(["#{Capybara.app_host}/payments/receive_webhook"])
+      end
+
+      if result2 !~ /status: 200/
+        puts `tail -40 #{@app_abs_path}/log/development.log`
       end
 
       result2.should =~ /status: 200/
