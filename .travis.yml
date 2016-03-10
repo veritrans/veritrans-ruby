@@ -1,4 +1,13 @@
+language: ruby
+cache: bundler
+env:
+  - DEBUG=1
+
+before_install:
+  - gem install bundler -v '~> 1.11'
+
 script: "bundle exec rspec"
+
 rvm:
   - 2.0.0
   - 2.1.5

@@ -160,7 +160,33 @@ development:
     FileUtils.remove_entry_secure(@rails_dir) if @rails_dir
   end
 
-  RAILS_VERSIONS.each do |rails_version|
+  def submit_payment_form(card_number)
+    # CREATE PAYMENT 1
+    visit "/payments/new"
+
+    fill_in 'credit_card_number', with: card_number
+
+    click_button "Pay via VT-Direct"
+    puts "Clicked Pay"
+
+    # Waiting for get token request in javascript...
+    Timeout.timeout(60.seconds) do
+      loop do
+        #puts "Path: #{current_path}"
+        break if current_path != "/payments/new"
+        sleep 1
+      end
+    end
+
+    Timeout.timeout(10.seconds) do
+      loop do
+        break if page.body =~ /<body>/
+        sleep 0.1
+      end
+    end
+  end
+
+  RAILS_VERSIONS.each_with_index do |rails_version, spec_index|
     next if rails_version.start_with?("5") && RUBY_VERSION < "2.2.2"
 
     it "should tests plugin (Rails #{rails_version})" do
@@ -168,33 +194,35 @@ development:
       install_rails_in_tmp(rails_version)
       run_rails_app
 
-      # CREATE PAYMENT 1
-      visit "/payments/new"
+      card_numbers = [
+        "5481 1611 1111 1081",
+        "5410 1111 1111 1116",
+        "4011 1111 1111 1112",
+        "4411 1111 1111 1118",
+        "4811 1111 1111 1114",
+        "3528 6647 7942 9687",
+        "3528 2033 2456 4357"
+      ]
+      spec_index = (spec_index + RUBY_VERSION.gsub(/[^\d]/, '').to_i) % card_numbers.size
+      card_number = card_numbers[spec_index]
 
-      click_button "Pay via VT-Direct"
-
-      # Waiting for get token request in javascript...
-      Timeout.timeout(30.seconds) do
-        loop do
-          break if current_path != "/payments/new"
-          sleep 0.1
-        end
-      end
-
-      Timeout.timeout(10.seconds) do
-        loop do
-          break if page.body =~ /<body>/
-          sleep 0.1
-        end
-      end
+      submit_payment_form(card_number)
 
       if page.body =~ /too many transactions/
-        page.should have_content("Merchant has sent too many transactions to the same card number")
-      else
-        page.should have_content("Success, Credit Card transaction is successful")
+        puts "!!!!"
+        puts "Merchant has sent too many transactions to the same card number"
+        puts "!!!!"
+        #page.should have_content("Merchant has sent too many transactions to the same card number")
+        puts "Wait 10 seconds and retry"
+        sleep 10
+        submit_payment_form(card_number)
       end
 
-      created_order_id = ActiveSupport::JSON.decode(find("pre").text)["order_id"]
+      page.should have_content("Success, Credit Card transaction is successful")
+
+      order_info = ActiveSupport::JSON.decode(find("pre").text)
+      puts "Order Info: #{order_info}"
+      created_order_id = order_info["order_id"]
       #Capybara::Screenshot.screenshot_and_open_image
 
       # CREATE PAYMENT 2

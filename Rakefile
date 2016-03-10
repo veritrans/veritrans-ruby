@@ -1,10 +1,12 @@
 require 'rubygems'
 
-task :default => :spec
-
-desc "Run Specs"
-require 'rspec/core/rake_task'
-RSpec::Core::RakeTask.new(:spec)
+begin
+  desc "Run Specs"
+  require 'rspec/core/rake_task'
+  RSpec::Core::RakeTask.new(:spec)
+rescue LoadError
+  puts "no rspec available"
+end
 
 desc "Generate documentation with sdoc"
 task :doc do

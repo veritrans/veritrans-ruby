@@ -148,10 +148,8 @@ PLATFORMS
 DEPENDENCIES
   poltergeist (~> 1.8)
   rails (~> 4.2)
-  rspec (~> 3.4)
+  rake (< 11.0)
+  rspec
   vcr (~> 3.0)
   veritrans!
   webmock (~> 1.20)
-
-BUNDLED WITH
-   1.10.6
