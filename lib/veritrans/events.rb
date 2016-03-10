@@ -15,14 +15,14 @@
 # All possible events:
 #
 # * payment.success     == ['authorize', 'capture', 'settlement']
-# * payment.failed      == ['deny', 'canel', 'expire']
-# * payment.challenge   # when payment.froud_status == 'challenge'
+# * payment.failed      == ['deny', 'cancel', 'expire']
+# * payment.challenge   # when payment.fraud_status == 'challenge'
 #
 # * payment.authorize
 # * payment.capture
 # * payment.settlement
 # * payment.deny
-# * payment.canel
+# * payment.cancel
 # * payment.expire
 #
 # * error

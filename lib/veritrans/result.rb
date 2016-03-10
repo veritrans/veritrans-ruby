@@ -18,7 +18,7 @@ module Veritrans
         end
 
       rescue => e
-        Veritrans.logger.info "Error parsing papi response #{e.message}"
+        Veritrans.logger.info "Error parsing Veritrans response #{e.message}"
         Veritrans.logger.info e.backtrace.join("\n")
         @data = {}
       end

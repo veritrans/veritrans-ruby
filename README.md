@@ -252,11 +252,15 @@ Veritrans.setup do
   config.client_key = "..."
 
   events.subscribe('payment.success') do |payment|
-    Payment.find_by(order_id: payment.order_id).mark_paid!(payment.masked_card)
+    # payment variable is hash with params recieved from Veritrans
+    # assuming you have model Order in your project
+    Order.find_by(order_id: payment.order_id).mark_paid!(payment.masked_card)
   end
 
   events.subscribe('payment.failed', 'payment.challenge') do |payment|
-    Payment.find_by(order_id: payment.order_id) ...
+    # payment variable is hash with params recieved from Veritrans
+    # assuming you have model Order in your project
+    Order.find_by(order_id: payment.order_id) ...
   end
 end
 ```

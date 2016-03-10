@@ -8,35 +8,38 @@ Veritrans.setup do
 
   # Veritrans::Events is rack application to handle http notifications from Veritrans
   # To enable it, add in config/routes.rb
-  # mount Veritrans::Events.new => '/vt_events'
-
+  #
+  #   mount Veritrans::Events.new => '/vt_events'
+  #
   # All possible events:
   #
-  # * payment.success     == ['authorize', 'capture', 'settlement']
-  # * payment.failed      == ['deny', 'canel', 'expire']
-  # * payment.challenge   # when payment.froud_status == 'challenge'
+  # 'payment.success'     == ['authorize', 'capture', 'settlement']
+  # 'payment.failed'      == ['deny', 'cancel', 'expire']
+  # 'payment.challenge'   # when payment.fraud_status == 'challenge'
   #
-  # * payment.authorize
-  # * payment.capture
-  # * payment.settlement
-  # * payment.deny
-  # * payment.canel
-  # * payment.expire
+  # 'payment.authorize'
+  # 'payment.capture'
+  # 'payment.settlement'
+  # 'payment.deny'
+  # 'payment.cancel'
+  # 'payment.expire'
 
   # events.subscribe 'payment.success' do |payment|
-  #   payment.mark_paid!
+  #   payment is instance of Veritrans::Result
+  #   puts "Payment #{payment.data[:order_id]} is successful"
   # end
-  # 
+  #
   # events.subscribe 'payment.failed' do |payment|
-  #   payment.mark_failed!
+  #   puts "Payment #{payment.data[:order_id]} is failed"
   # end
-  # 
+  #
   # events.subscribe 'payment.challenge' do |payment|
+  #   puts "Payment #{payment.data[:order_id]} chellenged by fraud system"
   #   payment.mark_challenge!
   # end
-  # 
+  #
   # events.subscribe /.+/ do |payment, event_name|
-  #   p "Event: #{event_name}"
+  #   puts "Payment #{payment.data[:order_id]} has status #{payment.data[:transaction_status]}"
   #   p payment
   # end
 
