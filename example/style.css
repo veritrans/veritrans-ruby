@@ -48,6 +48,18 @@ fieldset {
   margin: 25px 0 12px;
 }
 
+.white-popup {
+  position: relative;
+  background: #FFF;
+  padding: 20px;
+  width: auto;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.white-popup pre code {
+  white-space: pre-wrap;
+}
 
 #vtweb_form label {
   min-width: 180px;

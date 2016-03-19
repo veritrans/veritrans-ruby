@@ -32,6 +32,10 @@ get "/recurring" do
   erb :recurring
 end
 
+get "/localization" do
+  erb :localization
+end
+
 post "/charge_vtdirect" do
   @result = Veritrans.charge(
     payment_type: "credit_card",
@@ -45,7 +49,12 @@ post "/charge_vtdirect" do
     }
   )
 
-  erb :response
+  if params[:format] == "json"
+    content_type :json
+    @result.response.body
+  else
+    erb :response
+  end
 end
 
 get "/charge_vtweb" do

@@ -1,0 +1,237 @@
+<link rel="stylesheet" href="/style.css">
+
+<header>
+  <h3>Veritrans sinatra app</h3>
+</header>
+
+<section>
+  <h4>VT-Direct</h4>
+
+  <form action="/charge_vtdirect" method="post" id="card_form">
+    <input type="hidden" name="format" value="json">
+    <input type="hidden" name="token_id" id="card_token">
+    <fieldset>
+      <legend>Credit card</legend>
+      <p>
+        <label>Language</label>
+        <select name="locale" id="locale">
+          <option value="id" selected>Indonesian</option>
+          <option value="en">English</option>
+        </select>
+      </p>
+      <p>
+        <label for="gross_amount">Amount, Rp.</label>
+        <input type="text" name="gross_amount" id="gross_amount" value="30000">
+      </p>
+      <p>
+        <label for="card_number">Card Number</label>
+        <input type="text" id="card_number" style="width: 150px" value="4811 1111 1111 1114">
+        <br>
+        <small style="margin-left: 100px" class="card-numbers">
+          <a onclick="$('#card_number').val('4811 1111 1111 1114')">success Visa</a>
+          <a onclick="$('#card_number').val('5810 1111 1111 1112')">success MasterCard</a>
+          <a onclick="$('#card_number').val('4511 1111 1111 1117')">challenge</a>
+          <a onclick="$('#card_number').val('4611 1111 1111 1116')">Deny by FDS</a>
+          <a onclick="$('#card_number').val('4911 1111 1111 1113')">Deny by bank</a>
+          <a href="http://docs.veritrans.co.id/en/api/test_credentials.html" target="_blank">documentation</a>
+        </small>
+      </p>
+      <p>
+        <label for="card_cvc">Card CVV</label>
+        <input type="text" id="card_cvc" style="width: 35px" placeholder="cvc" value="123">
+      </p>
+      <p>
+        <label for="card_exp">Card Expiry Date</label>
+        <input type="text" id="card_exp" placeholder="MM / YY" value="12 / 16">
+      </p>
+
+      <p>
+        <label for="card_secure">3D-Secure</label>
+        <input type="checkbox" id="card_secure">
+      </p>
+
+    </fieldset>
+
+    <input id="submit_btn" type="submit">
+  </form>
+</section>
+
+<script src="https://api.sandbox.veritrans.co.id/v2/assets/veritrans.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.payment/1.0.2/jquery.payment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css">
+
+<script type="text/javascript">
+  // set Veritrans settings
+  Veritrans.url = "<%= Veritrans.config.api_host %>/v2/token";
+  Veritrans.client_key = "<%= Veritrans.config.client_key %>";
+
+  var Translations = {
+    en: {
+      "card_cvv does not match with regular expression": "Card CVV is not valid",
+      "card_cvv must be 3 digits": "Card CVV should be 3 digits",
+      "card_cvv is required": "Card CVV is required",
+
+      "card_number is required": "Card Number is required",
+      "card_number must be between 12 to 19 digits": "Card Number must be between 12 to 19 digits",
+      "card_number does not match with regular expression": "Card Number must contain only numbers",
+      "Invalid card_number association": "Card Number is not valid",
+      "card_number does not match with luhn algorithm": "Card Number is not valid",
+
+      "card_exp_month must be between 1 and 12": "Expiry month should be between 1 and 12",
+      "card_exp_month does not match with regular expression": "Expiry month must contain only numbers",
+      "card_exp_month must be 2 digits": "Expiry month must be 2 digits",
+      "card_expire_month must be greater than this year's month": "Expiry month must be greater than this year's month",
+
+      "card_exp_year does not match with regular expression": "Expiry year is not valid",
+      "card_exp_year must be greater than this year": "Expiry year must be greater than this year",
+      "card_exp_year must be 4 digits": "Expiry year must be 4 digits",
+      "card_exp_year is required": "Expiry year is required",
+
+      "gross_amount is required for 3d secure transaction": "Transaction amount is required",
+
+      "Denied by Veritrans Fraud Detection System": "Payment denied by fraud detection system",
+      "Deny by Bank [X] with code [05] and message [Do not honour]": "Your credit card was rejected by bank",
+      "Success, Credit Card transaction is successful": "Payment successfuly processed",
+      "transaction_details.gross_amount must be greater than or equal to 1": "Amount must be greater than or equal to 1",
+      "transaction_details.gross_amount is required": "Amount is required"
+    },
+
+    id: {
+      "card_cvv does not match with regular expression": "Nomor CVV tidak valid",
+      "card_cvv must be 3 digits": "Nomor CVV harus 3 angka",
+      "card_cvv is required": "Nomor CVV wajib diisi",
+
+      "card_number is required": "Nomor kartu wajib diisi",
+      "card_number must be between 12 to 19 digits": "Nomor kartu harus antara 12 sampai 19 angka",
+      "card_number does not match with regular expression": "Nomor kartu harus hanya angka sajah",
+      "Invalid card_number association": "Nomor kartu tidak valid",
+      "card_number does not match with luhn algorithm": "Nomor kartu tidak valid",
+
+      "card_exp_month must be between 1 and 12": "Bulan kedaluarsa harus antara 1 dan 12",
+      "card_exp_month does not match with regular expression": "Bulan kedaluarsa tidak valid",
+      "card_exp_month must be 2 digits": "Bulan kedaluarsa harus 2 angka",
+      "card_expire_month must be greater than this year's month": "Bulan kedaluarsa harus lebih dari bulan yang sekarang",
+      "card_exp_month is required": "Bulan kedaluarsa wajib diisi",
+
+      "card_exp_year does not match with regular expression": "Tahun kedaluarsa tidak valid",
+      "card_exp_year must be greater than this year": "Tahun kedaluarsa harus lebih dari tahun ini",
+      "card_exp_year must be 4 digits": "Tahun kedaluarsa harus 4 angka",
+      "card_exp_year is required": "Tahun kedaluarsa wajib diisi",
+
+      "gross_amount is required for 3d secure transaction": "Jumlah transaksi wajib diisi untuk transaksi 3D secure",
+
+      "Denied by Veritrans Fraud Detection System": "Pembayaran ditolak oleh sistem deteksi fraud",
+      "Deny by Bank [X] with code [05] and message [Do not honour]": "Kartu kredit anda ditolak oleh bank",
+      "Success, Credit Card transaction is successful": "Pembayaran berhasil",
+      "transaction_details.gross_amount must be greater than or equal to 1": "Jumlah transaksi harus lebih besar 0",
+      "transaction_details.gross_amount is required": "Jumlah transaksi wajib diisi"
+    }
+  }
+
+  function createTokenData() {
+    var date = $('#card_exp').val();
+    return {
+      // Optional params:
+      // secure: true
+      // bank: 'MANDIRI'
+
+      card_number: $('#card_number').val(),
+      card_cvv: $('#card_cvc').val(),
+      card_exp_month: date && date.match(/(\d+) \//)[1],
+      card_exp_year: date ? '20' + date.match(/\/ (\d+)/)[1] : date,
+      gross_amount: $('#gross_amount').val(),
+      secure: $('#card_secure')[0].checked
+    };
+  }
+
+  function submitForm(callback) {
+    var form = $('#card_form');
+    $.ajax({
+      url: form.attr('action'),
+      method: 'POST',
+      data: form.serialize(),
+      success: function (data, status, xhr) {
+        if (data.status_code == "200") {
+          $.magnificPopup.open({
+            items: {
+              src: '<div class="white-popup">' +
+                      '<h1>Successful!</h1>' +
+                      '<code><pre>' + JSON.stringify(data, null, 2) + '</code></pre>' +
+                    '</div>',
+              type: 'inline'
+            }
+          });
+        } else {
+          var language = $('#locale').val();
+          var messages = data.validation_messages || [data.status_message.replace(/Bank \[\w+\]/, 'Bank [X]')];
+          var localized = [];
+          messages.forEach(function (message) {
+            localized.push(Translations[language][message] || message)
+          });
+          $.magnificPopup.open({
+            items: {
+              src: '<div class="white-popup">' +
+                      '<strong>Localized: ' + localized.join("\n")  + '</strong>' +
+                      '<code><pre>' + JSON.stringify(data, null, 2) + '</code></pre>' +
+                    '</div>',
+              type: 'inline'
+            }
+          });
+        }
+        callback();
+      }
+    });
+  };
+
+  $(document).ready(function () {
+    $('#card_number').payment('formatCardNumber');
+    $('#card_cvc').payment('formatCardCVC');
+    $('#card_exp').payment('formatCardExpiry');
+
+    $('#card_form').on('submit', function (event) {
+      var form = this;
+      $('#submit_btn').attr('disabled', true).val("Processing ...");
+      event.preventDefault();
+
+      Veritrans.token(createTokenData, function (data) {
+        console.log('Token data:', data);
+        // if we get url then it's 3d-secure transaction
+        // so we need to open that page
+        // this callback function will be called again after user confirm 3d-secure
+        // you can also redirect on server side
+        if (data.redirect_url) {
+          $.magnificPopup.open({
+            items: { type: 'iframe', src: data.redirect_url }
+          });
+          $.magnificPopup.instance.content.find('iframe').height(590);
+        // if no redirect_url and we have token_id then just make charge request
+        } else if (data.token_id) {
+          $('#card_token').val(data.token_id);
+          $.magnificPopup.close();
+          submitForm(function () {
+            $('#submit_btn').removeAttr('disabled').removeAttr("value");
+          });
+          //form.submit();
+        // if no redirect_url and no token_id, then it should be error
+        } else {
+          $('#submit_btn').removeAttr('disabled').removeAttr("value");
+
+          var language = $('#locale').val();
+          var messages = data.validation_messages || [data.status_message];
+          var localizedMessages = [];
+          messages.forEach(function (message) {
+            if (Translations[language] && Translations[language][message]) {
+              localizedMessages.push(Translations[language][message]);
+            } else {
+              console.log("Missing translation", language, message);
+              localizedMessages.push(message);
+            }
+          });
+          alert(localizedMessages.sort().join("\n"));
+        }
+      });
+    });
+  });
+</script>
