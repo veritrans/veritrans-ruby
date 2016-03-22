@@ -30,6 +30,9 @@ development:
   server_key: # your api client key
 ```
 
+See out example sinatra application in [example](https://github.com/veritrans/veritrans-ruby/tree/master/example) folder or [online](https://veritrans-ruby-example.herokuapp.com/)
+
+
 ## STEP 1: Process credit cards
 
 

@@ -5,6 +5,12 @@ require 'json'
 require 'veritrans'
 require 'sinatra'
 
+begin
+  require 'tilt/erubis'
+rescue LoadError => error
+  puts "Warning: Can not load 'tilt', continue"
+end
+
 Veritrans.setup do
   config.load_yml "./veritrans.yml#development"
 
