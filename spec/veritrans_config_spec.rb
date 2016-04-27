@@ -6,7 +6,7 @@ describe Veritrans::Config do
 
   it "should set Veritras as self inside config block" do
     Veritrans.config do
-      self.should == Veritrans
+      self.should == Veritrans.instance
     end
   end
 

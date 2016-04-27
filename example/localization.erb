@@ -7,7 +7,7 @@
 </header>
 
 <section>
-  <h4>VT-Direct</h4>
+  <h4>VT-Direct Localization</h4>
 
   <form action="/charge_vtdirect" method="post" id="card_form">
     <input type="hidden" name="format" value="json">
@@ -215,7 +215,6 @@
           submitForm(function () {
             $('#submit_btn').removeAttr('disabled').removeAttr("value");
           });
-          //form.submit();
         // if no redirect_url and no token_id, then it should be error
         } else {
           $('#submit_btn').removeAttr('disabled').removeAttr("value");

@@ -2,7 +2,7 @@ require 'json'
 require 'securerandom'
 require 'logger'
 
-module Veritrans
+class Veritrans
   module CLI
     # can't find order
     class OrderNotFound < Exception; end

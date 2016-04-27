@@ -32,7 +32,7 @@
 #     run Rack::URLMap.new("/" => MyApp.new, "/payment_events" => Veritrans::Events.new)
 #
 
-module Veritrans
+class Veritrans
   class Events
 
     # This is rack application

@@ -4,21 +4,24 @@ require "base64"
 require 'uri'
 require 'excon'
 
-module Veritrans
+class Veritrans
   module Client
-    extend self
 
     # Failback for activesupport
-    def _json_encode(params)
+    def self._json_encode(params)
       if defined?(ActiveSupport) && defined?(ActiveSupport::JSON)
         ActiveSupport::JSON.encode(params)
       else
         require 'json' unless defined?(JSON)
-        JSON.generate(params)
+        JSON.pretty_generate(params)
       end
     end
 
-    def _json_decode(params)
+    def _json_encode(params)
+      Veritrans::Client._json_encode(params)
+    end
+
+    def self._json_decode(params)
       if defined?(ActiveSupport) && defined?(ActiveSupport::JSON)
         ActiveSupport::JSON.decode(params)
       else
@@ -69,6 +72,8 @@ module Veritrans
 
       method = method.to_s.upcase
       logger.info "Veritrans: #{method} #{url} #{_json_encode(params)}"
+      logger.info "Veritrans: Using server key: #{config.server_key}"
+      #puts "Veritrans: #{method} #{url} #{_json_encode(params)}"
 
       default_options = config.http_options || {}
 
@@ -91,9 +96,9 @@ module Veritrans
       end
 
       connection_options = {
-        read_timeout: 40,
-        write_timeout: 40,
-        connect_timeout: 40
+        read_timeout: 75,
+        write_timeout: 75,
+        connect_timeout: 75
       }.deep_merge(default_options)
 
       s_time = Time.now

@@ -1,15 +1,16 @@
-module Veritrans
+class Veritrans
   class Result
     attr_reader :data
     attr_reader :status
     attr_reader :response
+    attr_reader :request_options
 
-    def initialize(response, url, options, time)
+    def initialize(response, url, request_options, time)
       begin
         if url =~ %r{/v2/.+/transcript$}
           @data = {}
         else
-          @data = Veritrans._json_decode(response.body)
+          @data = Veritrans::Client._json_decode(response.body)
 
           # Failback for Hash#symbolize_keys
           @data.keys.each do |key|
@@ -27,7 +28,7 @@ module Veritrans
       @status = response.status
       @response = response
       @url = url
-      @options = options
+      @request_options = request_options
     end
 
     def success?
@@ -50,6 +51,10 @@ module Veritrans
 
     def redirect_url
       @data[:redirect_url]
+    end
+
+    def transaction_id
+      @data[:transaction_id]
     end
 
     def messages

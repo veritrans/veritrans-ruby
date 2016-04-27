@@ -1,12 +1,14 @@
 require 'yaml'
 require 'excon'
 
-module Veritrans
+class Veritrans
 
-  module Config
-    extend self
+  class Config
 
-    @api_host = "https://api.sandbox.veritrans.co.id"
+    def initialize(options = nil)
+      @api_host = "https://api.sandbox.veritrans.co.id"
+      apply(options) if options
+    end
 
     ##
     # Merhcant's Client key, used to make getToken request. (only for VT-Direct)
@@ -135,8 +137,13 @@ module Veritrans
 
     private
 
+    AVAILABLE_KEYS = [:server_key, :client_key, :api_host, :http_options]
+
     def apply(hash)
       hash.each do |key, value|
+        unless AVAILABLE_KEYS.include?(key.to_s.to_sym)
+          raise ArgumentError, "Unknown option #{key.inspect}, available keys: #{AVAILABLE_KEYS.map(&:inspect).join(", ")}"
+        end
         send(:"#{key}=", value)
       end
     end

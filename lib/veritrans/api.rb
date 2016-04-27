@@ -2,7 +2,7 @@
 
 require 'uri'
 
-module Veritrans
+class Veritrans
   module Api
 
     # POST /v2/charge { payment_type: "vtlink" }
@@ -90,6 +90,15 @@ module Veritrans
     def delete_vtlink(id, options)
       request_with_logging(:delete, config.api_host + "/v2/vtlink/#{URI.escape(id)}", options)
     end
+
+    # GET /v2/point_inquiry/{token_id}
+    def inquiry_points(token_id)
+      if token_id == nil || token_id.to_s == ""
+        raise ArgumentError, "parameter token_id can not be bank"
+      end
+      request_with_logging(:get, config.api_host + "/v2/point_inquiry/#{token_id}", {})
+    end
+    alias_method :point_inquiry, :inquiry_points
 
   end
 end

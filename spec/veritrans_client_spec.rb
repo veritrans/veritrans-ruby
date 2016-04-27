@@ -21,11 +21,11 @@ describe Veritrans do
 
     result = Veritrans.request_with_logging(:get, Veritrans.config.api_host + "/ping", {})
 
-    api_request.headers["Host"].should == "api.sandbox.veritrans.co.id"
+    api_request.headers["Host"].should == "api.sandbox.veritrans.co.id:443"
   end
 
   it "should use Veritrans.http_options to attach hedaers", vcr: false do
-    Veritrans::Config.stub(:http_options) do
+    Veritrans.config.stub(:http_options) do
       { headers: { "X-Rspec" => "ok" } }
     end
 
@@ -38,6 +38,47 @@ describe Veritrans do
     result = Veritrans.request_with_logging(:get, Veritrans.config.api_host + "/ping", {})
 
     api_request.headers["X-Rspec"].should == "ok"
+  end
+
+  it "should be able to create other instance of client" do
+    #Veritrans.logger = Logger.new(STDOUT)
+
+    VCR.configure do |c|
+      c.allow_http_connections_when_no_cassette = true
+    end
+
+    other_client = Veritrans.new(
+      server_key: "69b61a1b-b0b1-450b-a697-37109dbbecb0",
+      logger: Logger.new("/dev/null")
+    ) # M000937
+
+    result = Veritrans.charge(
+      payment_type: "mandiri_clickpay",
+      transaction_details: {
+        gross_amount: 10_000,
+        order_id: Time.now.to_s
+      },
+      mandiri_clickpay: {
+        card_number: "4111 1111 1111 1111".gsub(/\s/, ''),
+        input3: "%05d" % (rand * 100000).to_i,
+        input2: 10000,
+        input1: "1" * 10,
+        token: "000000"
+      },
+    )
+
+    #p result.request_options
+
+    other_result = other_client.status(result.transaction_id)
+
+    other_result.status_code.should == 404
+    other_result.status_message.should == "The requested resource is not found"
+
+    #p other_result.request_options
+
+    VCR.configure do |c|
+      c.allow_http_connections_when_no_cassette = true
+    end
   end
 
   it "should send charge vt-web request" do
