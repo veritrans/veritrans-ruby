@@ -49,20 +49,28 @@ class Veritrans
     # POST /v2/{id}/cancel
     # Docs http://docs.veritrans.co.id/en/api/methods.html#Cancel
     def cancel(payment_id, options = {})
+      if !payment_id || payment_id.to_s == ""
+        raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
+      end
+
       request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/cancel", options)
     end
 
     # POST /v2/{id}/approve
     # Docs http://docs.veritrans.co.id/en/api/methods.html#Approve
     def approve(payment_id, options = {})
+      if !payment_id || payment_id.to_s == ""
+        raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
+      end
+
       request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/approve", options)
     end
 
     # GET /v2/{id}/status
     # Docs http://docs.veritrans.co.id/en/api/methods.html#Status
     def status(payment_id)
-      if !payment_id || payment_id == ""
-        raise ArgumentError, "parameter payment_id can not be bank"
+      if !payment_id || payment_id.to_s == ""
+        raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
       end
 
       get(config.api_host + "/v2/#{URI.escape(payment_id)}/status")
@@ -71,11 +79,19 @@ class Veritrans
     # POST /v2/capture
     # Docs http://docs.veritrans.co.id/en/api/methods.html#Capture
     def capture(payment_id, gross_amount, options = {})
+      if !payment_id || payment_id.to_s == ""
+        raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
+      end
+
       post(config.api_host + "/v2/capture", options.merge(transaction_id: payment_id, gross_amount: gross_amount))
     end
 
     # POST /v2/{id}/expire
     def expire(id)
+      if !payment_id || payment_id.to_s == ""
+        raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
+      end
+
       request_with_logging(:post, config.api_host + "/v2/#{URI.escape(id)}/expire", nil)
     end
 
@@ -96,6 +112,7 @@ class Veritrans
       if token_id == nil || token_id.to_s == ""
         raise ArgumentError, "parameter token_id can not be bank"
       end
+
       request_with_logging(:get, config.api_host + "/v2/point_inquiry/#{token_id}", {})
     end
     alias_method :point_inquiry, :inquiry_points
