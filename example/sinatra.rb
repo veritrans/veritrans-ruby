@@ -48,6 +48,21 @@ get "/points" do
   erb :points
 end
 
+get "/widget" do
+  response = Veritrans.create_widget_token(
+    transaction_details: {
+      order_id: generate_order_id,
+      gross_amount: 30_000
+    }
+  )
+  @token_id = response.data[:token_id]
+  erb :widget
+end
+
+get "/widget/confirm/:transaction_id" do
+  @result = Veritrans.status(params[:transaction_id])
+  erb :response
+end
 
 post "/charge_vtdirect" do
   @charge_params = {

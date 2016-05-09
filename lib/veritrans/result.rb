@@ -4,6 +4,8 @@ class Veritrans
     attr_reader :status
     attr_reader :response
     attr_reader :request_options
+    attr_reader :time
+    attr_reader :url
 
     def initialize(response, url, request_options, time)
       begin
@@ -80,7 +82,21 @@ class Veritrans
     def inspect
       time_ms = (@time * 1000).round
       data = @data.inspect.gsub(/:([^\s]+)=>/, "\\1: ")
-      "#<Veritrans::Result:#{object_id} ^^ http_status: #{@status} time: #{time_ms}ms ^^ data: #{data}>"
+      "#<#{self.class.to_s}:#{object_id} ^^ http_status: #{@status} time: #{time_ms}ms ^^ data: #{data}>"
+    end
+  end
+
+  class SnapResult < Result
+    def status_code
+      @response.status.to_i
+    end
+
+    def token_id
+      @data[:token_id]
+    end
+
+    def success?
+      status_code == 200
     end
   end
 end

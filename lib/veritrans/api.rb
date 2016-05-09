@@ -46,6 +46,12 @@ class Veritrans
       request_with_logging(:post, config.api_host + "/v2/charge", data)
     end
 
+    # POST https://app.sandbox.veritrans.co.id/snap/v1/charge
+    def create_widget_token(options = {})
+      result = request_with_logging(:post, config.api_host.sub('//api.', '//app.') + "/snap/v1/charge", options)
+      Veritrans::SnapResult.new(result.response, result.url, result.request_options, result.time)
+    end
+
     # POST /v2/{id}/cancel
     # Docs http://docs.veritrans.co.id/en/api/methods.html#Cancel
     def cancel(payment_id, options = {})

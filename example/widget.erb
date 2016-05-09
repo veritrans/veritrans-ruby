@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+  <title>veritrans-ruby demo</title>
+  <link rel="icon" type="image/x-icon" href="https://account.veritrans.co.id/favicon.ico" />
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header>
+  <h3>
+    <a href="/">Veritrans sinatra app</a>
+  </h3>
+</header>
+
+<section>
+  <h4>Veritrans Widget</h4>
+
+  <section>
+    <p>
+      <label>Token ID</label>
+      <input type="text" id="token_id" value="<%= @token_id %>" readonly>
+    </p>
+    <button id="snap_pay">Pay Now</button>
+  </section>
+</section>
+
+<script src="https://app.sandbox.veritrans.co.id/snap/snap.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+$('#snap_pay').on('click', function (e) {
+  e.preventDefault();
+  snap.pay($('#token_id').val() + "?locale=en", {
+    env: 'sandbox',
+    onSuccess: function (res) {
+      console.log('onSuccess', res);
+      alert(res.status_message + "\nRedirecting to confirm page...");
+      window.location = "/widget/confirm/" + res.transaction_id;
+    },
+    onPending: function (res) {
+      console.log('onPending', res);
+    },
+    onError: function (res) {
+      console.log('onError', res);
+    }
+  });
+});
+</script>
+
+</body>
+</html>
