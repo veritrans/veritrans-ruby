@@ -6,11 +6,11 @@ require 'socket'
 describe "Rails plugin", vcr: false do
   include Capybara::DSL
 
-  MAIN_RAILS_VER = "4.1.14"
+  MAIN_RAILS_VER = "4.1.15"
   APP_DIR = "plugin_test"
   PLUGIN_DIR = File.expand_path("..", File.dirname(__FILE__))
 
-  RAILS_VERSIONS = ["4.0.13", "4.1.15", "4.2.6", "5.0.0.beta3"]
+  RAILS_VERSIONS = ["4.0.13", "4.1.15", "4.2.6", "5.0.0.rc1"]
 
   before :all do
     FileUtils.mkdir_p("#{PLUGIN_DIR}/tmp")
@@ -218,6 +218,9 @@ development:
         submit_payment_form(card_number)
       end
 
+      if page.body !~ /transaction is successful/
+        puts page.body
+      end
       page.should have_content("Success, Credit Card transaction is successful")
 
       order_info = ActiveSupport::JSON.decode(find("pre").text)

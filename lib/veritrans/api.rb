@@ -87,12 +87,12 @@ class Veritrans
     end
 
     # POST /v2/{id}/expire
-    def expire(id)
+    def expire(payment_id)
       if !payment_id || payment_id.to_s == ""
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
       end
 
-      request_with_logging(:post, config.api_host + "/v2/#{URI.escape(id)}/expire", nil)
+      request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/expire", nil)
     end
 
     # POST /v2/charge { payment_type: "vtlink" }

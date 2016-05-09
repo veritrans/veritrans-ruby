@@ -26,6 +26,8 @@ end
 set :public_folder, "."
 set :views,         "."
 
+set :run, $0 == __FILE__
+
 def generate_order_id
   "testing-#{rand.round(4)}-#{Time.now.to_i}"
 end
@@ -42,18 +44,33 @@ get "/localization" do
   erb :localization
 end
 
+get "/points" do
+  erb :points
+end
+
+
 post "/charge_vtdirect" do
-  @result = Veritrans.charge(
+  @charge_params = {
     payment_type: "credit_card",
     credit_card: {
-      token_id: params[:token_id],
-      recurring: params[:recurring] == "1"
+      token_id: params[:token_id]
     },
     transaction_details: {
       order_id: generate_order_id,
-      gross_amount: params[:gross_amount]
+      gross_amount: params[:gross_amount].to_f,
     }
-  )
+  }
+
+  if params[:recurring] == "1"
+    @charge_params[:credit_card][:recurring] = true
+  end
+
+  if params[:points_amount]
+    @charge_params[:credit_card][:point_redeem_amount] = params[:points_amount]
+    @charge_params[:credit_card][:bank] = "bni"
+  end
+
+  @result = Veritrans.charge(@charge_params)
 
   if params[:format] == "json"
     content_type :json
@@ -115,6 +132,12 @@ get "/charge_vtweb" do
   end
 
   erb :response
+end
+
+get "/check_points/:token_id" do
+  @result = Veritrans.inquiry_points(params[:token_id])
+  content_type :json
+  @result.response.body
 end
 
 post "/webhook" do
