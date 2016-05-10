@@ -125,6 +125,16 @@ get "/charge_vtweb" do
     if params[:installment][:mandiri]
       vtweb_options[:payment_options][:installment][:installment_terms][:mandiri] = [3, 6, 12]
     end
+
+    if params[:installment]['bca']
+      vtweb_options[:payment_options][:installment][:installment_terms][:bca] = [3, 6, 12]
+    end
+  end
+
+  if request.env["HTTP_REFERER"]
+    vtweb_options[:finish_redirect_url] = request.env["HTTP_REFERER"]
+    vtweb_options[:unfinish_redirect_url] = request.env["HTTP_REFERER"]
+    vtweb_options[:error_redirect_url] = request.env["HTTP_REFERER"]
   end
 
   @cahrge_params = {

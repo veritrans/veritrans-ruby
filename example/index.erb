@@ -27,7 +27,7 @@
       <div class="form-row">
         <label>Payment Types</label>
         <ul>
-          <% @payment_types = %w{CREDIT_CARD MANDIRI_CLICKPAY MANDIRI_BILL CIMB_CLICKS INDOMARET} %>
+          <% @payment_types = %w{CREDIT_CARD MANDIRI_CLICKPAY MANDIRI_BILL CIMB_CLICKS INDOMARET BANK_TRANSFER MANDIRI_BILL} %>
           <% for type in @payment_types %>
             <li>
               <label>
@@ -38,7 +38,7 @@
           <% end %>
         </ul>
         <br/>
-        <small class="types-hint">By default system will show all available types</small>
+        <small class="types-hint">By default Veritrans will show all available types</small>
       </div>
 
       <p>
@@ -66,7 +66,10 @@
             <label><input type="checkbox" name="installment[bni]">BNI</label>
           </li>
           <li>
-            <label><input type="checkbox" name="installment[mandiri]">Mandir</label>
+            <label><input type="checkbox" name="installment[mandiri]">Mandiri</label>
+          </li>
+          <li>
+            <label><input type="checkbox" name="installment[bca]">BCA</label>
           </li>
         </ul>
       </div>
