@@ -34,6 +34,6 @@ describe Veritrans::Config do
     response.success?.should be_truthy
     response.token_id.should be_present
     response.token_id.should == response.data[:token_id]
-    response.inspect.should =~ /#<Veritrans::SnapResult:\d+ \^\^ http_status: 200 time: \d+ms \^\^ data: \{token_id: "[\da-f\-]+"\}>/
+    response.inspect.should =~ /#<Veritrans::SnapResult:\d+ \^\^ status: 200 time: \d+ms \^\^ data: \{token_id: "[\da-f\-]+"\}>/
   end
 end
