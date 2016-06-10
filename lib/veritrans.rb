@@ -89,6 +89,7 @@ class Veritrans
       if defined?(Rails) && Rails.root
         @file_logger = Logger.new(Rails.root.join("log/veritrans.log").to_s)
       else
+        require 'logger'
         @file_logger = Logger.new("/dev/null")
       end
     end
