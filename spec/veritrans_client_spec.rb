@@ -1,4 +1,4 @@
-describe Veritrans do
+describe Veritrans::Client do
 
   before do
     hide_const("Rails")
@@ -167,5 +167,18 @@ describe Veritrans do
       result.success?.should == false
       result.status_message.should == "The requested resource is not found"
     end
+  end
+
+  it "should handle network exceptions", vcr: false do
+    Excon::Connection.any_instance.stub(:send) do
+      raise Excon::Errors::SocketError, Excon::Errors::Error.new("testing exception")
+    end
+
+    result = Veritrans.expire("not-exists")
+    result.status.should == "500"
+    result.data.should == {
+      status_code: "500",
+      status_message: "Internal server error, no response from backend. Try again later"
+    }
   end
 end

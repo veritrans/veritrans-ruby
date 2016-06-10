@@ -82,7 +82,7 @@ class Veritrans
     def inspect
       time_ms = (@time * 1000).round
       data = @data.inspect.gsub(/:([^\s]+)=>/, "\\1: ")
-      "#<#{self.class.to_s}:#{object_id} ^^ http_status: #{@status} time: #{time_ms}ms ^^ data: #{data}>"
+      "#<#{self.class.to_s}:#{object_id} ^^ status: #{@status} time: #{time_ms}ms ^^ data: #{data}>"
     end
   end
 
