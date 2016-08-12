@@ -18,7 +18,7 @@ GIT
 PATH
   remote: .
   specs:
-    veritrans (2.0.4)
+    veritrans (2.1.0)
       excon (~> 0.20)
 
 GEM
