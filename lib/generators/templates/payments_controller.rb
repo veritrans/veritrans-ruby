@@ -5,6 +5,7 @@ class PaymentsController < ApplicationController
     @payment = make_payment
   end
 
+  # Creating example payment
   def create
     @payment = make_payment
 
@@ -30,6 +31,9 @@ class PaymentsController < ApplicationController
     )
   end
 
+  # Processing HTTP Notification from Veritrans
+  # POST request with JSON-encoded body
+  # If you using Veritrans::Events then you don't need this
   def receive_webhook
     post_body = request.body.read
 
@@ -61,6 +65,7 @@ class PaymentsController < ApplicationController
 
   end
 
+  # You should replace this with your own model
   private
   def make_payment
     @paymentKlass = Struct.new("Payment", :amount, :token_id, :order_id, :credit_card_secure) do

@@ -12,6 +12,7 @@ require 'vcr'
 
 require 'capybara/rspec'
 require 'capybara/poltergeist'
+require 'active_support/testing/stream'
 
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app,

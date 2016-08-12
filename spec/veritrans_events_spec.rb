@@ -1,4 +1,6 @@
 describe Veritrans do
+  include ActiveSupport::Testing::Stream
+
   before do
     stub_const("CONFIG", {})
     Veritrans.logger = Logger.new(STDOUT)
