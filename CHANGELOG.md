@@ -1,3 +1,18 @@
+### Version 2.1.0 (date 12 Aug 2016)
+
+* Add support for rails 5
+* Add Snap API and example
+* Add support to create multiple instance of client
+* Increase timeout to 120 seconds
+* Fix network exception handling
+* Add missing require 'logger'
+* Add validation for payment_id argument
+* Improve VT-Web example
+* Add example for recurring (1 clck / 2 click)
+* Add example for Indonesian validation messages
+* Add Credit Card Points example
+* Deploy example in heroku
+
 ### Version 2.0.4  (date: 30 Nov 2015)
 
 * Show warning when can not find section in veritrans.yml
