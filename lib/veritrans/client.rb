@@ -96,9 +96,9 @@ class Veritrans
       end
 
       connection_options = {
-        read_timeout: 75,
-        write_timeout: 75,
-        connect_timeout: 75
+        read_timeout: 120,
+        write_timeout: 120,
+        connect_timeout: 120
       }.deep_merge(default_options)
 
       s_time = Time.now
