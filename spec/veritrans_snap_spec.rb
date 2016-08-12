@@ -23,7 +23,7 @@ describe Veritrans::Config do
   end
 
   it "should create widget token" do
-    response = Veritrans.create_widget_token(
+    response = Veritrans.create_snap_token(
       transaction_details: {
         order_id: generate_order_id,
         gross_amount: 30_000
