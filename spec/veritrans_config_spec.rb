@@ -2,6 +2,7 @@ describe Veritrans::Config do
 
   before do
     hide_const("Rails")
+    hide_const("ENV")
   end
 
   it "should set Veritras as self inside config block" do
@@ -42,6 +43,16 @@ describe Veritrans::Config do
     })
 
     data = Veritrans.config.load_config("./spec/configs/veritrans.yml")
+    data.should == {"client_key" => "test_client_key", "server_key" => "test_server_key"}
+  end
+
+  it "should load config and render erb lines" do
+    stub_const('ENV', {
+      'CLIENT_KEY' => 'test_client_key',
+      'SERVER_KEY' => 'test_server_key'
+    })
+
+    data = Veritrans.config.load_config("./spec/configs/veritrans_with_erb.yml")
     data.should == {"client_key" => "test_client_key", "server_key" => "test_server_key"}
   end
 
