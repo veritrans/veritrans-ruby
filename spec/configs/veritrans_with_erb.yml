@@ -1,0 +1,2 @@
+client_key: <%= ENV['CLIENT_KEY'] %>
+server_key: <%= ENV['SERVER_KEY'] %>

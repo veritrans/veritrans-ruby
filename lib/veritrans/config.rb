@@ -96,7 +96,7 @@ class Veritrans
     #
     def load_config(filename, yml_section = nil)
       yml_file, file_yml_section = filename.to_s.split('#')
-      config_data = YAML.load(File.read(yml_file))
+      config_data = YAML.load(ERB.new(File.read(yml_file)).result)
 
       yml_section ||= file_yml_section
       if defined?(Rails) && !yml_section
