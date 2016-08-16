@@ -1,5 +1,6 @@
 require 'yaml'
 require 'excon'
+require 'erb'
 
 class Veritrans
 
