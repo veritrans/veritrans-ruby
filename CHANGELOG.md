@@ -1,3 +1,7 @@
+### Version 2.1.1 (date 15 Sep 2016)
+
+* Allow use ENV variables in config
+
 ### Version 2.1.0 (date 12 Aug 2016)
 
 * Add support for rails 5
