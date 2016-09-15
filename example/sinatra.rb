@@ -12,7 +12,7 @@ rescue LoadError => error
 end
 
 Veritrans.setup do
-  config.load_yml "./veritrans.yml#development"
+  config.load_yml File.dirname(__FILE__) + "/veritrans.yml#development"
 
   # config.server_key = "..."
   # config.client_key = "..."
@@ -23,8 +23,8 @@ end
 # Veritrans.config.client_key
 # Veritrans.config.api_host
 
-set :public_folder, "."
-set :views,         "."
+set :public_folder, File.dirname(__FILE__)
+set :views,         File.dirname(__FILE__)
 
 set :run, $0 == __FILE__
 

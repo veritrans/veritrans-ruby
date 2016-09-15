@@ -4,9 +4,8 @@ gem 'rake'
 gem 'rspec'
 
 gem 'rails', '< 6'
-# For example app
-gem 'sinatra', github: 'sinatra/sinatra'
-gem 'rack-protection', github: 'sinatra/rack-protection'
+
+gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git'
 gem 'puma'
 gem 'tilt'
 

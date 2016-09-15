@@ -1,24 +1,19 @@
 GIT
-  remote: git://github.com/sinatra/rack-protection.git
-  revision: 7e723a74763bb83989d1249cdceb9cceb2ee6f01
+  remote: https://github.com/sinatra/sinatra.git
+  revision: 1b0edc0aeaaf4839cadfcec1b21da86e6af1d4c0
   specs:
-    rack-protection (2.0.0)
+    rack-protection (2.0.0.beta2)
       rack
-
-GIT
-  remote: git://github.com/sinatra/sinatra.git
-  revision: 285275b42fa1bf096a5c9559b6cead2f31b65b66
-  specs:
-    sinatra (2.0.0.pre.alpha)
-      mustermann (~> 0.4)
+    sinatra (2.0.0.beta2)
+      mustermann (= 1.0.0.beta2)
       rack (~> 2.0)
-      rack-protection (~> 2.0)
+      rack-protection (= 2.0.0.beta2)
       tilt (~> 2.0)
 
 PATH
   remote: .
   specs:
-    veritrans (2.1.0)
+    veritrans (2.1.1)
       excon (~> 0.20)
 
 GEM
@@ -77,7 +72,7 @@ GEM
       safe_yaml (~> 1.0.0)
     diff-lcs (1.2.5)
     erubis (2.7.0)
-    excon (0.51.0)
+    excon (0.52.0)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
     hashdiff (0.3.0)
@@ -92,8 +87,7 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
     minitest (5.9.0)
-    mustermann (0.4.0)
-      tool (~> 0.2)
+    mustermann (1.0.0.beta2)
     nio4r (1.2.1)
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
@@ -155,7 +149,6 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (2.0.5)
-    tool (0.2.3)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     vcr (3.0.3)
@@ -175,7 +168,6 @@ PLATFORMS
 DEPENDENCIES
   poltergeist (~> 1.8)
   puma
-  rack-protection!
   rails (< 6)
   rake
   rspec
@@ -186,4 +178,4 @@ DEPENDENCIES
   webmock (>= 1.20)
 
 BUNDLED WITH
-   1.12.5
+   1.13.1

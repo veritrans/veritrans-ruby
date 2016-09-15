@@ -20,7 +20,7 @@
 
   <code>
     <pre>
-<%= @result.response.body %>
+<%= JSON.pretty_generate(JSON.parse(@result.response.body)) %>
     </pre>
   </code>
 
