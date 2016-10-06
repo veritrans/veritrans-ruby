@@ -32,7 +32,6 @@
 $('#snap_pay').on('click', function (e) {
   e.preventDefault();
   snap.pay($('#token_id').val() + "?locale=en", {
-    env: 'sandbox',
     onSuccess: function (res) {
       console.log('onSuccess', res);
       alert(res.status_message + "\nRedirecting to confirm page...");
