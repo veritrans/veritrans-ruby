@@ -102,3 +102,5 @@ class Veritrans
   end
 
 end
+
+Midtrans = Veritrans

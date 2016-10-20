@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.test_files = []
 
   s.require_paths = ["lib"] 
-  s.executables   = ["veritrans"]
+  s.executables   = ["veritrans", "midtrans"]
 
   s.add_runtime_dependency "excon", "~> 0.20"
 
