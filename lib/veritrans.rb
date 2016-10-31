@@ -13,6 +13,10 @@ class Veritrans
   include Veritrans::Client
   include Veritrans::Api
 
+  autoload :Testing, 'veritrans/testing'
+  autoload :CLI, 'veritrans/cli'
+  autoload :Events, 'veritrans/events'
+
   class << self
     extend Forwardable
 
