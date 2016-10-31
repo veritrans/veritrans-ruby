@@ -12,6 +12,10 @@ class Veritrans::TestingLib
     @logger || Veritrans.logger
   end
 
+  def logger=(value)
+    @logger = value
+  end
+
   def GET(url, options = {})
     logger.info("Veritrans::Testing GET #{url}")
     result = Excon.get(url)
