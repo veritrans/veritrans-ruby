@@ -232,7 +232,7 @@ development:
       visit "/payments/new"
       click_link "Pay via VT-Web"
 
-      page.should have_content("Payment is securely processed by Veritrans")
+      page.should have_content("Payment is securely processed by Midtrans")
       #Capybara::Screenshot.screenshot_and_open_image
 
       # TEST CALLBACK FOR WRONG DATA
