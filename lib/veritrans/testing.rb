@@ -25,7 +25,7 @@ class Veritrans::TestingLib
 
   def POST(url, options = {})
     logger.info("Veritrans::Testing POST #{url} #{options[:body]}")
-    result = Excon.post(url)
+    result = Excon.post(url, options)
     logger.info("Veritrans::Testing -> #{result.status}\n#{result.body}")
     options[:return_raw] ? result : result_json(result)
   end
@@ -95,10 +95,26 @@ class Veritrans::TestingLib
 
     result2 = POST(result['redirect_url'],
       body: URI.encode_www_form(result['redirect_params'].to_a),
-      headers: {'Content-Type' => 'application/x-www-form-urlencoded'}
+      headers: {'Content-Type' => 'application/x-www-form-urlencoded'},
+      return_raw: true
     )
 
-    [result, result2]
+    result
+  end
+
+  # experimental
+  def pay_snap(snap_token, payment_type, transaction_params = {})
+    #snap_data = GET("https://app.sandbox.veritrans.co.id/snap/v1/payment_pages/#{snap_token}")
+    #snap_data = GET("https://app.sandbox.midtrans.com/snap/v1/transactions/#{snap_token}")
+
+    result = POST("https://app.sandbox.midtrans.com/snap/v1/transactions/#{snap_token}/pay",
+      body: JSON.pretty_generate({
+        payment_type: payment_type
+      }.merge(transaction_params)),
+      headers: json_headers
+    )
+
+    result
   end
 
   def extract_form(html)
@@ -121,6 +137,13 @@ class Veritrans::TestingLib
 
   def result_json(result)
     JSON.parse(result.body)
+  end
+
+  def json_headers
+    {
+      'Content-Type' => 'application/json;charset=UTF-8',
+      'Accept' => 'application/json, text/plain, */*'
+    }
   end
 end
 
