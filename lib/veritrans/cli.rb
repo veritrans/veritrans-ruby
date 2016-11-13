@@ -119,8 +119,8 @@ class Veritrans
       if CONFIG[:order]
         load_local_config!
         order_info = get_order_info(CONFIG[:order])
-        order_data = order_info.data.except(:status_message, :signature_key)
-        data = data.except(:fraud_status, :masked_card).merge(order_data)
+        order_data = hash_except(order_info.data, :status_message, :signature_key)
+        data = hash_except(data, :fraud_status, :masked_card).merge(order_data)
       end
 
       JSON.pretty_generate(data)
@@ -150,6 +150,12 @@ class Veritrans
       colorize(str, 35)
     end
     def cyan(str); colorize(str, 36) end
+
+    def hash_except(hash, *except_keys)
+      copy = hash.dup
+      keys.each { |key| copy.delete(key) }
+      copy
+    end
 
   end
 end
