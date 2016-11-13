@@ -92,11 +92,11 @@ class Veritrans
     end
 
     def token_id
-      @data[:token_id]
+      @data[:token]
     end
 
     def success?
-      status_code == 200
+      status_code == 201
     end
   end
 end

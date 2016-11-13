@@ -46,9 +46,9 @@ class Veritrans
       request_with_logging(:post, config.api_host + "/v2/charge", data)
     end
 
-    # POST https://app.sandbox.veritrans.co.id/snap/v1/charge
+    # POST https://app.sandbox.veritrans.co.id/snap/v1/transactions
     def create_snap_token(options = {})
-      result = request_with_logging(:post, config.api_host.sub('//api.', '//app.') + "/snap/v1/charge", options)
+      result = request_with_logging(:post, config.api_host.sub('//api.', '//app.') + "/snap/v1/transactions", options)
       Veritrans::SnapResult.new(result.response, result.url, result.request_options, result.time)
     end
 

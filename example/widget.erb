@@ -18,20 +18,20 @@
 
   <section>
     <p>
-      <label>Token ID</label>
-      <input type="text" id="token_id" value="<%= @token_id %>" readonly>
+      <label>Snap Token</label>
+      <input type="text" id="token" value="<%= @token %>" readonly>
     </p>
     <button id="snap_pay">Pay Now</button>
   </section>
 </section>
 
-<script src="https://app.sandbox.veritrans.co.id/snap/snap.js"></script>
+<script src="https://app.sandbox.midtrans.com/snap/snap.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 <script type="text/javascript">
 $('#snap_pay').on('click', function (e) {
   e.preventDefault();
-  snap.pay($('#token_id').val() + "?locale=en", {
+  snap.pay($('#token').val() + "?locale=en", {
     onSuccess: function (res) {
       console.log('onSuccess', res);
       alert(res.status_message + "\nRedirecting to confirm page...");
