@@ -25,7 +25,6 @@ end
 Capybara.configure do |config|
   config.javascript_driver = :poltergeist
   config.default_driver = :poltergeist
-  config.app_host = ""
   config.run_server = false
 end
 
