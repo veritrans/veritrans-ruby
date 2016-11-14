@@ -153,7 +153,7 @@ class Veritrans
 
     def hash_except(hash, *except_keys)
       copy = hash.dup
-      keys.each { |key| copy.delete(key) }
+      except_keys.each { |key| copy.delete(key) }
       copy
     end
 
