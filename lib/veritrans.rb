@@ -194,4 +194,5 @@ class Veritrans
 
 end
 
+# Alias constant for new name of company
 Midtrans = Veritrans

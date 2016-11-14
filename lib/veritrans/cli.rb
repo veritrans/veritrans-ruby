@@ -5,8 +5,8 @@ require 'logger'
 class Veritrans
   module CLI
     # can't find order
-    class OrderNotFound < Exception; end
-    class AuthenticationError < Exception; end
+    class OrderNotFound < Exception; end  # :nodoc:
+    class AuthenticationError < Exception; end  # :nodoc:
 
     extend self
 

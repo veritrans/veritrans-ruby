@@ -2,6 +2,10 @@ require 'excon'
 require 'json'
 require 'uri'
 
+# Client for Midtrans Testing API and some helper methods for SNAP API
+#
+# Status: still in development
+#
 class Veritrans::TestingLib
 
   def initialize(server_url = "https://my.sandbox.veritrans.co.id:7676")
@@ -135,11 +139,11 @@ class Veritrans::TestingLib
     }
   end
 
-  def result_json(result)
+  def result_json(result) # :nodoc:
     JSON.parse(result.body)
   end
 
-  def json_headers
+  def json_headers # :nodoc:
     {
       'Content-Type' => 'application/json;charset=UTF-8',
       'Accept' => 'application/json, text/plain, */*'
