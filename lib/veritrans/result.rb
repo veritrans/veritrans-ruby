@@ -136,7 +136,18 @@ class Veritrans
       @response.status.to_i
     end
 
+    # DEPRECATED, please use #token instead
     def token_id
+      if defined?(ActiveSupport::Deprecation)
+        ActiveSupport::Deprecation.warn("`token_id` on SnapResult is deprecated.  Please use `token` instead.")
+      else
+        warn "DEPRECATION WARNING: `token_id` on SnapResult is deprecated.  Please use `token` instead."
+      end
+      @data[:token]
+    end
+
+    # Acccessor for <tt>token</tt> value
+    def token
       @data[:token]
     end
 
