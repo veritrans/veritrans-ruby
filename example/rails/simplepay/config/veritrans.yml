@@ -1,0 +1,18 @@
+development:
+  # Register in sandbox veritrans and get your keys here:
+  # https://my.sandbox.veritrans.co.id/settings/config_info
+  client_key: ""
+  server_key: ""
+  api_host: https://api.sandbox.veritrans.co.id
+
+production:
+  # Register and get your keys here:
+  # https://my.veritrans.co.id/settings/config_info
+  client_key: <%= ENV['VERITRANS_CLIENT_KEY'] %>
+  server_key: <%= ENV['VERITRANS_SERVER_KEY'] %>
+  api_host: https://api.veritrans.co.id
+
+staging:
+  client_key: <%= ENV['VT_SANDBOX_CLIENT_KEY'] %>
+  server_key: <%= ENV['VT_SANDBOX_SERVER_KEY'] %>
+  api_host: https://api.sandbox.veritrans.co.id

@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  transaction_status: MyString
+  price: MyString
+
+two:
+  transaction_status: MyString
+  price: MyString
