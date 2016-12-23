@@ -6,7 +6,7 @@ describe Veritrans do
     Veritrans.logger = Logger.new(STDOUT)
     Veritrans.file_logger = Logger.new(STDOUT)
     Veritrans.setup do
-      config.load_yml "./example/veritrans.yml#development"
+      config.load_yml "./example/sinatra/veritrans.yml#development"
     end
   end
 
