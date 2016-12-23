@@ -1,1 +1,1 @@
-web: bundle exec puma -p $PORT --dir example config.ru
+web: bundle exec puma -p $PORT --dir example/sinatra config.ru

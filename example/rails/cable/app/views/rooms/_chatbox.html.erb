@@ -1,0 +1,13 @@
+<div class='chatbox'>
+   <ul class='chats'>
+     <% all_chats.each do |chat| %>
+       <%= render "chats/chat", chat: chat %>
+     <% end %>
+   </ul>
+
+   <div class='chat-input'>
+     <%= form_for Chat.new do |f| %>
+         <textarea id='chat-input-text' class='form-control' placeholder="Type 'Jual Nama Product, harga', e.g 'jual pisang, 3000'"></textarea>
+     <% end %>
+   </div>
+</div>

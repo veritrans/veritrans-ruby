@@ -1,0 +1,31 @@
+.chatbox {
+  height: 100%;
+  .chats {
+    height: 85%;
+    padding: 0px;
+    list-style: none;
+    margin: 0;
+    overflow-x: scroll;
+
+    .chat {
+      padding: 5px 25px;
+      p { margin: 0px; }
+      img.person-avatar {
+        width: 25px;
+        height: 25px;
+      }
+    } // .chat
+  } // .chats
+
+  .chat-input {
+    height: 15%;
+    padding: 7px;
+
+    form { height: 100%; width: 100%; }
+
+    #chat-input-text {
+      width: 100%;
+      height: 100%;
+    } // #chat-input-text
+  } // .chat-input
+} // .chatbox

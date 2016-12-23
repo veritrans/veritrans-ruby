@@ -27,7 +27,7 @@ describe Veritrans do
 
   it "should raise error if payment not found" do
     CONFIG[:order] = "1111-not-exists"
-    CONFIG[:config_path] = "./example/veritrans.yml"
+    CONFIG[:config_path] = "./example/sinatra/veritrans.yml"
 
     VCR.use_cassette("cli_test_not_exists") do
       silence_stream(STDOUT) do
@@ -64,7 +64,7 @@ describe Veritrans do
 
   it "should send real data as json" do
     CONFIG[:order] = "testing-0.2703-1415600236"
-    CONFIG[:config_path] = "./example/veritrans.yml"
+    CONFIG[:config_path] = "./example/sinatra/veritrans.yml"
 
     VCR.use_cassette("cli_test_real_txn") do
       silence_stream(STDOUT) do
