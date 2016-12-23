@@ -112,6 +112,18 @@ describe Veritrans::Testing do
       result['status'].should == 'SUCCESS'
       assert_txn_status(txn_result.order_id, 'settlement')
     end
+
+    it "should reject cimb clicks txn", vcr: false do
+      txn_result = Veritrans.charge("cimb_clicks",
+        cimb_clicks: { description: "My Payment" },
+        transaction: { order_id: Time.now.to_s, gross_amount: 100_000 }
+      )
+
+      result = Veritrans::Testing.pay_cimb_clicks(txn_result.redirect_url, 'aaaa')
+
+      result['status'].should == 'SUCCESS'
+      assert_txn_status(txn_result.order_id, 'settlement')
+    end
   end
 
   context "SNAP" do
