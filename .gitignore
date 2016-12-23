@@ -3,4 +3,8 @@ rails_example*
 .DS_Store
 tmp
 doc/
+example/rails/cable/log
+example/rails/cable/tmp
+example/rails/simplepay/log
+example/rails/simplepay/tmp
 veritrans_credentials

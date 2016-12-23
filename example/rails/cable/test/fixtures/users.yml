@@ -1,6 +1,0 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-adam:
-  id: 1
-  name: Adam
-  avatar: adam.jpg
