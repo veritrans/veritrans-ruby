@@ -24,10 +24,15 @@ class Veritrans
     def_delegators :instance, :request_with_logging, :basic_auth_header, :get, :post, :delete, :make_request
     def_delegators :instance, :charge, :cancel, :approve, :status, :capture, :expire
     def_delegators :instance, :create_vtlink, :delete_vtlink, :inquiry_points, :create_widget_token, :create_snap_token
-    def_delegators :instance, :checksum
+    def_delegators :instance, :checksum, :events
 
     # Shortcut for Veritrans::Events
     def events
+      if defined?(ActiveSupport::Deprecation)
+        ActiveSupport::Deprecation.warn("`Veritrans.events` is deprecated.  Please use `Veritrans::Events`.")
+      else
+        warn "`Veritrans.events` is deprecated.  Please use `Veritrans::Events`."
+      end
       Veritrans::Events if defined?(Veritrans::Events)
     end
 
@@ -40,6 +45,10 @@ class Veritrans
       @instance ||= new
     end
 
+  end
+
+  def events
+    self.class.events
   end
 
   # If you want to use multiple instances of Midtrans in your code (e.g. process payments in different accounts),
