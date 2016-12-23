@@ -15,6 +15,17 @@ header {
   background: #F5FAFC;
   padding: 3px 5px;
   border-bottom: 1px solid #ccc;
+  overflow: hidden;
+}
+
+header .github {
+  float: right;
+  margin: 18px 0;
+}
+
+header h3 {
+  float: left;
+  margin: 18px 0;
 }
 
 section {
