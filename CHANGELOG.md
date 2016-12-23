@@ -1,3 +1,11 @@
+### Version 2.1.3 (date 19 Dec 2016)
+
+* Update create snap token endpoint
+
+### Version 2.1.2 (date 20 Oct 2016)
+
+* Create alias Midtrans = Veritrans
+
 ### Version 2.1.1 (date 15 Sep 2016)
 
 * Allow use ENV variables in config
