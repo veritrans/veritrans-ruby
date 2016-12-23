@@ -19,10 +19,19 @@
   <section>
     <p>
       <label>Snap Token</label>
-      <input type="text" id="token" value="<%= @token %>" readonly>
+      <input type="text" id="token" value="<%= @token %>" readonly size="50">
     </p>
     <button id="snap_pay">Pay Now</button>
   </section>
+
+  <p>
+    To complete payment in sandbox mode, plese use <a href="https://docs.midtrans.com/en/api/test_credentials.html" target="_blank">testing credentials</a>.<br/>
+    For more details see <a href="https://snap-docs.midtrans.com/">SNAP Documentation</a>
+  <p>
+
+  <code>
+    <pre class="callback-result"></pre>
+  </code>
 </section>
 
 <script src="https://app.sandbox.midtrans.com/snap/snap.js"></script>
@@ -34,8 +43,10 @@ $('#snap_pay').on('click', function (e) {
   snap.pay($('#token').val() + "?locale=en", {
     onSuccess: function (res) {
       console.log('onSuccess', res);
-      alert(res.status_message + "\nRedirecting to confirm page...");
-      window.location = "/widget/confirm/" + res.transaction_id;
+      $('.callback-result').text("SNAP Callback parameters:\n" + JSON.stringify(res, null, 4));
+      if (confirm(res.status_message + "\nRedirect to confirm page?")) {
+        window.location = "/widget/confirm/" + res.transaction_id;
+      }
     },
     onPending: function (res) {
       console.log('onPending', res);

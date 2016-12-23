@@ -55,7 +55,8 @@ get "/widget" do
       gross_amount: 30_000
     }
   )
-  @token = response.data[:token]
+
+  @token = response.token_id
   erb :widget
 end
 
