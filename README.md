@@ -1,7 +1,16 @@
 # Veritrans ruby library
 
+Veritrans gem is the library that will help you to integrate seamlessly with
+Midtrans.
+
 [![Gem Version](https://badge.fury.io/rb/veritrans.svg)](http://badge.fury.io/rb/veritrans)
 [![Build Status](https://travis-ci.org/veritrans/veritrans-ruby.svg?branch=master)](https://travis-ci.org/veritrans/veritrans-ruby)
+
+To see it in action, we have made 3 examples:
+
+1. Sinatra, which demonstrate in as succint code as possible. Please [have a look here](https://github.com/veritrans/veritrans-ruby/tree/master/example/sinatra)
+2. Simplepay, demonstrated how to integrate Midtrans with a simple, succint Rails project. [Have a look](https://github.com/veritrans/veritrans-ruby/tree/master/example/rails/simplepay).
+3. Cable, demonstrate a chat-commerce app where the payment is handled with Midtrans. [Have a look](https://github.com/veritrans/veritrans-ruby/tree/master/example/rails/cable).
 
 ## How to use (Rails)
 
@@ -29,9 +38,6 @@ development:
   client_key: # your api client key
   server_key: # your api client key
 ```
-
-See out example sinatra application in [example](https://github.com/veritrans/veritrans-ruby/tree/master/example) folder or [online](https://veritrans-ruby-example.herokuapp.com/)
-
 
 ## STEP 1: Process credit cards
 
