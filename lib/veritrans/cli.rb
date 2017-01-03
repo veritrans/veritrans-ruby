@@ -3,10 +3,12 @@ require 'securerandom'
 require 'logger'
 
 class Veritrans
-  module CLI
+  module CLI #:nodoc:
     # can't find order
-    class OrderNotFound < Exception; end
-    class AuthenticationError < Exception; end
+    class OrderNotFound < Exception #:nodoc:
+    end
+    class AuthenticationError < Exception #:nodoc:
+    end
 
     extend self
 

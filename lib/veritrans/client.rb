@@ -7,7 +7,8 @@ require 'excon'
 class Veritrans
   module Client
 
-    # Failback for activesupport
+    # If you using Rails then it will call ActiveSupport::JSON.encode
+    # Otherwise JSON.pretty_generate
     def self._json_encode(params)
       if defined?(ActiveSupport) && defined?(ActiveSupport::JSON)
         ActiveSupport::JSON.encode(params)
@@ -21,6 +22,8 @@ class Veritrans
       Veritrans::Client._json_encode(params)
     end
 
+    # If you using Rails then it will call ActiveSupport::JSON.decode
+    # Otherwise JSON.parse
     def self._json_decode(params)
       if defined?(ActiveSupport) && defined?(ActiveSupport::JSON)
         ActiveSupport::JSON.decode(params)
