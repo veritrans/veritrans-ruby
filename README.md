@@ -58,6 +58,49 @@ development:
 redirect_to @result.redirect_url
 ```
 
+#### Snap
+
+First, generate token in the back end provided with enough details as necessary
+and as detailed as you wish to.
+
+```ruby
+response = Veritrans.create_widget_token(
+  transaction_details: {
+    order_id: 'THE-ITEM-ORDER-ID',
+    gross_amount: 200000
+  }
+)
+
+@snap_token = response.token
+```
+
+Then on the front end, the token is saved somewhere probably in the hidden field.
+
+```
+<div class='cart'>
+  <!-- some other codes -->
+  <input type='hidden' name='snap-token' id='snap-token' value='<%=  %>'>
+  <%= hidden_field_tag 'snap_token', @snap_token %>
+  <a href='#' class='order-button'>Order</a>
+</div>
+```
+
+Then JavaScript can be used to invoke the SNAP dialog upon click on the
+order button.
+
+```javascript
+var token = jQuery("#snap_token").val();
+
+jQuery(".order-button").on("click", function() {
+  snap.pay(token, {
+    onSuccess: function(res) { console.log("SUCCESS RESPONSE", res); },
+    // you may also implement:
+    // onPending
+    // onError
+  });
+});
+```
+
 #### VT-Direct
 
 It's little more complicated, because credit_card is sensitive data,
