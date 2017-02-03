@@ -144,7 +144,12 @@ get "/charge_vtweb" do
     transaction_details: {
       order_id: generate_order_id,
       gross_amount: 100_000
-    }
+    },
+    item_details: [
+      name: "Mountain Apple",
+      price: 2_000,
+      quantity: 50
+    ]
   }
 
   @result = Veritrans.charge(@cahrge_params)
