@@ -111,7 +111,7 @@ class Veritrans
       Result.new(response, url, request_options, Time.now - s_time)
 
     rescue Excon::Errors::SocketError => error
-      logger.info "Veritrans: socket error, can not connect"
+      logger.info "Veritrans: socket error, can not connect (#{error.message})"
       error_response = Excon::Response.new(
         body: '{"status_code": "500", "status_message": "Internal server error, no response from backend. Try again later"}',
         status: '500'
