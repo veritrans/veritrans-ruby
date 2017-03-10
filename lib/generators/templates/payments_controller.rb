@@ -1,4 +1,4 @@
-class PaymentsController < ApplicationController
+class PaymentsController < ApplicationController # :nodoc:
   skip_before_filter :verify_authenticity_token, only: [:receive_webhook]
 
   def new

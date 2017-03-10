@@ -1,41 +1,45 @@
-# Rack based event notification callback processor
-#
-# Usage:
-#
-#     Rails.application.routes.draw do
-#       ...
-#       mount Veritrans::Events.new => '/vt_events'
-#     end
-#     
-#     Veritrans.events.subscribe('payment.success') do |payment|
-#       payment.mark_paid!(payment.masked_card)
-#     end
-#
-
-# All possible events:
-#
-# * payment.success     == ['authorize', 'capture', 'settlement']
-# * payment.failed      == ['deny', 'cancel', 'expire']
-# * payment.challenge   # when payment.fraud_status == 'challenge'
-#
-# * payment.authorize
-# * payment.capture
-# * payment.settlement
-# * payment.deny
-# * payment.cancel
-# * payment.expire
-#
-# * error
-
-# For sinatra you can use Rack::URLMap
-#
-#     run Rack::URLMap.new("/" => MyApp.new, "/payment_events" => Veritrans::Events.new)
-#
-
 class Veritrans
+  #
+  # Rack based event notification callback processor
+  #
+  # Usage:
+  #
+  #   Rails.application.routes.draw do
+  #     # ...
+  #     mount Veritrans::Events.new => '/vt_events'
+  #   end
+  #   
+  #   Veritrans::Events.subscribe('payment.success') do |payment|
+  #     payment.mark_paid!(payment.masked_card)
+  #   end
+  #
+  #
+  # All possible events:
+  #
+  # * payment.success     == ['authorize', 'capture', 'settlement']
+  # * payment.failed      == ['deny', 'cancel', 'expire']
+  # * payment.challenge   # when payment.fraud_status == 'challenge'
+  #
+  # * payment.authorize
+  # * payment.capture
+  # * payment.settlement
+  # * payment.deny
+  # * payment.cancel
+  # * payment.expire
+  #
+  # * error
+  #
+  # For sinatra you can use Rack::URLMap
+  #
+  #     run Rack::URLMap.new("/" => MyApp.new, "/payment_events" => Veritrans::Events.new)
+  #
   class Events
 
     # This is rack application
+    # Can be used as:
+    #
+    #   use Veritrans::Events.new
+    #
     def call(env)
       Veritrans.logger.info "Receive notification callback"
 
@@ -92,7 +96,7 @@ class Veritrans
       return send_text("Server error:\n#{error.message}", 500)
     end
 
-    def send_text(body, status = 200)
+    def send_text(body, status = 200) # :nodoc:
       [status, {"Content-Type" => "text/html"}, [body]]
     end
 
@@ -101,6 +105,12 @@ class Veritrans
     class << self
       attr_accessor :listeners
 
+      # Subscribe for events. The event object will be an instance of Midtrans::Result
+      #
+      #   Midtrans::Events.subscribe('payment.success') do |payment_status|
+      #     Order.find_by(order_id: payment_status.order_id).mark_paid!
+      #   end
+      #
       def subscribe(*event_types, &handler)
         @listeners ||= []
         event_types.each do |event_type|
@@ -108,6 +118,7 @@ class Veritrans
         end
       end
 
+      # Used internally to dispatch event
       def dispatch(new_event, event_data)
         @listeners.each do |pair|
           event_type, handler = *pair

@@ -1,5 +1,5 @@
 class Veritrans
-  class PaymentFormGenerator < ::Rails::Generators::Base
+  class PaymentFormGenerator < ::Rails::Generators::Base # :nodoc:
     source_root File.expand_path("../../templates", __FILE__)
 
 desc %{

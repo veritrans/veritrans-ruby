@@ -93,6 +93,8 @@ class Veritrans
     #
     #   Veritrans.setup do
     #     config.load_yml "#{Rails.root.to_s}/config/veritrans.yml#development"
+    #     # or
+    #     config.load_yml "#{Rails.root.to_s}/config/veritrans.yml", :development
     #   end
     #
     def load_config(filename, yml_section = nil)
