@@ -135,7 +135,7 @@ Payment form: (same as if you use `rails g veritrans:payment_form`)
   </p>
   <p>
     <%= label_tag "card_exp", "Expiration date" %>
-    <%= text_field_tag :card_exp, "12 / 16", name: nil, placeholder: "MM / YY" %>
+    <%= text_field_tag :card_exp, "12 / 18", name: nil, placeholder: "MM / YY" %>
   </p>
   <%= submit_tag "Make payment", id: "submit_btn" %>
 <% end %>
@@ -158,7 +158,7 @@ For sinatra:
   </p>
   <p>
     <label for="card_exp">Expiration date</label>
-    <input type="text" id="card_exp" placeholder="MM / YY" value="12 / 16">
+    <input type="text" id="card_exp" placeholder="MM / YY" value="12 / 18">
   </p>
   <p>
     <label for="card_secure">3D-secure</label>
