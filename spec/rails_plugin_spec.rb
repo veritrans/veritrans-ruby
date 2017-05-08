@@ -6,11 +6,11 @@ require 'socket'
 describe "Rails plugin", vcr: false do
   include Capybara::DSL
 
-  MAIN_RAILS_VER = "5.0.0.1"
+  MAIN_RAILS_VER = "5.1.0"
   APP_DIR = "plugin_test"
   PLUGIN_DIR = File.expand_path("..", File.dirname(__FILE__))
 
-  RAILS_VERSIONS = ["4.0.13", "4.1.16", "4.2.7.1", "5.0.0.1"]
+  RAILS_VERSIONS = ["4.1.16", "4.2.8", "5.0.2", "5.1.0"]
 
   before :all do
     FileUtils.mkdir_p("#{PLUGIN_DIR}/tmp")
@@ -31,19 +31,21 @@ describe "Rails plugin", vcr: false do
   def run_cmd(cmd, cli_args = [])
     full_cmd = ([cmd] + cli_args).join.strip
 
-    stdout_str, stderr_str, status = Open3.capture3(full_cmd)
+    puts "RUN: #{full_cmd}" if ENV['DEBUG']
+
+    output, status = Open3.capture2e(full_cmd)
 
     if status != 0
       puts "CMD: #{full_cmd}"
       puts "FAILED"
-      puts stderr_str
+      puts output
 
       exit 1
     end
 
     #puts stdout_str
 
-    return stdout_str
+    return output
   end
 
   def install_rails_in_tmp(rails_version = MAIN_RAILS_VER)
@@ -70,9 +72,6 @@ describe "Rails plugin", vcr: false do
   end
 
   def generate_rails_app(rails_version)
-    gen = "rails _#{rails_version}_ new #{APP_DIR} -B -G --skip-spring -d sqlite3 --skip-turbolinks --skip-test-unit --skip-action-cable --no-rc --skip-puma --skip-listen"
-    run_cmd(gen)
-
     gemfile_content = "
       source 'https://rubygems.org'
 
@@ -82,6 +81,13 @@ describe "Rails plugin", vcr: false do
       gem 'jquery-rails'
       gem 'veritrans', path: '#{PLUGIN_DIR}'
     ".gsub(/^\s+/, '')
+
+    File.open("./Gemfile", "w") {|f| f.write(gemfile_content) }
+    run_cmd("bundle")
+
+    gen = "bundle exec rails _#{rails_version}_ new #{APP_DIR} -B -G --skip-spring -d sqlite3 --skip-turbolinks --skip-test-unit --skip-action-cable --no-rc --skip-puma --skip-listen"
+
+    run_cmd(gen)
 
     File.open("#{@app_abs_path}/Gemfile", "w") {|f| f.write(gemfile_content) }
 
@@ -100,7 +106,7 @@ describe "Rails plugin", vcr: false do
 development:
   client_key: VT-client-NArmatJZqzsmTmzR
   server_key: VT-server-9Htb-RxXkg7-7hznSCCjxvoY
-  api_host: https://api.sandbox.veritrans.co.id
+  api_host: https://api.sandbox.midtrans.com
 "
 
     File.open("#{@app_abs_path}/config/veritrans.yml", "w") {|f| f.write(config_content) }
@@ -109,11 +115,15 @@ development:
   def run_rails_app
     @rails_port = find_open_port
 
+    server_cmd = "./bin/rails server -p #{@rails_port} -b 127.0.0.1"
+    server_env = {"RAILS_ENV" => "development"}
+    spawn_opts = {chdir: @app_abs_path}
+    spawn_opts.merge!([:err, :out] => "/dev/null") unless ENV['DEBUG']
+
     Bundler.with_clean_env do
-      ENV["RAILS_ENV"] = "development"
-      Dir.chdir(@app_abs_path) do
-        run_cmd("./bin/rails server -d -p #{@rails_port} --bind 127.0.0.1")
-      end
+      puts "RUN: #{server_cmd} #{spawn_opts}" if ENV['DEBUG']
+      @runner_pid = spawn(server_env, server_cmd, spawn_opts)
+      puts "Process running PID: #{$runner_pid}" if ENV['DEBUG']
     end
 
     Capybara.app_host = "http://127.0.0.1:#{@rails_port}"
@@ -121,19 +131,19 @@ development:
     #puts "RAILS_DIR: #{@app_abs_path}"
 
     failed = 0
-    while failed < 10
+    while failed < 100
       begin
         run_cmd("curl #{Capybara.app_host}/payments/new > /dev/null")
         break
       rescue Object => error
         failed += 1
-        p error
-        puts "Retry"
+        #p error
+        #puts "Retry"
         sleep 0.3
       end
     end
 
-    if failed == 10
+    if failed == 100
       puts `tail -100 #{@app_abs_path}/log/development.log`
       raise Exception, "can not start rails server"
     end
@@ -188,8 +198,10 @@ development:
 
   RAILS_VERSIONS.each_with_index do |rails_version, spec_index|
     next if rails_version.start_with?("5") && RUBY_VERSION < "2.2.2"
+    next if RUBY_VERSION >= "2.4.0" && rails_version < "4.2.0"
 
     it "should tests plugin (Rails #{rails_version})" do
+      puts "Testing with Rails #{rails_version} and Ruby #{RUBY_VERSION}"
       # PREPARE APP
       install_rails_in_tmp(rails_version)
       run_rails_app

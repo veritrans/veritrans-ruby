@@ -5,7 +5,7 @@ gem 'rspec'
 
 gem 'rails', '< 6'
 
-gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git'
+gem 'sinatra'
 gem 'puma'
 gem 'tilt'
 

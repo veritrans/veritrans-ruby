@@ -8,3 +8,4 @@ example/rails/cable/tmp
 example/rails/simplepay/log
 example/rails/simplepay/tmp
 veritrans_credentials
+.ruby-version

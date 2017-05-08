@@ -1,5 +1,5 @@
 class PaymentsController < ApplicationController # :nodoc:
-  skip_before_filter :verify_authenticity_token, only: [:receive_webhook]
+  skip_before_action :verify_authenticity_token, only: [:receive_webhook]
 
   def new
     @payment = make_payment
@@ -53,14 +53,14 @@ class PaymentsController < ApplicationController # :nodoc:
       puts "Payment amount: #{verified_data.data[:gross_amount]}"
       puts "--- Transaction callback ---"
 
-      render text: "ok"
+      render plain: "ok"
     else
       Veritrans.file_logger.info("Callback verification failed for order: " +
         "#{params[:order_id]} #{params[:transaction_status]}}\n" +
         verified_data.body + "\n"
       )
 
-      render text: "ok", :status => :not_found
+      render plain: "ok", :status => :not_found
     end
 
   end
