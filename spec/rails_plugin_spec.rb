@@ -130,13 +130,15 @@ development:
 
     #puts "RAILS_DIR: #{@app_abs_path}"
 
-    check_cmd = "curl #{Capybara.app_host}/payments/new &> /dev/null"
+    check_cmd = "curl #{Capybara.app_host}/payments/new"
 
     failed = 0
     while failed < 100
       puts "Check if rails server UP (#{Capybara.app_host})" if ENV['DEBUG']
       output, status = Open3.capture2e(check_cmd)
-      if status == 0
+      if status == 0 && output =~ /credit_card_number/
+        puts "Server is running, output:"
+        puts output
         break
       else
         failed += 1
