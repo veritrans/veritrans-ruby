@@ -122,8 +122,6 @@ development:
 
     Bundler.with_clean_env do
       puts "RUN: #{server_cmd} #{spawn_opts}" if ENV['DEBUG']
-      Process.wait(spawn(server_env, "ls -lah", spawn_opts))
-      Process.wait(spawn(server_env, "bundle list", spawn_opts))
       @runner_pid = spawn(server_env, server_cmd, spawn_opts)
       puts "Process running PID: #{$runner_pid}" if ENV['DEBUG']
     end
@@ -132,12 +130,15 @@ development:
 
     #puts "RAILS_DIR: #{@app_abs_path}"
 
+    check_cmd = "curl #{Capybara.app_host}/payments/new &> /dev/null"
+
     failed = 0
     while failed < 100
-      begin
-        run_cmd("curl #{Capybara.app_host}/payments/new &> /dev/null")
+      puts "Check if rails server UP (#{Capybara.app_host})" if ENV['DEBUG']
+      output, status = Open3.capture2e(check_cmd)
+      if status == 0
         break
-      rescue Object => error
+      else
         failed += 1
         #p error
         #puts "Retry"
