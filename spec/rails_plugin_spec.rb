@@ -116,7 +116,7 @@ development:
     @rails_port = find_open_port
 
     server_cmd = "./bin/rails server -p #{@rails_port} -b 127.0.0.1"
-    server_env = {"RAILS_ENV" => "development"}
+    server_env = {"RAILS_ENV" => "development", "BUNDLE_GEMFILE" => @app_abs_path + "/Gemfile"}
     spawn_opts = {chdir: @app_abs_path}
     spawn_opts.merge!([:err, :out] => "/dev/null") unless ENV['DEBUG']
 
@@ -130,12 +130,17 @@ development:
 
     #puts "RAILS_DIR: #{@app_abs_path}"
 
+    check_cmd = "curl #{Capybara.app_host}/payments/new"
+
     failed = 0
     while failed < 100
-      begin
-        run_cmd("curl #{Capybara.app_host}/payments/new &> /dev/null")
+      puts "Check if rails server UP (#{Capybara.app_host})" if ENV['DEBUG']
+      output, status = Open3.capture2e(check_cmd)
+      if status == 0 && output =~ /credit_card_number/
+        puts "Server is running, output:"
+        puts output
         break
-      rescue Object => error
+      else
         failed += 1
         #p error
         #puts "Retry"
