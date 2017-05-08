@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.sandbox.veritrans.co.id/v2/af3fb136-c405-4103-9a36-5a6a9e2855a9/expire
+    uri: https://api.sandbox.midtrans.com/v2/af3fb136-c405-4103-9a36-5a6a9e2855a9/expire
     body:
       encoding: UTF-8
       string: 'null'

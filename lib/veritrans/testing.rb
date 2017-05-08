@@ -8,7 +8,7 @@ require 'uri'
 #
 class Veritrans::TestingLib
 
-  def initialize(server_url = "https://my.sandbox.veritrans.co.id:7676")
+  def initialize(server_url = "https://api.sandbox.midtrans.com:7676")
     @server_url = server_url
   end
 

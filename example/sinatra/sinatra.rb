@@ -16,7 +16,7 @@ Veritrans.setup do
 
   # config.server_key = "..."
   # config.client_key = "..."
-  # config.api_host = "https://api.sandbox.veritrans.co.id" (default)
+  # config.api_host = "https://api.sandbox.midtrans.com" (default)
 end
 
 # Veritrans.config.server_key

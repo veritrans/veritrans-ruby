@@ -7,7 +7,7 @@ class Veritrans
   class Config
 
     def initialize(options = nil)
-      @api_host = "https://api.sandbox.veritrans.co.id"
+      @api_host = "https://api.sandbox.midtrans.com"
       apply(options) if options
     end
 
@@ -41,9 +41,9 @@ class Veritrans
     ##
     # API Server hostname, this allow to switch between production and sandbox
     #
-    # Should be "https://api.sandbox.veritrans.co.id" or "https://api.veritrans.co.id"
+    # Should be "https://api.sandbox.midtrans.com" or "https://api.midtrans.com"
     #
-    # Default is "https://api.sandbox.veritrans.co.id"
+    # Default is "https://api.sandbox.midtrans.com"
     #
     def api_host=(value)
       @api_host = value

@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.version    = Veritrans::VERSION
   s.author     = ["Veritrans Dev Team"]
   s.description= "Veritrans ruby client"
-  s.email      = ["dev@veritrans.co.id"]
+  s.email      = ["pavel.evstigneev@midtrans.com"]
   s.homepage   = "https://github.com/veritrans/veritrans-ruby"
   s.summary    = %q{Veritrans ruby library}
   s.license    = 'MIT'

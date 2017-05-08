@@ -113,7 +113,7 @@ describe Veritrans::Testing do
       assert_txn_status(txn_result.order_id, 'settlement')
     end
 
-    it "should reject cimb clicks txn", vcr: false do
+    it "should reject cimb clicks txn with wrong user_id", vcr: false do
       txn_result = Veritrans.charge("cimb_clicks",
         cimb_clicks: { description: "My Payment" },
         transaction: { order_id: Time.now.to_s, gross_amount: 100_000 }
@@ -121,8 +121,8 @@ describe Veritrans::Testing do
 
       result = Veritrans::Testing.pay_cimb_clicks(txn_result.redirect_url, 'aaaa')
 
-      result['status'].should == 'SUCCESS'
-      assert_txn_status(txn_result.order_id, 'settlement')
+      result['status'].should == 'ERROR'
+      assert_txn_status(txn_result.order_id, 'pending')
     end
   end
 
@@ -131,7 +131,7 @@ describe Veritrans::Testing do
       snap_txn_details = txn_details
       result = Veritrans.create_snap_token(transaction_details: snap_txn_details)
 
-      snap_result = Veritrans::Testing.pay_snap(result.token_id, 'mandiri_clickpay', {
+      snap_result = Veritrans::Testing.pay_snap(result.token, 'mandiri_clickpay', {
         payment_params: {
           mandiri_card_no: "4111111111111111",
           input3: 43044,

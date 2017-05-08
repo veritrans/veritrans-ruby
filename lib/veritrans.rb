@@ -57,7 +57,7 @@ class Veritrans
   #   mt_client = Midtrans.new(
   #     server_key: "My-Different-Key",
   #     client_key: "...",
-  #     api_host: "https://api.sandbox.veritrans.co.id", # default
+  #     api_host: "https://api.sandbox.midtrans.com", # default
   #     http_options: { }, # optional
   #     logger: Logger.new(STDOUT), # optional
   #     file_logger: Logger.new(STDOUT), # optional
@@ -89,7 +89,7 @@ class Veritrans
   #     # also can set one by one:
   #     config.server_key = "..."
   #     config.client_key = "..."
-  #     config.api_host = "https://api.sandbox.veritrans.co.id" # (default)
+  #     config.api_host = "https://api.sandbox.midtrans.com" # (default)
   #   end
   #
   # Use as object:

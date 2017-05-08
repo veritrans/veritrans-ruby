@@ -111,7 +111,7 @@ We don't want you to send credit card number to your server, especially for webs
 File: "app/views/shared/_veritrans_include.erb"
 
 ```html
-<script src="//api.sandbox.veritrans.co.id/v2/assets/veritrans.js"></script>
+<script src="https://api.midtrans.com/v2/assets/js/midtrans.min.js"></script>
 
 <script type="text/javascript">
   Veritrans.url = "<%= Veritrans.config.api_host %>/v2/token";
@@ -247,16 +247,16 @@ For VT-Direct you have to specify payment method (token required only for credit
 puts "Please send money to account no. #{@result.permata_va_number} in bank Permata"
 ```
 
-See [our documentation](http://docs.veritrans.co.id/sandbox/charge.html) for other available options.
+See [our documentation](https://api-docs.midtrans.com/#charge-features) for other available options.
 
 
 ## STEP 3: Receive notification callback
 
 For every transaction success and failed we will send you HTTP POST notification (aka webhook)
 
-First you should set callback url in our dashboard https://my.sandbox.veritrans.co.id/settings/vtweb_configuration
+First you should set callback url in our dashboard https://dashboard.sandbox.midtrans.com/settings/vtweb_configuration
 
-For testing in development phase please read our [Testing webhooks tutorial](https://github.com/veritrans/veritrans-ruby/blob/new_api/testing_webhooks.md) and [command line tool](#command-line-tool)
+For testing in development phase please read our [Testing webhooks tutorial](https://github.com/veritrans/veritrans-ruby/blob/master/testing_webhooks.md) and [command line tool](#command-line-tool)
 
 
 For rails:
@@ -355,7 +355,7 @@ Testing http notification:
 #### Get help
 
 * [Veritrans gem reference](https://github.com/veritrans/veritrans-ruby/blob/master/api_reference.md)
-* [Veritrans login](https://my.veritrans.co.id/login)
-* [Veritrans registration](https://my.veritrans.co.id/register)
-* [Veritrans documentation](http://docs.veritrans.co.id)
-* Technical support [support@veritrans.co.id](mailto:support@veritrans.co.id)
+* [Midtrans login](https://account.midtrans.com/login)
+* [Midtrans registration](https://account.midtrans.com/register)
+* [Midtrans documentation](http://docs.midtrans.com)
+* Technical support [support@midtrans.com](mailto:support@midtrans.com)

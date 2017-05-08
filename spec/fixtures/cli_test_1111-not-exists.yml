@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.sandbox.veritrans.co.id/v2/1111-not-exists/status
+    uri: https://api.sandbox.midtrans.com/v2/1111-not-exists/status
     body:
       encoding: US-ASCII
       string: ''

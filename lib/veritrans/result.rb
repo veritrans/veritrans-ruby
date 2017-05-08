@@ -40,7 +40,7 @@ class Veritrans
     attr_reader :request_options
     # HTTP request time, a Float
     attr_reader :time
-    # Request full URL, e.g. "https://api.sandbox.veritrans.co.id/v2/charge"
+    # Request full URL, e.g. "https://api.sandbox.midtrans.com/v2/charge"
     attr_reader :url
 
     def initialize(response, url, request_options, time)
@@ -80,7 +80,7 @@ class Veritrans
     end
 
     # Return <tt>"status_code"</tt> field of response
-    # Docs http://docs.veritrans.co.id/en/api/status_code.html
+    # Docs https://api-docs.midtrans.com/#status-code
     def status_code
       @data[:status_code].to_i
     end

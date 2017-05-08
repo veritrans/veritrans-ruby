@@ -11,8 +11,8 @@ describe Veritrans do
   end
 
   after do
-    if Veritrans.events.listeners
-      Veritrans.events.listeners.clear
+    if Veritrans::Events.listeners
+      Veritrans::Events.listeners.clear
     end
   end
 
@@ -34,13 +34,13 @@ describe Veritrans do
   DOUBLE_ENCODED_JSON_RESPONSE = JSON.dump(JSON_RESPONSE)
 
   def stub_vt_status_response
-    stub_request(:any, /.*veritrans.*/).to_return(lambda {|request|
+    stub_request(:any, /.*(veritrans|midtrans).*/).to_return(lambda {|request|
       {status: 200, body: JSON_RESPONSE}
     })
   end
 
   it "should work with single encoded json" do
-    Veritrans.events.subscribe('payment.success') do |payment|
+    Veritrans::Events.subscribe('payment.success') do |payment|
       @payment = payment
     end
 
@@ -55,7 +55,7 @@ describe Veritrans do
   end
 
   it "should work with double encoded json" do
-    Veritrans.events.subscribe('payment.success') do |payment|
+    Veritrans::Events.subscribe('payment.success') do |payment|
       @payment = payment
     end
 

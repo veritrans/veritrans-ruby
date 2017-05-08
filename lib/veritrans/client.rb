@@ -81,7 +81,7 @@ class Veritrans
       default_options = config.http_options || {}
 
       # Add authentication and content type
-      # Docs http://docs.veritrans.co.id/sandbox/introduction.html
+      # Docs https://api-docs.midtrans.com/#http-s-header
       request_options = {
         :path => URI.parse(url).path,
         :headers => {

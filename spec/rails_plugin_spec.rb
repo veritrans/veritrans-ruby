@@ -133,7 +133,7 @@ development:
     failed = 0
     while failed < 100
       begin
-        run_cmd("curl #{Capybara.app_host}/payments/new > /dev/null")
+        run_cmd("curl #{Capybara.app_host}/payments/new &> /dev/null")
         break
       rescue Object => error
         failed += 1

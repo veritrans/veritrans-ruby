@@ -5,7 +5,7 @@ For better security we recommend to use webhooks and check status of transaction
 Webhook is http post request that veritrans send to merchant's server when any transaction change status.
 It can be success transaction, can be failed transaction, and when transaction settled.
 
-Now you can set webhook url at https://my.sandbox.veritrans.co.id/settings/vtweb_configuration
+Now you can set webhook url at https://dashboard.sandbox.midtrans.com/settings/vtweb_configuration
 
 ## Veritrans command line tool
 
@@ -53,7 +53,7 @@ Also you can collect requests online for further inspection.
 
 To receive http notification from veritrans you can try to make transaction or use callback tester in merchant portal
 
-https://my.sandbox.veritrans.co.id/settings/vtweb_configuration/test_callback
+https://dashboard.sandbox.midtrans.com/settings/vtweb_configuration/test_callback
 
 
 ## Format

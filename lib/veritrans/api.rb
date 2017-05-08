@@ -5,9 +5,8 @@ require 'uri'
 class Veritrans
   module Api
 
-    # POST /v2/charge { payment_type: "vtlink" }
-    # Docs http://docs.veritrans.co.id/vtdirect/integration_cc.html#step2
-    # Docs http://docs.veritrans.co.id/sandbox/charge.html
+    # POST /v2/charge { payment_type: "credit_card" }
+    # Docs https://api-docs.midtrans.com/#charge-features
     #
     # Example:
     # Veritrans.charge(
@@ -55,7 +54,7 @@ class Veritrans
     alias_method :create_widget_token, :create_snap_token
 
     # POST /v2/{id}/cancel
-    # Docs http://docs.veritrans.co.id/en/api/methods.html#Cancel
+    # Docs https://api-docs.midtrans.com/#cancel-transaction
     def cancel(payment_id, options = {})
       if !payment_id || payment_id.to_s == ""
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
@@ -65,7 +64,7 @@ class Veritrans
     end
 
     # POST /v2/{id}/approve
-    # Docs http://docs.veritrans.co.id/en/api/methods.html#Approve
+    # Docs https://api-docs.midtrans.com/#approve-transaction
     def approve(payment_id, options = {})
       if !payment_id || payment_id.to_s == ""
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
@@ -75,7 +74,7 @@ class Veritrans
     end
 
     # GET /v2/{id}/status
-    # Docs http://docs.veritrans.co.id/en/api/methods.html#Status
+    # Docs https://api-docs.midtrans.com/#get-status-transaction
     def status(payment_id)
       if !payment_id || payment_id.to_s == ""
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
@@ -85,7 +84,7 @@ class Veritrans
     end
 
     # POST /v2/capture
-    # Docs http://docs.veritrans.co.id/en/api/methods.html#Capture
+    # Docs https://api-docs.midtrans.com/#capture-transaction
     def capture(payment_id, gross_amount, options = {})
       if !payment_id || payment_id.to_s == ""
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
@@ -95,6 +94,7 @@ class Veritrans
     end
 
     # POST /v2/{id}/expire
+    # Docs https://api-docs.midtrans.com/#expire-transaction
     def expire(payment_id)
       if !payment_id || payment_id.to_s == ""
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"

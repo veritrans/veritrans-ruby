@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.sandbox.veritrans.co.id/v2/testing-0.2703-1415600236/status
+    uri: https://api.sandbox.midtrans.com/v2/testing-0.2703-1415600236/status
     body:
       encoding: US-ASCII
       string: ''

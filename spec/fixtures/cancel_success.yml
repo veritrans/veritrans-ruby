@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.sandbox.veritrans.co.id/v2/charge
+    uri: https://api.sandbox.midtrans.com/v2/charge
     body:
       encoding: UTF-8
       string: '{"payment_type":"permata","transaction_details":{"order_id":1415110696,"gross_amount":100000}}'
@@ -54,7 +54,7 @@ http_interactions:
   recorded_at: Tue, 04 Nov 2014 14:18:17 GMT
 - request:
     method: post
-    uri: https://api.sandbox.veritrans.co.id/v2/1415110696/cancel
+    uri: https://api.sandbox.midtrans.com/v2/1415110696/cancel
     body:
       encoding: UTF-8
       string: "{}"

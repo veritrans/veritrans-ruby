@@ -21,7 +21,7 @@ describe Veritrans::Client do
 
     result = Veritrans.request_with_logging(:get, Veritrans.config.api_host + "/ping", {})
 
-    api_request.headers["Host"].should == "api.sandbox.veritrans.co.id:443"
+    api_request.headers["Host"].should == "api.sandbox.midtrans.com:443"
   end
 
   it "should use Veritrans.http_options to attach hedaers", vcr: false do

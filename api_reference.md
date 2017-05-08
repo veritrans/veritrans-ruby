@@ -1,7 +1,7 @@
 # API Reference
 
 Here is only reference for API of this gem, to see complete information
-please use our [documentation](http://docs.veritrans.co.id/en/api/introduction.html)
+please use our [documentation](https://api-docs.midtrans.com/)
 
 
 <table>
@@ -19,37 +19,37 @@ please use our [documentation](http://docs.veritrans.co.id/en/api/introduction.h
       <td><a href="#charge">Veritrans.charge(data)</a></td>
       <td>Charge Transaction</td>
       <td>POST</td>
-      <td>api.veritrans.co.id/v2/charge</td>
+      <td>api.midtrans.com/v2/charge</td>
     </tr>
     <tr>
       <td><a href="#status">Veritrans.status(id)</a></td>
       <td>Get Last Status</td>
       <td>GET</td>
-      <td>api.veritrans.co.id/v2/{id}/status</td>
+      <td>api.midtrans.com/v2/{id}/status</td>
     </tr>
     <tr>
       <td><a href="#cancel">Veritrans.cancel(id)</a></td>
       <td>Cancel Transaction</td>
       <td>POST</td>
-      <td>api.veritrans.co.id/v2/{id}/cancel</td>
+      <td>api.midtrans.com/v2/{id}/cancel</td>
     </tr>
     <tr>
       <td><a href="#approve">Veritrans.approve(id)</a></td>
       <td>Approve Challenge Transaction</td>
       <td>POST</td>
-      <td>api.veritrans.co.id/v2/{id}/approve</td>
+      <td>api.midtrans.com/v2/{id}/approve</td>
     </tr>
     <tr>
       <td><a href="#capture">Veritrans.capture(id)</a></td>
       <td>Capture Authorise Transaction</td>
       <td>POST</td>
-      <td>api.veritrans.co.id/v2/{id}/capture</td>
+      <td>api.midtrans.com/v2/{id}/capture</td>
     </tr>
     <tr>
       <td><a href="#expire">Veritrans.expire(id)</a></td>
       <td>Expire Pending Transaction</td>
       <td>POST</td>
-      <td>api.veritrans.co.id/v2/{id}/expire</td>
+      <td>api.midtrans.com/v2/{id}/expire</td>
     </tr>
   </tbody>
 </table>
@@ -76,7 +76,7 @@ q.class # => Veritrans::Result
 q.data == {
   status_code: "201",
   status_message: "OK, success do VTWeb transaction, please go to redirect_url",
-  redirect_url: "https://vtweb.sandbox.veritrans.co.id/v2/vtweb/b27d421f-90ff-4427-83d2-fbe8acbbce89"
+  redirect_url: "https://vtweb.sandbox.midtrans.com/v2/vtweb/b27d421f-90ff-4427-83d2-fbe8acbbce89"
 }
 ```
 
@@ -109,7 +109,7 @@ q = Veritrans.charge({
   customer_details: {
     first_name: "Nadia",
     last_name: "Modjo",
-    email: "noreply@veritrans.co.id",
+    email: "noreply@midtrans.com",
     phone: "+6281 123 12345",
     billing_address: {
       address: "Jalan Raya Kalijati",
@@ -253,7 +253,7 @@ result.class # => Veritrans::Result
 
 * `Veritrans::Result#success?` - `boolean`, base on `status_code` field in json
 * `Veritrans::Result#created?` - `boolean`, for VT-Link
-* `Veritrans::Result#status_code` - `integer`, e.g. 200, 402. Documentation http://docs.veritrans.co.id/en/api/status_code.html
+* `Veritrans::Result#status_code` - `integer`, e.g. 200, 402. Documentation https://api-docs.midtrans.com/#status-code
 * `Veritrans::Result#status_message` - `string`, e.g. "OK, success do VTWeb transaction, please go to redirect_url"
 * `Veritrans::Result#redirect_url` - `string`, redirect URL for VT-Web and VT-Link
 * `Veritrans::Result#body` - `string`, raw HTTP request body

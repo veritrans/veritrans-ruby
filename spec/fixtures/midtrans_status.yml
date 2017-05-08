@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.sandbox.veritrans.co.id/v2/charge
+    uri: https://api.sandbox.midtrans.com/v2/charge
     body:
       encoding: UTF-8
       string: '{"payment_type":"permata","transaction_details":{"order_id":"2016-10-20
@@ -58,7 +58,7 @@ http_interactions:
   recorded_at: Thu, 20 Oct 2016 05:39:18 GMT
 - request:
     method: get
-    uri: https://api.sandbox.veritrans.co.id/v2/2016-10-20%2012:39:16%20+0700/status
+    uri: https://api.sandbox.midtrans.com/v2/2016-10-20%2012:39:16%20+0700/status
     body:
       encoding: US-ASCII
       string: ''

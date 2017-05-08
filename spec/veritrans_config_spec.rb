@@ -12,7 +12,7 @@ describe Veritrans::Config do
   end
 
   it "should have sandbox api_host by defualt" do
-    Veritrans.config.api_host.should == "https://api.sandbox.veritrans.co.id"
+    Veritrans.config.api_host.should == "https://api.sandbox.midtrans.com"
   end
 
   it "should set client key and server key" do

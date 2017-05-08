@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.sandbox.veritrans.co.id/v2/capture
+    uri: https://api.sandbox.midtrans.com/v2/capture
     body:
       encoding: UTF-8
       string: '{"transaction_id":"not-exists","gross_amount":1000}'
