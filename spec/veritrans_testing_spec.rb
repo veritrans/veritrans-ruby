@@ -1,4 +1,4 @@
-describe Veritrans::Testing do
+describe Veritrans::Testing, skip: true do
 
   before do
     hide_const("Rails")
