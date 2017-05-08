@@ -116,13 +116,14 @@ development:
     @rails_port = find_open_port
 
     server_cmd = "./bin/rails server -p #{@rails_port} -b 127.0.0.1"
-    server_env = {"RAILS_ENV" => "development"}
+    server_env = {"RAILS_ENV" => "development", "BUNDLE_GEMFILE" => @app_abs_path + "/Gemfile"}
     spawn_opts = {chdir: @app_abs_path}
     spawn_opts.merge!([:err, :out] => "/dev/null") unless ENV['DEBUG']
 
     Bundler.with_clean_env do
       puts "RUN: #{server_cmd} #{spawn_opts}" if ENV['DEBUG']
-      spawn(server_env, "ls -lah", spawn_opts)
+      Process.wait(spawn(server_env, "ls -lah", spawn_opts))
+      Process.wait(spawn(server_env, "bundle list", spawn_opts))
       @runner_pid = spawn(server_env, server_cmd, spawn_opts)
       puts "Process running PID: #{$runner_pid}" if ENV['DEBUG']
     end
