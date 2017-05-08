@@ -122,6 +122,7 @@ development:
 
     Bundler.with_clean_env do
       puts "RUN: #{server_cmd} #{spawn_opts}" if ENV['DEBUG']
+      spawn(server_env, "ls -lah", spawn_opts)
       @runner_pid = spawn(server_env, server_cmd, spawn_opts)
       puts "Process running PID: #{$runner_pid}" if ENV['DEBUG']
     end
