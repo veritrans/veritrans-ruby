@@ -1,3 +1,15 @@
+### Version 2.2.0 (date 08 May 2017)
+
+* Change default endpoint to *.midtrans.com
+* Fix broken links to documentation
+* Add support for Rails 5.1
+* Add Rails examples (Thanks to Adam Pahlevi)
+* More complete rdoc commects
+* Add items to vtweb example
+* Update year in example app
+* Log error message for failed requests
+* Add Veritrans::Testing for testing API
+
 ### Version 2.1.3 (date 19 Dec 2016)
 
 * Update create snap token endpoint

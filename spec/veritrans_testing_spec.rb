@@ -150,7 +150,7 @@ describe Veritrans::Testing do
       snap_txn_details = txn_details
       result = Veritrans.create_snap_token(transaction_details: snap_txn_details)
 
-      snap_result = Veritrans::Testing.pay_snap(result.token_id, 'permata_va', {
+      snap_result = Veritrans::Testing.pay_snap(result.token, 'permata_va', {
         #customer_details: {
         #  email: "budi@utomo.com"
         #}
