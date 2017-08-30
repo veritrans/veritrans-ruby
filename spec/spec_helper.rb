@@ -11,6 +11,7 @@ require 'webmock/rspec'
 require 'vcr'
 
 require 'capybara/rspec'
+require 'capybara-screenshot/rspec'
 require 'capybara/poltergeist'
 require 'active_support/testing/stream'
 
@@ -37,6 +38,12 @@ VCR.configure do |c|
   #c.debug_logger = STDOUT
 end
 
+module SpecHelper
+  def show_image
+    Capybara::Screenshot.screenshot_and_open_image
+  end
+end
+
 RSpec.configure do |config|
   config.mock_with :rspec
 
@@ -57,4 +64,5 @@ RSpec.configure do |config|
       example.run
     end
   end
+  config.include(SpecHelper)
 end

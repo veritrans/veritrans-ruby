@@ -1,12 +1,19 @@
 source "https://rubygems.org"
 
 gem 'rake'
-gem 'rspec'
 
 gem 'rails', '< 6'
 
 gem 'sinatra'
 gem 'puma'
 gem 'tilt'
+
+group :test do
+  gem 'capybara-screenshot'
+  gem "rspec", '~> 3.4'
+  gem 'webmock', '>= 1.20'
+  gem 'vcr', '~> 3.0'
+  gem "poltergeist", '~> 1.8'
+end
 
 gemspec

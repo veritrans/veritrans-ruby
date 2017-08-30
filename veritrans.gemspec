@@ -18,11 +18,5 @@ Gem::Specification.new do |s|
   s.executables   = ["veritrans", "midtrans"]
 
   s.add_runtime_dependency "excon", "~> 0.20"
-
-  s.add_development_dependency "rspec", '~> 3.4'
-  s.add_development_dependency "rails", ">= 4.0", "< 6"
-  s.add_development_dependency 'webmock', '>= 1.20'
-  s.add_development_dependency 'vcr', '~> 3.0'
-  s.add_development_dependency "poltergeist", '~> 1.8'
 end
 

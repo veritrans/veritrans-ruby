@@ -251,8 +251,7 @@ development:
       visit "/payments/new"
       click_link "Pay via VT-Web"
 
-      page.should have_content("Payment is securely processed by Midtrans")
-      #Capybara::Screenshot.screenshot_and_open_image
+      page.should have_content("ATM/Bank Transfer")
 
       # TEST CALLBACK FOR WRONG DATA
       stub_const("CONFIG", {})

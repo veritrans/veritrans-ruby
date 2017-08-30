@@ -55,6 +55,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    capybara-screenshot (1.0.17)
+      capybara (>= 1.0, < 3)
+      launchy
     cliver (0.3.2)
     concurrent-ruby (1.0.5)
     crack (0.4.3)
@@ -66,6 +69,8 @@ GEM
       activesupport (>= 4.2.0)
     hashdiff (0.3.6)
     i18n (0.8.6)
+    launchy (2.4.3)
+      addressable (~> 2.3)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.6)
@@ -162,11 +167,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  capybara-screenshot
   poltergeist (~> 1.8)
   puma
   rails (< 6)
   rake
-  rspec
+  rspec (~> 3.4)
   sinatra
   tilt
   vcr (~> 3.0)
