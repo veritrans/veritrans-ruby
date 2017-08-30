@@ -10,7 +10,7 @@ describe "Rails plugin", vcr: false do
   APP_DIR = "plugin_test"
   PLUGIN_DIR = File.expand_path("..", File.dirname(__FILE__))
 
-  RAILS_VERSIONS = ["4.1.16", "4.2.8", "5.0.2", "5.1.0"]
+  RAILS_VERSIONS = ["4.1.16", "4.2.9", "5.0.5", "5.1.3"]
 
   before :all do
     FileUtils.mkdir_p("#{PLUGIN_DIR}/tmp")
@@ -137,8 +137,10 @@ development:
       puts "Check if rails server UP (#{Capybara.app_host})" if ENV['DEBUG']
       output, status = Open3.capture2e(check_cmd)
       if status == 0 && output =~ /credit_card_number/
-        puts "Server is running, output:"
-        puts output
+        if ENV['DEBUG']
+          puts "Server is running, output:"
+          puts output[0..300]
+        end
         break
       else
         failed += 1
@@ -294,5 +296,29 @@ development:
         stderr_str.should include('Veritrans: Using first section "development"')
       end
     end
+  end
+
+  it "should create logs filder for log/veritrans.log" do
+    install_rails_in_tmp
+    FileUtils.rm_rf(@app_abs_path + "/log")
+    File.open(@app_abs_path + "/config/application.rb", 'a') do |f|
+      f.write %{
+        logger = ActiveSupport::Logger.new(STDOUT)
+        Rails.application.config.logger = ActiveSupport::TaggedLogging.new(logger)
+      }
+    end
+    run_rails_app
+
+    response = Excon.post("#{Capybara.app_host}/payments/receive_webhook",
+      body: {transaction_id: "111"}.to_json,
+      headers: {"Content-Type" => "application/json"}
+    )
+    response.body.should == "error"
+    response.status.should == 404
+
+    File.exist?(@app_abs_path + "/log/development.log").should == false
+    File.exist?(@app_abs_path + "/log/veritrans.log").should == true
+
+    File.read(@app_abs_path + "/log/veritrans.log").should include("Callback verification failed for order")
   end
 end

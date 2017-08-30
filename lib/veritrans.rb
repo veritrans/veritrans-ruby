@@ -182,10 +182,19 @@ class Veritrans
   # For rails apps it will write log to RAILS_ROOT/log/veritrans.log
   def file_logger
     if !@file_logger
-      if defined?(Rails) && Rails.root
-        @file_logger = Logger.new(Rails.root.join("log/veritrans.log").to_s)
-      else
-        require 'logger'
+      require 'logger'
+      begin
+        if defined?(Rails) && Rails.root
+          require 'fileutils'
+          FileUtils.mkdir_p(Rails.root.join("log"))
+          @file_logger = Logger.new(Rails.root.join("log/veritrans.log").to_s)
+        else
+          @file_logger = Logger.new("/dev/null")
+        end
+      rescue => error
+        STDERR.puts "Failed to create Midtrans.file_logger, will use /dev/null"
+        STDERR.puts "#{error.class}: #{error.message}"
+        STDERR.puts error.backtrace
         @file_logger = Logger.new("/dev/null")
       end
     end

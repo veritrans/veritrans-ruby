@@ -60,7 +60,7 @@ class PaymentsController < ApplicationController # :nodoc:
         verified_data.body + "\n"
       )
 
-      render plain: "ok", :status => :not_found
+      render plain: "error", :status => :not_found
     end
 
   end
