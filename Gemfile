@@ -12,7 +12,7 @@ group :test do
   gem 'capybara-screenshot'
   gem "rspec", '~> 3.4'
   gem 'webmock', '>= 1.20'
-  gem 'vcr', '~> 3.0'
+  gem 'vcr', '~> 4.0'
   gem "poltergeist", '~> 1.8'
 end
 

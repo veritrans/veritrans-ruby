@@ -10,7 +10,7 @@ describe "Rails plugin", vcr: false do
   APP_DIR = "plugin_test"
   PLUGIN_DIR = File.expand_path("..", File.dirname(__FILE__))
 
-  RAILS_VERSIONS = ["4.1.16", "4.2.9", "5.0.5", "5.1.3"]
+  RAILS_VERSIONS = ["4.1.16", "4.2.10", "5.0.6", "5.1.5"]
 
   before :all do
     FileUtils.mkdir_p("#{PLUGIN_DIR}/tmp")
