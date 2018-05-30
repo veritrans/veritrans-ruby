@@ -1,3 +1,10 @@
+### Version 2.2.1 (date 30 May 2018)
+
+* Update assertion message value
+* Add alias method create_snap_redirect_url
+* add redirect_url accessor in SnapResult
+* Improve some wordings and examples in README.md 
+
 ### Version 2.2.0 (date 08 May 2017)
 
 * Change default endpoint to *.midtrans.com
