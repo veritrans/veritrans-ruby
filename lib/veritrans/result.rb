@@ -151,6 +151,11 @@ class Veritrans
       @data[:token]
     end
 
+    # Acccessor for <tt>redirect_url</tt> value
+    def redirect_url
+      @data[:redirect_url]
+    end
+
     def success?
       status_code == 201
     end

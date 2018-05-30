@@ -45,13 +45,14 @@ class Veritrans
       request_with_logging(:post, config.api_host + "/v2/charge", data)
     end
 
-    # POST https://app.sandbox.veritrans.co.id/snap/v1/transactions
+    # POST https://app.sandbox.midtrans.com/snap/v1/transactions
     def create_snap_token(options = {})
       result = request_with_logging(:post, config.api_host.sub('//api.', '//app.') + "/snap/v1/transactions", options)
       Veritrans::SnapResult.new(result.response, result.url, result.request_options, result.time)
     end
 
     alias_method :create_widget_token, :create_snap_token
+    alias_method :create_snap_redirect_url, :create_snap_token
 
     # POST /v2/{id}/cancel
     # Docs https://api-docs.midtrans.com/#cancel-transaction
