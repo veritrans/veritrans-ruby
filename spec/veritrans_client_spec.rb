@@ -72,7 +72,7 @@ describe Veritrans::Client do
     other_result = other_client.status(result.transaction_id)
 
     other_result.status_code.should == 404
-    other_result.status_message.should == "The requested resource is not found"
+    other_result.status_message.should == "Transaction doesnt exist."
 
     #p other_result.request_options
 
