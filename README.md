@@ -1,7 +1,7 @@
 # Veritrans ruby library
 
 Veritrans gem is the library that will help you to integrate seamlessly with
-Midtrans.
+Midtrans (formerly known as Veritrans Indonesia).
 
 [![Gem Version](https://badge.fury.io/rb/veritrans.svg)](http://badge.fury.io/rb/veritrans)
 [![Build Status](https://travis-ci.org/veritrans/veritrans-ruby.svg?branch=master)](https://travis-ci.org/veritrans/veritrans-ruby)
@@ -41,24 +41,11 @@ development:
 
 ## STEP 1: Process credit cards
 
-
-#### VT-Web
-
-*If you want to use VT-Web, add `payment_type: "VTWEB"`*
-
-```ruby
-@result = Veritrans.charge(
-  payment_type: "VTWEB",
-  transaction_details: {
-    order_id: "my-unique-order-id",
-    gross_amount: 100_000
-  }
-)
-
-redirect_to @result.redirect_url
-```
-
 #### Snap
+
+##### Pop-up
+
+This will result in payment page being a pop-up(iframe) inside your own web page, no need redirection, similar to our [demo](http://demo.midtrans.com)
 
 First, generate token in the back end provided with enough details as necessary
 and as detailed as you wish to.
@@ -101,10 +88,45 @@ jQuery(".order-button").on("click", function() {
 });
 ```
 
-#### VT-Direct
+##### Redirection
+
+This will result in redirect_url, you can redirect customer to the url, payment page is securely hosted by Midtrans.
+
+```ruby
+@result = Veritrans.create_snap_redirect_url(
+  transaction_details: {
+    order_id: "my-unique-order-id",
+    gross_amount: 100_000
+  }
+)
+
+redirect_to @result.redirect_url
+```
+
+> This is similar feature as old VT-Web
+
+#### VT-Web
+
+> !!! WARNING NOTE: VT-Web is deprecated, please use [Snap](#Snap) instead, it has better previous VT-Web feature and many more improvements, including redirect_url.
+
+*If you want to use VT-Web, add `payment_type: "VTWEB"`*
+
+```ruby
+@result = Veritrans.charge(
+  payment_type: "VTWEB",
+  transaction_details: {
+    order_id: "my-unique-order-id",
+    gross_amount: 100_000
+  }
+)
+
+redirect_to @result.redirect_url
+```
+
+#### VT-Direct / Core API
 
 It's little more complicated, because credit_card is sensitive data,
-you need put credit card number in our safe storage first using `veritrans.js` library, then send received token to with other payment details.
+you need put credit card number in our safe storage first using `midtrans.min.js` library, then send received token to with other payment details.
 
 We don't want you to send credit card number to your server, especially for websites not using https.
 
@@ -227,13 +249,13 @@ if @result.success?
 end
 ```
 
-## STEP 2: Process not credit cards
+## STEP 2: Process non credit cards payment
 
-We provide many payment channels to receive money, but API is almost same.
+We provide many payment channels to accept payment, but the API call is almost the same.
 
-For VT-Web in only one request, and payment page will have all available payment options.
+For Snap / VT-Web in only one request, payment page will display all available payment options.
 
-For VT-Direct you have to specify payment method (token required only for credit card transactions).
+For Core API / VT-Direct you have to specify payment method (without get token step, credit card token required only for credit card transactions).
 
 ```ruby
 @result = Veritrans.charge(
@@ -244,7 +266,7 @@ For VT-Direct you have to specify payment method (token required only for credit
     gross_amount: @payment.amount
   }
 )
-puts "Please send money to account no. #{@result.permata_va_number} in bank Permata"
+puts "Please transfer fund to account no. #{@result.permata_va_number} in bank Permata"
 ```
 
 See [our documentation](https://api-docs.midtrans.com/#charge-features) for other available options.
