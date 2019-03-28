@@ -67,7 +67,7 @@ describe "Rails plugin", vcr: false do
     if response =~ /[^\d]#{rails_version}[^\d]/
       return true
     else
-      run_cmd("gem install rails -v #{rails_version} --no-ri --no-rdoc")
+      run_cmd("gem install rails -v #{rails_version}")
     end
   end
 

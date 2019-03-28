@@ -7,6 +7,7 @@ gem 'rails', '< 6'
 gem 'sinatra'
 gem 'puma'
 gem 'tilt'
+gem 'sqlite3'
 
 group :test do
   gem 'capybara-screenshot'
