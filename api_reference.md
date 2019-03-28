@@ -22,6 +22,12 @@ please use our [documentation](https://api-docs.midtrans.com/)
       <td>api.midtrans.com/v2/charge</td>
     </tr>
     <tr>
+      <td><a href="#token">Veritrans.test_token(data)</a></td>
+      <td>Get Token for Card</td>
+      <td>GET</td>
+      <td>api.midtrans.com/v2/token</td>
+    </tr>
+    <tr>
       <td><a href="#status">Veritrans.status(id)</a></td>
       <td>Get Last Status</td>
       <td>GET</td>
@@ -40,6 +46,12 @@ please use our [documentation](https://api-docs.midtrans.com/)
       <td>api.midtrans.com/v2/{id}/approve</td>
     </tr>
     <tr>
+      <td><a href="#refund">Veritrans.refund(id)</a></td>
+      <td>Refund Successful Transaction</td>
+      <td>POST</td>
+      <td>api.midtrans.com/v2/{id}/refund</td>
+    </tr>
+    <tr>
       <td><a href="#capture">Veritrans.capture(id)</a></td>
       <td>Capture Authorise Transaction</td>
       <td>POST</td>
@@ -50,6 +62,12 @@ please use our [documentation](https://api-docs.midtrans.com/)
       <td>Expire Pending Transaction</td>
       <td>POST</td>
       <td>api.midtrans.com/v2/{id}/expire</td>
+    </tr>
+    <tr>
+      <td><a href="#deny">Veritrans.deny(id)</a></td>
+      <td>Deny Challenged Transaction</td>
+      <td>POST</td>
+      <td>api.midtrans.com/v2/{id}/deny</td>
     </tr>
   </tbody>
 </table>
@@ -141,6 +159,24 @@ q.data == {
 q.success? # => true
 ```
 
+<a name="token"></a>
+### Test Token
+
+Get a token from card information for testing. **Not to be used outside of tests**
+
+```ruby
+card =
+  {
+    card_number: 4_811_111_111_111_114,
+    card_cvv: 123,
+    card_exp_month: 0o1,
+    card_exp_year: 2020
+  }
+
+q = Veritrans.test_token(card)
+
+q == '481111-1114-a901971f-2f1b-4781-802a-df326fbf0e9c'
+```
 
 <a name="status"></a>
 ### Status
@@ -219,6 +255,30 @@ q.data == {
 }
 ```
 
+<a name="refund"></a>
+### Refund
+
+To be used to refund. Can only be used on transactions that are marked as `successful` which happens automatically after
+one day after charge request. Defaults to full refund if not specified.
+
+```ruby
+q = Veritrans.refund('testing-0.2072-1415086078')
+
+q == {
+   status_code: "200",
+   status_message: "Success, refund request is approved",
+   transaction_id: "447e846a-403e-47db-a5da-d7f3f06375d6",
+   order_id: "testing-0.2072-1415086078",
+   payment_type: "credit_card",
+   transaction_time: "2015-06-15 13:36:24",
+   transaction_status: "refund",
+   gross_amount: "10000.00",
+   refund_chargeback_id: 1,
+   refund_amount: "10000.00",
+   refund_key: "reference1"
+}
+```
+
 <a name="capture"></a>
 ### Capture
 
@@ -232,13 +292,35 @@ q.success? # => true
 <a name="expire"></a>
 ### Expire
 
-You can expire pedning transactions. For examople if merchant choose to pay via ATM,
-then user change mind and want to pay with credit card.
-In this situation you better expire previous transaction, and you can use same order_id again
+To expire pending transactions. For example if a merchant chooses to pay via ATM and
+then the user changes their mind and now wants to pay with credit card.
+In this situation the previous transaction should be expired. The same order_id can be used again.
 
 ```ruby
 q = Veritrans.expire("testing-0.2072-1415086078")
 q.success? # => true
+```
+
+<a name="deny"></a>
+### Deny
+Used to deny a card payment transaction in which `fraud_status` is `challenge`
+
+```ruby
+q = Veritrans.deny("testing-0.2072-1415086078")
+
+q == { 
+  status_code: "200",
+  status_message: "Success, transaction is denied",
+  transaction_id: "ca297170-be4c-45ed-9dc9-be5ba99d30ee",
+  masked_card: "451111-1117",
+  order_id: "testing-0.2072-1415086078",
+  payment_type: "credit_card",
+  transaction_time: "2014-10-31 14:46:44",
+  transaction_status: "deny",
+  fraud_status: "deny",
+  bank: "bni",
+  gross_amount: "30000.00"
+}
 ```
 
 
