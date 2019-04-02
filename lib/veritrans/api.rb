@@ -28,7 +28,7 @@ class Veritrans
       data[:payment_type] = payment_type if payment_type
 
       if data.has_key?(:payment_options)
-        data[ payment_type.to_sym ] = data.delete(:payment_options)
+        data[payment_type.to_sym] = data.delete(:payment_options)
       end
 
       # Rename keys:
@@ -37,12 +37,17 @@ class Veritrans
       # items       -> item_details
       # customer    -> customer_details
 
-      data[:transaction_details]  = data.delete(:payment)     if data[:payment]
-      data[:transaction_details]  = data.delete(:transaction) if data[:transaction]
-      data[:item_details]         = data.delete(:items)       if data[:items]
-      data[:customer_details]     = data.delete(:customer)    if data[:customer]
+      data[:transaction_details] = data.delete(:payment) if data[:payment]
+      data[:transaction_details] = data.delete(:transaction) if data[:transaction]
+      data[:item_details] = data.delete(:items) if data[:items]
+      data[:customer_details] = data.delete(:customer) if data[:customer]
 
       request_with_logging(:post, config.api_host + "/v2/charge", data)
+    end
+
+    def test_token(options = {})
+      options[:client_key] = config.client_key
+      request_with_logging(:get, config.api_host + '/v2/token', options).token_id
     end
 
     # POST https://app.sandbox.midtrans.com/snap/v1/transactions
@@ -74,6 +79,16 @@ class Veritrans
       request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/approve", options)
     end
 
+    # POST /v2/{id}/refund
+    # Docs https://api-docs.midtrans.com/#refund-transaction
+    def refund(payment_id, options = {})
+      if !payment_id || payment_id.to_s == ''
+        raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
+      end
+
+      request_with_logging(:post, config.api_host + "/v2/#{ERB::Util.url_encode(payment_id)}/refund", options)
+    end
+
     # GET /v2/{id}/status
     # Docs https://api-docs.midtrans.com/#get-status-transaction
     def status(payment_id)
@@ -92,6 +107,16 @@ class Veritrans
       end
 
       post(config.api_host + "/v2/capture", options.merge(transaction_id: payment_id, gross_amount: gross_amount))
+    end
+
+    # POST /v2/{id}/deny
+    # Docs https://api-docs.midtrans.com/#deny-transaction
+    def deny(payment_id, options = {})
+      if !payment_id || payment_id.to_s == ''
+        raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
+      end
+
+      request_with_logging(:post, config.api_host + "/v2/#{ERB::Util.url_encode(payment_id)}/deny", options)
     end
 
     # POST /v2/{id}/expire
@@ -124,6 +149,7 @@ class Veritrans
 
       request_with_logging(:get, config.api_host + "/v2/point_inquiry/#{token_id}", {})
     end
+
     alias_method :point_inquiry, :inquiry_points
 
   end

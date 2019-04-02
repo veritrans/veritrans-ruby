@@ -16,7 +16,7 @@ describe Veritrans::Client do
     api_request = nil
     stub_request(:any, /.*/).to_return(lambda { |request|
       api_request = request
-      {body: request.body}
+      { body: request.body }
     })
 
     result = Veritrans.request_with_logging(:get, Veritrans.config.api_host + "/ping", {})
@@ -32,7 +32,7 @@ describe Veritrans::Client do
     api_request = nil
     stub_request(:any, /.*/).to_return(lambda { |request|
       api_request = request
-      {body: request.body}
+      { body: request.body }
     })
 
     result = Veritrans.request_with_logging(:get, Veritrans.config.api_host + "/ping", {})
@@ -72,7 +72,8 @@ describe Veritrans::Client do
     other_result = other_client.status(result.transaction_id)
 
     other_result.status_code.should == 404
-    other_result.status_message.should == "Transaction doesnt exist."
+
+    other_result.status_message.should == "Transaction doesn't exist."
 
     #p other_result.request_options
 
@@ -83,7 +84,7 @@ describe Veritrans::Client do
 
   it "should send charge vt-web request" do
     VCR.use_cassette('charge_vtweb') do
-      result = Veritrans.charge('vtweb', transaction: { order_id: Time.now.to_s, gross_amount: 100_000 } )
+      result = Veritrans.charge('vtweb', transaction: { order_id: Time.now.to_s, gross_amount: 100_000 })
 
       result.status_message.should == "OK, success do VTWeb transaction, please go to redirect_url"
       result.success?.should == true
@@ -111,7 +112,7 @@ describe Veritrans::Client do
 
   it "should send status request and get response" do
     VCR.use_cassette('status_success') do
-      result_charge = Veritrans.charge('permata', transaction: { order_id: Time.now.to_i, gross_amount: 100_000 } )
+      result_charge = Veritrans.charge('permata', transaction: { order_id: Time.now.to_i, gross_amount: 100_000 })
       result = Veritrans.status(result_charge.order_id)
       result.success?.should == true
       result.status_message.should == "Success, transaction found"
@@ -129,7 +130,7 @@ describe Veritrans::Client do
 
   it "should send status request and get response" do
     VCR.use_cassette('cancel_success') do
-      result_charge = Veritrans.charge('permata', transaction: { order_id: Time.now.to_i, gross_amount: 100_000 } )
+      result_charge = Veritrans.charge('permata', transaction: { order_id: Time.now.to_i, gross_amount: 100_000 })
       result = Veritrans.cancel(result_charge.order_id)
       result.success?.should == true
       result.status_message.should == "Success, transaction is canceled"
@@ -145,11 +146,69 @@ describe Veritrans::Client do
     end
   end
 
+  describe 'fake token' do
+    let(:card) do
+      {
+        card_number: 4_811_111_111_111_114,
+        card_cvv: 123,
+        card_exp_month: 0o1,
+        card_exp_year: 2020
+      }
+    end
+
+    it 'should get token for testing' do
+      VCR.use_cassette('test_token') do
+        result = Veritrans.test_token(card)
+        expect(result).to be_a_kind_of String
+      end
+    end
+  end
+
+  # Can only refund after it has been settled after one day
+  it 'should send refund request' do
+    VCR.use_cassette('refund_failed') do
+      result = Veritrans.refund('1415110696')
+      expect(result.success?).to be false
+      expect(result.status_message).to eq 'Merchant cannot modify the status of the transaction'
+    end
+  end
+
   it "should send capture request" do
     VCR.use_cassette('capture_failed') do
       result = Veritrans.capture("not-exists", 1000)
       result.success?.should == false
       result.status_message.should == "The requested resource is not found"
+    end
+  end
+
+  describe 'deny' do
+    let(:card) do
+      {
+        card_number: 4_811_111_111_111_114,
+        card_cvv: 123,
+        card_exp_month: 0o1,
+        card_exp_year: 2020
+      }
+    end
+
+    let(:order_id) { Time.now.to_i }
+
+    it 'should send deny request' do
+      VCR.use_cassette('deny_failed', record: :all) do
+        Veritrans.charge(
+          payment_type: 'credit_card',
+          credit_card: {
+            token_id: Veritrans.test_token(card)
+          },
+          transaction_details: {
+            order_id: order_id.to_s,
+            gross_amount: 3000
+          }
+        )
+        result = Veritrans.deny(order_id.to_s)
+        expect(result.success?).to be false
+        expect(result.status_message).to eq 'Transaction status cannot be updated.'
+      end
     end
   end
 

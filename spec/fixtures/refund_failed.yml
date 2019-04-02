@@ -1,0 +1,54 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.sandbox.midtrans.com/v2/1415110696/refund
+    body:
+      encoding: UTF-8
+      string: "{}"
+    headers:
+      User-Agent:
+      - Veritrans ruby gem 2.2.1
+      Authorization:
+      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 01 Apr 2019 04:17:41 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '104'
+      Connection:
+      - keep-alive
+      Cache-Control:
+      - no-cache
+      Pragma:
+      - no-cache
+      Expires:
+      - Wed, 31 Dec 1969 17:00:00 GMT
+      X-Kong-Upstream-Latency:
+      - '38'
+      X-Kong-Proxy-Latency:
+      - '4'
+      Via:
+      - kong/0.14.0
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains;
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "status_code" : "412",
+          "status_message" : "Merchant cannot modify the status of the transaction"
+        }
+    http_version: 
+  recorded_at: Mon, 01 Apr 2019 04:17:41 GMT
+recorded_with: VCR 4.0.0
