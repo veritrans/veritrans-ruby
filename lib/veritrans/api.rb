@@ -57,6 +57,7 @@ class Veritrans
     end
 
     alias_method :create_widget_token, :create_snap_token
+    alias_method :create_snap_redirect_url, :create_snap_token
 
     # POST /v2/{id}/cancel
     # Docs https://api-docs.midtrans.com/#cancel-transaction
