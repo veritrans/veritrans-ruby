@@ -6,11 +6,11 @@ require 'socket'
 describe 'Rails plugin', vcr: false do
   include Capybara::DSL
 
-  MAIN_RAILS_VER = '5.1.0'.freeze
+  MAIN_RAILS_VER = '5.2.3'.freeze
   APP_DIR = 'plugin_test'.freeze
   PLUGIN_DIR = File.expand_path('..', File.dirname(__FILE__))
 
-  RAILS_VERSIONS = %w[4.1.16 4.2.10 5.0.6 5.1.5].freeze
+  RAILS_VERSIONS = %w[4.2.11.1 5.0.7.2 5.1.7 5.2.3].freeze
 
   before :all do
     FileUtils.mkdir_p("#{PLUGIN_DIR}/tmp")

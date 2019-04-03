@@ -5,10 +5,10 @@ http_interactions:
     uri: https://api.sandbox.midtrans.com/v2/charge
     body:
       encoding: UTF-8
-      string: '{"payment_type":"permata","transaction_details":{"order_id":1415110696,"gross_amount":100000}}'
+      string: '{"payment_type":"permata","transaction_details":{"order_id":1554317097,"gross_amount":100000}}'
     headers:
       User-Agent:
-      - Veritrans ruby gem 2.0.0beta
+      - Veritrans ruby gem 2.3.0
       Authorization:
       - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
       Accept:
@@ -18,49 +18,59 @@ http_interactions:
   response:
     status:
       code: 200
-      message: ''
+      message: OK
     headers:
-      Server:
-      - nginx/1.5.13
       Date:
-      - Tue, 04 Nov 2014 14:19:48 GMT
+      - Wed, 03 Apr 2019 18:44:57 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '381'
+      - '432'
       Connection:
       - keep-alive
+      Vary:
+      - Accept-Encoding
       Cache-Control:
       - no-cache
       Pragma:
       - no-cache
       Expires:
       - Wed, 31 Dec 1969 17:00:00 GMT
+      X-Kong-Upstream-Latency:
+      - '200'
+      X-Kong-Proxy-Latency:
+      - '0'
+      Via:
+      - kong/0.14.0
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains;
     body:
-      encoding: UTF-8
+      encoding: ASCII-8BIT
       string: |-
         {
           "status_code" : "201",
           "status_message" : "Success, PERMATA VA transaction is successful",
-          "transaction_id" : "d8757b8a-b97e-4881-9f55-69f6db6f4006",
-          "order_id" : "1415110696",
+          "transaction_id" : "f162dd28-c6a2-4357-a2ff-b942ba33d01e",
+          "order_id" : "1554317097",
+          "gross_amount" : "100000.00",
+          "currency" : "IDR",
           "payment_type" : "bank_transfer",
-          "transaction_time" : "2014-11-04 21:20:07",
+          "transaction_time" : "2019-04-04 01:44:57",
           "transaction_status" : "pending",
-          "permata_va_number" : "8778990000000023",
-          "gross_amount" : "100000.00"
+          "fraud_status" : "accept",
+          "permata_va_number" : "8778008906093609"
         }
     http_version: 
-  recorded_at: Tue, 04 Nov 2014 14:18:17 GMT
+  recorded_at: Wed, 03 Apr 2019 18:44:57 GMT
 - request:
     method: post
-    uri: https://api.sandbox.midtrans.com/v2/1415110696/cancel
+    uri: https://api.sandbox.midtrans.com/v2/1554317097/cancel
     body:
       encoding: UTF-8
       string: "{}"
     headers:
       User-Agent:
-      - Veritrans ruby gem 2.0.0beta
+      - Veritrans ruby gem 2.3.0
       Authorization:
       - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
       Accept:
@@ -70,37 +80,47 @@ http_interactions:
   response:
     status:
       code: 200
-      message: ''
+      message: OK
     headers:
-      Server:
-      - nginx/1.5.13
       Date:
-      - Tue, 04 Nov 2014 14:19:48 GMT
+      - Wed, 03 Apr 2019 18:44:58 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '323'
+      - '374'
       Connection:
       - keep-alive
+      Vary:
+      - Accept-Encoding
       Cache-Control:
       - no-cache
       Pragma:
       - no-cache
       Expires:
       - Wed, 31 Dec 1969 17:00:00 GMT
+      X-Kong-Upstream-Latency:
+      - '56'
+      X-Kong-Proxy-Latency:
+      - '87'
+      Via:
+      - kong/0.14.0
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains;
     body:
-      encoding: UTF-8
+      encoding: ASCII-8BIT
       string: |-
         {
           "status_code" : "200",
           "status_message" : "Success, transaction is canceled",
-          "transaction_id" : "d8757b8a-b97e-4881-9f55-69f6db6f4006",
-          "order_id" : "1415110696",
+          "transaction_id" : "f162dd28-c6a2-4357-a2ff-b942ba33d01e",
+          "order_id" : "1554317097",
+          "gross_amount" : "100000.00",
+          "currency" : "IDR",
           "payment_type" : "bank_transfer",
-          "transaction_time" : "2014-11-04 21:20:07",
+          "transaction_time" : "2019-04-04 01:44:57",
           "transaction_status" : "cancel",
-          "gross_amount" : "100000.00"
+          "fraud_status" : "accept"
         }
     http_version: 
-  recorded_at: Tue, 04 Nov 2014 14:18:17 GMT
-recorded_with: VCR 2.9.3
+  recorded_at: Wed, 03 Apr 2019 18:44:58 GMT
+recorded_with: VCR 4.0.0

@@ -8,7 +8,7 @@ http_interactions:
       string: "{}"
     headers:
       User-Agent:
-      - Veritrans ruby gem 2.0.0beta
+      - Veritrans ruby gem 2.3.0
       Authorization:
       - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
       Accept:
@@ -18,31 +18,31 @@ http_interactions:
   response:
     status:
       code: 200
-      message: ''
+      message: OK
     headers:
-      Server:
-      - nginx/1.5.13
       Date:
-      - Tue, 04 Nov 2014 14:18:37 GMT
+      - Wed, 03 Apr 2019 18:44:32 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '87'
+      - '111'
       Connection:
       - keep-alive
-      Cache-Control:
-      - no-cache
       Pragma:
       - no-cache
-      Expires:
-      - Wed, 31 Dec 1969 17:00:00 GMT
+      Cache-Control:
+      - no-cache
+      X-Kong-Upstream-Latency:
+      - '19'
+      X-Kong-Proxy-Latency:
+      - '94'
+      Via:
+      - kong/0.14.0
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains;
     body:
-      encoding: UTF-8
-      string: |-
-        {
-          "status_code" : "404",
-          "status_message" : "The requested resource is not found"
-        }
+      encoding: ASCII-8BIT
+      string: '{"status_code":"404","status_message":"Transaction doesn''t exist.","id":"37bb81e3-341f-4730-aaa6-8e985343fbb3"}'
     http_version: 
-  recorded_at: Tue, 04 Nov 2014 14:17:06 GMT
-recorded_with: VCR 2.9.3
+  recorded_at: Wed, 03 Apr 2019 18:44:32 GMT
+recorded_with: VCR 4.0.0

@@ -1,14 +1,14 @@
 ---
 http_interactions:
 - request:
-    method: post
-    uri: https://api.sandbox.midtrans.com/v2/1554115345/deny
+    method: get
+    uri: https://api.sandbox.midtrans.com/v2/token?card_cvv=123&card_exp_month=1&card_exp_year=2020&card_number=4811111111111114&client_key=VT-client-NArmatJZqzsmTmzR
     body:
-      encoding: UTF-8
-      string: "{}"
+      encoding: US-ASCII
+      string: ''
     headers:
       User-Agent:
-      - Veritrans ruby gem 2.2.1
+      - Veritrans ruby gem 2.3.0
       Authorization:
       - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
       Accept:
@@ -21,11 +21,11 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Apr 2019 10:42:26 GMT
+      - Wed, 03 Apr 2019 18:55:44 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '122'
+      - '170'
       Connection:
       - keep-alive
       Pragma:
@@ -33,28 +33,28 @@ http_interactions:
       Cache-Control:
       - no-cache
       X-Kong-Upstream-Latency:
-      - '24'
+      - '43'
       X-Kong-Proxy-Latency:
-      - '174'
+      - '0'
       Via:
       - kong/0.14.0
       Strict-Transport-Security:
       - max-age=15724800; includeSubDomains;
     body:
       encoding: ASCII-8BIT
-      string: '{"status_code":"412","status_message":"Transaction status cannot be
-        updated.","id":"b30a117f-3bc7-4160-bc2f-e0a8a564c216"}'
+      string: '{"status_code":"200","status_message":"Credit card token is created
+        as Token ID.","token_id":"481111-1114-7b87fe46-c989-4034-852f-110f712486f1","hash":"481111-1114-mami"}'
     http_version: 
-  recorded_at: Mon, 01 Apr 2019 10:42:26 GMT
+  recorded_at: Sun, 31 Mar 2019 16:00:00 GMT
 - request:
     method: post
-    uri: https://api.sandbox.midtrans.com/v2/1554115516/deny
+    uri: https://api.sandbox.midtrans.com/v2/charge
     body:
       encoding: UTF-8
-      string: "{}"
+      string: '{"payment_type":"credit_card","credit_card":{"token_id":"481111-1114-7b87fe46-c989-4034-852f-110f712486f1"},"transaction_details":{"order_id":"1554048000","gross_amount":3000}}'
     headers:
       User-Agent:
-      - Veritrans ruby gem 2.2.1
+      - Veritrans ruby gem 2.3.0
       Authorization:
       - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
       Accept:
@@ -67,7 +67,54 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Apr 2019 10:45:18 GMT
+      - Wed, 03 Apr 2019 18:55:44 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '201'
+      Connection:
+      - keep-alive
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Kong-Upstream-Latency:
+      - '22'
+      X-Kong-Proxy-Latency:
+      - '1'
+      Via:
+      - kong/0.14.0
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains;
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status_code":"406","status_message":"The request could not be completed
+        due to a conflict with the current state of the target resource, please try
+        again","id":"7b87fe46-c989-4034-852f-110f712486f1"}'
+    http_version: 
+  recorded_at: Sun, 31 Mar 2019 16:00:00 GMT
+- request:
+    method: post
+    uri: https://api.sandbox.midtrans.com/v2/1554048000/deny
+    body:
+      encoding: UTF-8
+      string: "{}"
+    headers:
+      User-Agent:
+      - Veritrans ruby gem 2.3.0
+      Authorization:
+      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 03 Apr 2019 18:55:44 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -81,7 +128,7 @@ http_interactions:
       X-Kong-Upstream-Latency:
       - '27'
       X-Kong-Proxy-Latency:
-      - '23'
+      - '5'
       Via:
       - kong/0.14.0
       Strict-Transport-Security:
@@ -89,286 +136,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status_code":"412","status_message":"Transaction status cannot be
-        updated.","id":"747b903a-8275-4a00-a80b-a38ddb3767ed"}'
+        updated.","id":"cd658a44-5589-49df-9357-a2f4317c612f"}'
     http_version: 
-  recorded_at: Mon, 01 Apr 2019 10:45:18 GMT
-- request:
-    method: post
-    uri: https://api.sandbox.midtrans.com/v2/1554115523/deny
-    body:
-      encoding: UTF-8
-      string: "{}"
-    headers:
-      User-Agent:
-      - Veritrans ruby gem 2.2.1
-      Authorization:
-      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
-      Accept:
-      - application/json
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 01 Apr 2019 10:45:24 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '122'
-      Connection:
-      - keep-alive
-      Pragma:
-      - no-cache
-      Cache-Control:
-      - no-cache
-      X-Kong-Upstream-Latency:
-      - '122'
-      X-Kong-Proxy-Latency:
-      - '20'
-      Via:
-      - kong/0.14.0
-      Strict-Transport-Security:
-      - max-age=15724800; includeSubDomains;
-    body:
-      encoding: ASCII-8BIT
-      string: '{"status_code":"412","status_message":"Transaction status cannot be
-        updated.","id":"b4a573bd-7a41-41c2-ad9a-8d017c408899"}'
-    http_version: 
-  recorded_at: Mon, 01 Apr 2019 10:45:24 GMT
-- request:
-    method: post
-    uri: https://api.sandbox.midtrans.com/v2/1554171127/deny
-    body:
-      encoding: UTF-8
-      string: "{}"
-    headers:
-      User-Agent:
-      - Veritrans ruby gem 2.2.0
-      Authorization:
-      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
-      Accept:
-      - application/json
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Tue, 02 Apr 2019 02:12:09 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '122'
-      Connection:
-      - keep-alive
-      Pragma:
-      - no-cache
-      Cache-Control:
-      - no-cache
-      X-Kong-Upstream-Latency:
-      - '20'
-      X-Kong-Proxy-Latency:
-      - '63'
-      Via:
-      - kong/0.14.0
-      Strict-Transport-Security:
-      - max-age=15724800; includeSubDomains;
-    body:
-      encoding: ASCII-8BIT
-      string: '{"status_code":"412","status_message":"Transaction status cannot be
-        updated.","id":"b7a77b78-9a1f-42cf-b288-157ca030050f"}'
-    http_version: 
-  recorded_at: Tue, 02 Apr 2019 02:12:09 GMT
-- request:
-    method: post
-    uri: https://api.sandbox.midtrans.com/v2/1554191467/deny
-    body:
-      encoding: UTF-8
-      string: "{}"
-    headers:
-      User-Agent:
-      - Veritrans ruby gem 2.2.0
-      Authorization:
-      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
-      Accept:
-      - application/json
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Tue, 02 Apr 2019 07:51:09 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '122'
-      Connection:
-      - keep-alive
-      Pragma:
-      - no-cache
-      Cache-Control:
-      - no-cache
-      X-Kong-Upstream-Latency:
-      - '37'
-      X-Kong-Proxy-Latency:
-      - '65'
-      Via:
-      - kong/0.14.0
-      Strict-Transport-Security:
-      - max-age=15724800; includeSubDomains;
-    body:
-      encoding: ASCII-8BIT
-      string: '{"status_code":"412","status_message":"Transaction status cannot be
-        updated.","id":"a19c9cee-db27-4e1f-877b-e0a5b9f16c83"}'
-    http_version: 
-  recorded_at: Tue, 02 Apr 2019 07:51:09 GMT
-- request:
-    method: get
-    uri: https://api.sandbox.midtrans.com/v2/token?card_cvv=123&card_exp_month=1&card_exp_year=2020&card_number=4811111111111114&client_key=VT-client-NArmatJZqzsmTmzR
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Veritrans ruby gem 2.2.0
-      Authorization:
-      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
-      Accept:
-      - application/json
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Tue, 02 Apr 2019 07:55:26 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '170'
-      Connection:
-      - keep-alive
-      Pragma:
-      - no-cache
-      Cache-Control:
-      - no-cache
-      X-Kong-Upstream-Latency:
-      - '47'
-      X-Kong-Proxy-Latency:
-      - '1'
-      Via:
-      - kong/0.14.0
-      Strict-Transport-Security:
-      - max-age=15724800; includeSubDomains;
-    body:
-      encoding: ASCII-8BIT
-      string: '{"status_code":"200","status_message":"Credit card token is created
-        as Token ID.","token_id":"481111-1114-8480a6dd-1d19-427b-a1d4-2a775ddbb9b9","hash":"481111-1114-mami"}'
-    http_version: 
-  recorded_at: Tue, 02 Apr 2019 07:55:26 GMT
-- request:
-    method: post
-    uri: https://api.sandbox.midtrans.com/v2/charge
-    body:
-      encoding: UTF-8
-      string: '{"payment_type":"credit_card","credit_card":{"token_id":"481111-1114-8480a6dd-1d19-427b-a1d4-2a775ddbb9b9"},"transaction_details":{"order_id":"1554191726","gross_amount":3000}}'
-    headers:
-      User-Agent:
-      - Veritrans ruby gem 2.2.0
-      Authorization:
-      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
-      Accept:
-      - application/json
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Tue, 02 Apr 2019 07:55:26 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '499'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept-Encoding
-      Pragma:
-      - no-cache
-      Cache-Control:
-      - no-cache
-      X-Kong-Upstream-Latency:
-      - '238'
-      X-Kong-Proxy-Latency:
-      - '1'
-      Via:
-      - kong/0.14.0
-      Strict-Transport-Security:
-      - max-age=15724800; includeSubDomains;
-    body:
-      encoding: ASCII-8BIT
-      string: '{"status_code":"200","status_message":"Success, Credit Card transaction
-        is successful","transaction_id":"8480a6dd-1d19-427b-a1d4-2a775ddbb9b9","order_id":"1554191726","gross_amount":"3000.00","currency":"IDR","payment_type":"credit_card","transaction_time":"2019-04-02
-        14:55:26","transaction_status":"capture","fraud_status":"accept","approval_code":"1554191726801","masked_card":"481111-1114","bank":"mandiri","card_type":"credit","channel_response_code":"00","channel_response_message":"Approved"}'
-    http_version: 
-  recorded_at: Tue, 02 Apr 2019 07:55:26 GMT
-- request:
-    method: post
-    uri: https://api.sandbox.midtrans.com/v2/1554191726/deny
-    body:
-      encoding: UTF-8
-      string: "{}"
-    headers:
-      User-Agent:
-      - Veritrans ruby gem 2.2.0
-      Authorization:
-      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
-      Accept:
-      - application/json
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Tue, 02 Apr 2019 07:55:27 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '122'
-      Connection:
-      - keep-alive
-      Pragma:
-      - no-cache
-      Cache-Control:
-      - no-cache
-      X-Kong-Upstream-Latency:
-      - '29'
-      X-Kong-Proxy-Latency:
-      - '19'
-      Via:
-      - kong/0.14.0
-      Strict-Transport-Security:
-      - max-age=15724800; includeSubDomains;
-    body:
-      encoding: ASCII-8BIT
-      string: '{"status_code":"412","status_message":"Transaction status cannot be
-        updated.","id":"8480a6dd-1d19-427b-a1d4-2a775ddbb9b9"}'
-    http_version: 
-  recorded_at: Tue, 02 Apr 2019 07:55:27 GMT
+  recorded_at: Sun, 31 Mar 2019 16:00:00 GMT
 recorded_with: VCR 4.0.0

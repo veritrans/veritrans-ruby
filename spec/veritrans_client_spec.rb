@@ -8,6 +8,15 @@ describe Veritrans::Client do
     end
   end
 
+  def test_card_data
+    {
+      card_number: 4811_1111_1111_1114,
+      card_cvv: 123,
+      card_exp_month: 1,
+      card_exp_year: Time.now.year + 1
+    }
+  end
+
   it "should use Veritrans.http_options", vcr: false do
     Veritrans::Config.stub(:http_options) do
       { omit_default_port: true }
@@ -106,7 +115,7 @@ describe Veritrans::Client do
     VCR.use_cassette('status_fail') do
       result = Veritrans.status("not-exists")
       result.success?.should == false
-      result.status_message.should == "The requested resource is not found"
+      result.status_message.should == "Transaction doesn't exist."
     end
   end
 
@@ -115,7 +124,7 @@ describe Veritrans::Client do
       result_charge = Veritrans.charge('permata', transaction: { order_id: Time.now.to_i, gross_amount: 100_000 })
       result = Veritrans.status(result_charge.order_id)
       result.success?.should == true
-      result.status_message.should == "Success, transaction found"
+      result.status_message.should == "Success, transaction is found"
       result.transaction_status.should == "pending"
     end
   end
@@ -124,7 +133,7 @@ describe Veritrans::Client do
     VCR.use_cassette('cancel_failed') do
       result = Veritrans.cancel("not-exists")
       result.success?.should == false
-      result.status_message.should == "The requested resource is not found"
+      result.status_message.should == "Transaction doesn't exist."
     end
   end
 
@@ -146,21 +155,10 @@ describe Veritrans::Client do
     end
   end
 
-  describe 'fake token' do
-    let(:card) do
-      {
-        card_number: 4_811_111_111_111_114,
-        card_cvv: 123,
-        card_exp_month: 0o1,
-        card_exp_year: 2020
-      }
-    end
-
-    it 'should get token for testing' do
-      VCR.use_cassette('test_token') do
-        result = Veritrans.test_token(card)
-        expect(result).to be_a_kind_of String
-      end
+  it 'should get token for testing' do
+    VCR.use_cassette('test_token') do
+      result = Veritrans.test_token(test_card_data)
+      expect(result).to be_a_kind_of String
     end
   end
 
@@ -181,31 +179,22 @@ describe Veritrans::Client do
     end
   end
 
-  describe 'deny' do
-    let(:card) do
-      {
-        card_number: 4_811_111_111_111_114,
-        card_cvv: 123,
-        card_exp_month: 0o1,
-        card_exp_year: 2020
-      }
-    end
+  it 'should send deny request' do
+    VCR.use_cassette('deny_failed') do
+      Timecop.freeze(Time.local(2019, 4, 1)) do
+        order_id = Time.now.to_i.to_s
 
-    let(:order_id) { Time.now.to_i }
-
-    it 'should send deny request' do
-      VCR.use_cassette('deny_failed', record: :all) do
         Veritrans.charge(
           payment_type: 'credit_card',
           credit_card: {
-            token_id: Veritrans.test_token(card)
+            token_id: Veritrans.test_token(test_card_data)
           },
           transaction_details: {
-            order_id: order_id.to_s,
+            order_id: order_id,
             gross_amount: 3000
           }
         )
-        result = Veritrans.deny(order_id.to_s)
+        result = Veritrans.deny(order_id)
         expect(result.success?).to be false
         expect(result.status_message).to eq 'Transaction status cannot be updated.'
       end

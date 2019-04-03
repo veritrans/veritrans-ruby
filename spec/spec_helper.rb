@@ -9,6 +9,7 @@ require 'veritrans/events'
 require 'rails'
 require 'webmock/rspec'
 require 'vcr'
+require 'timecop'
 
 require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
