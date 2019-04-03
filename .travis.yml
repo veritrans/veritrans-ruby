@@ -4,8 +4,10 @@ cache: bundler
 env:
 #  - DEBUG=1
 
+before_install:
+  - gem install bundler -v '1.17.3'
+
 script:
-  - gem install bundler -v 1.17.3
   - bundle exec rspec
 
 rvm:
