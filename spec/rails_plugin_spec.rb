@@ -79,9 +79,14 @@ describe 'Rails plugin', vcr: false do
     ".gsub(/^\s+/, '')
 
     File.open('./Gemfile', 'w') { |f| f.write(gemfile_content) }
-    run_cmd('bundle')
+    run_cmd('bundle _1.17.3_')
 
-    gen = "bundle exec rails _#{rails_version}_ new #{APP_DIR} -B -G --skip-spring -d sqlite3 --skip-turbolinks --skip-test-unit --skip-action-cable --no-rc --skip-puma --skip-listen"
+    extra_rails_args = []
+    if rails_version >= '5.2.0'
+      extra_rails_args << '--skip-bootsnap'
+    end
+
+    gen = "bundle exec rails _#{rails_version}_ new #{APP_DIR} -B -G --skip-spring -d sqlite3 --skip-turbolinks --skip-test-unit --skip-action-cable --no-rc --skip-puma --skip-listen #{extra_rails_args.join(' ')}"
 
     run_cmd(gen)
 
@@ -197,7 +202,6 @@ development:
 
   RAILS_VERSIONS.each_with_index do |rails_version, spec_index|
     next if rails_version.start_with?('5') && RUBY_VERSION < '2.2.2'
-    next if RUBY_VERSION >= '2.4.0' && rails_version < '4.2.0'
 
     it "should tests plugin (Rails #{rails_version})" do
       puts "Testing with Rails #{rails_version} and Ruby #{RUBY_VERSION}"
