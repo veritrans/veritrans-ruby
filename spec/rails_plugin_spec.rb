@@ -93,7 +93,7 @@ describe 'Rails plugin', vcr: false do
     File.open("#{@app_abs_path}/Gemfile", 'w') { |f| f.write(gemfile_content) }
 
     Dir.chdir(@app_abs_path) do
-      run_cmd('bundle')
+      run_cmd('bundle _1.17.3_')
     end
   end
 
