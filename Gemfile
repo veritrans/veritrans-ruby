@@ -8,6 +8,7 @@ gem 'tilt'
 gem 'sqlite3'
 
 group :test do
+  gem 'capybara', '~> 3.15.0' # for ruby 2.3 support
   gem 'capybara-screenshot'
   gem 'poltergeist', '~> 1.8'
   gem 'rspec', '~> 3.4'

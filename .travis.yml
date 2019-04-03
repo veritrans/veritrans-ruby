@@ -1,13 +1,14 @@
 language: ruby
 cache: bundler
-dist: trusty
-env:
-  - DEBUG=1
 
-script: "bundle exec rspec"
+env:
+#  - DEBUG=1
+
+script:
+  - gem install bundler -v 1.17.3
+  - bundle exec rspec
 
 rvm:
-  - 2.2.10
   - 2.3.8
   - 2.4.6
   - 2.5.5
