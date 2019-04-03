@@ -1,0 +1,128 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.sandbox.midtrans.com/v2/charge
+    body:
+      encoding: UTF-8
+      string: '{"payment_type":"permata","transaction_details":{"order_id":1554320900,"gross_amount":100000}}'
+    headers:
+      User-Agent:
+      - Veritrans ruby gem 2.3.0
+      Authorization:
+      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 03 Apr 2019 19:48:20 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '432'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding
+      Cache-Control:
+      - no-cache
+      Pragma:
+      - no-cache
+      Expires:
+      - Wed, 31 Dec 1969 17:00:00 GMT
+      X-Kong-Upstream-Latency:
+      - '202'
+      X-Kong-Proxy-Latency:
+      - '1'
+      Via:
+      - kong/0.14.0
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains;
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "status_code" : "201",
+          "status_message" : "Success, PERMATA VA transaction is successful",
+          "transaction_id" : "4991d60f-c8d4-49b6-bfd9-2751681fdcab",
+          "order_id" : "1554320900",
+          "gross_amount" : "100000.00",
+          "currency" : "IDR",
+          "payment_type" : "bank_transfer",
+          "transaction_time" : "2019-04-04 02:48:20",
+          "transaction_status" : "pending",
+          "fraud_status" : "accept",
+          "permata_va_number" : "8778001842689488"
+        }
+    http_version: 
+  recorded_at: Wed, 03 Apr 2019 19:48:20 GMT
+- request:
+    method: get
+    uri: https://api.sandbox.midtrans.com/v2/1554320900/status
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Veritrans ruby gem 2.3.0
+      Authorization:
+      - Basic VlQtc2VydmVyLTlIdGItUnhYa2c3LTdoem5TQ0NqeHZvWTo=
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 03 Apr 2019 19:48:21 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '568'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding, Accept-Encoding, User-Agent
+      Cache-Control:
+      - no-cache
+      Pragma:
+      - no-cache
+      Expires:
+      - Wed, 31 Dec 1969 17:00:00 GMT
+      X-Kong-Upstream-Latency:
+      - '45'
+      X-Kong-Proxy-Latency:
+      - '27'
+      Via:
+      - kong/0.14.0
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains;
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "status_code" : "201",
+          "status_message" : "Success, transaction is found",
+          "transaction_id" : "4991d60f-c8d4-49b6-bfd9-2751681fdcab",
+          "order_id" : "1554320900",
+          "gross_amount" : "100000.00",
+          "currency" : "IDR",
+          "payment_type" : "bank_transfer",
+          "transaction_time" : "2019-04-04 02:48:20",
+          "transaction_status" : "pending",
+          "fraud_status" : "accept",
+          "permata_va_number" : "8778001842689488",
+          "signature_key" : "9b0a7d1b2672b148d869c5b1135603f08cc043ef353602045df299712d1c858415ed2acada1c618a997a5a9e635791ecfda46d7d61a8d6dd13e6d5821a669a75"
+        }
+    http_version: 
+  recorded_at: Wed, 03 Apr 2019 19:48:21 GMT
+recorded_with: VCR 4.0.0

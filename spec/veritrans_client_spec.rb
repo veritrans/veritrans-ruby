@@ -158,7 +158,7 @@ describe Veritrans::Client do
   it 'should get token for testing' do
     VCR.use_cassette('test_token') do
       result = Veritrans.test_token(test_card_data)
-      expect(result).to be_a_kind_of String
+      result.should be_a_kind_of(String)
     end
   end
 
@@ -166,8 +166,8 @@ describe Veritrans::Client do
   it 'should send refund request' do
     VCR.use_cassette('refund_failed') do
       result = Veritrans.refund('1415110696')
-      expect(result.success?).to be false
-      expect(result.status_message).to eq 'Merchant cannot modify the status of the transaction'
+      result.success?.should == false
+      result.status_message.should == 'Merchant cannot modify the status of the transaction'
     end
   end
 
@@ -181,10 +181,10 @@ describe Veritrans::Client do
 
   it 'should send deny request' do
     VCR.use_cassette('deny_failed') do
-      Timecop.freeze(Time.local(2019, 4, 1)) do
+      Timecop.freeze(Time.utc(2019, 4, 1)) do
         order_id = Time.now.to_i.to_s
 
-        Veritrans.charge(
+        charge_result = Veritrans.charge(
           payment_type: 'credit_card',
           credit_card: {
             token_id: Veritrans.test_token(test_card_data)
@@ -194,9 +194,12 @@ describe Veritrans::Client do
             gross_amount: 3000
           }
         )
+
+        charge_result.status_message.should == "Success, Credit Card transaction is successful"
+
         result = Veritrans.deny(order_id)
-        expect(result.success?).to be false
-        expect(result.status_message).to eq 'Transaction status cannot be updated.'
+        result.success?.should == false
+        result.status_message.should == 'Transaction status cannot be updated.'
       end
     end
   end

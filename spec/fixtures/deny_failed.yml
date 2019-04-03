@@ -21,7 +21,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 03 Apr 2019 18:55:44 GMT
+      - Wed, 03 Apr 2019 19:45:47 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -33,7 +33,7 @@ http_interactions:
       Cache-Control:
       - no-cache
       X-Kong-Upstream-Latency:
-      - '43'
+      - '71'
       X-Kong-Proxy-Latency:
       - '0'
       Via:
@@ -43,15 +43,15 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status_code":"200","status_message":"Credit card token is created
-        as Token ID.","token_id":"481111-1114-7b87fe46-c989-4034-852f-110f712486f1","hash":"481111-1114-mami"}'
+        as Token ID.","token_id":"481111-1114-af98ef7c-4d8e-4216-8027-d657bbaa3bf2","hash":"481111-1114-mami"}'
     http_version: 
-  recorded_at: Sun, 31 Mar 2019 16:00:00 GMT
+  recorded_at: Mon, 01 Apr 2019 00:00:00 GMT
 - request:
     method: post
     uri: https://api.sandbox.midtrans.com/v2/charge
     body:
       encoding: UTF-8
-      string: '{"payment_type":"credit_card","credit_card":{"token_id":"481111-1114-7b87fe46-c989-4034-852f-110f712486f1"},"transaction_details":{"order_id":"1554048000","gross_amount":3000}}'
+      string: '{"payment_type":"credit_card","credit_card":{"token_id":"481111-1114-af98ef7c-4d8e-4216-8027-d657bbaa3bf2"},"transaction_details":{"order_id":"1554076800","gross_amount":3000}}'
     headers:
       User-Agent:
       - Veritrans ruby gem 2.3.0
@@ -67,19 +67,21 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 03 Apr 2019 18:55:44 GMT
+      - Wed, 03 Apr 2019 19:45:48 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '201'
+      - '499'
       Connection:
       - keep-alive
+      Vary:
+      - Accept-Encoding
       Pragma:
       - no-cache
       Cache-Control:
       - no-cache
       X-Kong-Upstream-Latency:
-      - '22'
+      - '228'
       X-Kong-Proxy-Latency:
       - '1'
       Via:
@@ -88,14 +90,14 @@ http_interactions:
       - max-age=15724800; includeSubDomains;
     body:
       encoding: ASCII-8BIT
-      string: '{"status_code":"406","status_message":"The request could not be completed
-        due to a conflict with the current state of the target resource, please try
-        again","id":"7b87fe46-c989-4034-852f-110f712486f1"}'
+      string: '{"status_code":"200","status_message":"Success, Credit Card transaction
+        is successful","transaction_id":"af98ef7c-4d8e-4216-8027-d657bbaa3bf2","order_id":"1554076800","gross_amount":"3000.00","currency":"IDR","payment_type":"credit_card","transaction_time":"2019-04-04
+        02:45:47","transaction_status":"capture","fraud_status":"accept","approval_code":"1554320748048","masked_card":"481111-1114","bank":"mandiri","card_type":"credit","channel_response_code":"00","channel_response_message":"Approved"}'
     http_version: 
-  recorded_at: Sun, 31 Mar 2019 16:00:00 GMT
+  recorded_at: Mon, 01 Apr 2019 00:00:00 GMT
 - request:
     method: post
-    uri: https://api.sandbox.midtrans.com/v2/1554048000/deny
+    uri: https://api.sandbox.midtrans.com/v2/1554076800/deny
     body:
       encoding: UTF-8
       string: "{}"
@@ -114,7 +116,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 03 Apr 2019 18:55:44 GMT
+      - Wed, 03 Apr 2019 19:45:48 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -126,9 +128,9 @@ http_interactions:
       Cache-Control:
       - no-cache
       X-Kong-Upstream-Latency:
-      - '27'
+      - '24'
       X-Kong-Proxy-Latency:
-      - '5'
+      - '19'
       Via:
       - kong/0.14.0
       Strict-Transport-Security:
@@ -136,7 +138,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status_code":"412","status_message":"Transaction status cannot be
-        updated.","id":"cd658a44-5589-49df-9357-a2f4317c612f"}'
+        updated.","id":"af98ef7c-4d8e-4216-8027-d657bbaa3bf2"}'
     http_version: 
-  recorded_at: Sun, 31 Mar 2019 16:00:00 GMT
+  recorded_at: Mon, 01 Apr 2019 00:00:00 GMT
 recorded_with: VCR 4.0.0
