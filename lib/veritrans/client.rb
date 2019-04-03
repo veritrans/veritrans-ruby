@@ -75,7 +75,7 @@ class Veritrans
 
       method = method.to_s.upcase
       logger.info "Veritrans: #{method} #{url} #{_json_encode(params)}"
-      logger.info "Veritrans: Using server key: #{config.server_key}"
+      #logger.info "Veritrans: Using server key: #{config.server_key}"
       #puts "Veritrans: #{method} #{url} #{_json_encode(params)}"
 
       default_options = config.http_options || {}
