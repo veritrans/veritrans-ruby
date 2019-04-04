@@ -1,6 +1,7 @@
 ### Version 2.3.0 (date 1 April 2019)
 
-* Add refund, deny, and test_token methods
+* Add refund, deny, and test_token methods (Thank to @christianmkuss)
+* Remove logging of server key
 
 ### Version 2.2.1 (date 30 May 2018)
 
