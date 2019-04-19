@@ -34,11 +34,11 @@ class Veritrans
     end
 
     # This is proxy method for make_request to save request and response to logfile
-    def request_with_logging(method, url, params)
+    def request_with_logging(method, url, params, server_key = nil)
       short_url = url.sub(config.api_host, '')
       file_logger.info("Perform #{short_url} \nSending: " + _json_encode(params))
 
-      result = make_request(method, url, params)
+      result = make_request(method, url, params, server_key)
 
       if result.status_code < 300
         file_logger.info("Success #{short_url} \nGot: " + _json_encode(result.data) + "\n")
@@ -56,22 +56,24 @@ class Veritrans
       "Basic #{key}"
     end
 
-    def get(url, params = {})
-      make_request(:get, url, params)
+    def get(url, server_key = nil, params = {})
+      make_request(:get, url, params, server_key)
     end
 
-    def delete(url, params)
-      make_request(:delete, url, params)
+    def delete(url, params, server_key = nil)
+      make_request(:delete, url, params, server_key)
     end
 
-    def post(url, params)
-      make_request(:post, url, params)
+    def post(url, params, server_key = nil)
+      make_request(:post, url, params, server_key)
     end
 
     def make_request(method, url, params, auth_header = nil)
       if !config.server_key || config.server_key == ''
         raise "Please add server_key to config/veritrans.yml"
       end
+
+      server_key = auth_header.nil? ? config.server_key : auth_header
 
       method = method.to_s.upcase
       logger.info "Veritrans: #{method} #{url} #{_json_encode(params)}"
@@ -85,7 +87,7 @@ class Veritrans
       request_options = {
         :path => URI.parse(url).path,
         :headers => {
-          :Authorization => auth_header || basic_auth_header(config.server_key),
+          :Authorization => basic_auth_header(server_key),
           :Accept => "application/json",
           :"Content-Type" => "application/json",
           :"User-Agent" => "Veritrans ruby gem #{Veritrans::VERSION}"

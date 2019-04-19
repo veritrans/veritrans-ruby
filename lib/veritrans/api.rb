@@ -17,7 +17,7 @@ class Veritrans
     #     gross_amount: 100_000
     #   }
     # )
-    def charge(payment_type, data = nil)
+    def charge(payment_type, data = nil, server_key = nil)
       if payment_type.kind_of?(Hash) && data.nil?
         data = payment_type
         payment_type = nil
@@ -42,7 +42,7 @@ class Veritrans
       data[:item_details] = data.delete(:items) if data[:items]
       data[:customer_details] = data.delete(:customer) if data[:customer]
 
-      request_with_logging(:post, config.api_host + "/v2/charge", data)
+      request_with_logging(:post, config.api_host + "/v2/charge", data, server_key)
     end
 
     def test_token(options = {})
@@ -51,8 +51,8 @@ class Veritrans
     end
 
     # POST https://app.sandbox.midtrans.com/snap/v1/transactions
-    def create_snap_token(options = {})
-      result = request_with_logging(:post, config.api_host.sub('//api.', '//app.') + "/snap/v1/transactions", options)
+    def create_snap_token(options = {}, server_key = nil)
+      result = request_with_logging(:post, config.api_host.sub('//api.', '//app.') + "/snap/v1/transactions", options, server_key)
       Veritrans::SnapResult.new(result.response, result.url, result.request_options, result.time)
     end
 
@@ -61,93 +61,93 @@ class Veritrans
 
     # POST /v2/{id}/cancel
     # Docs https://api-docs.midtrans.com/#cancel-transaction
-    def cancel(payment_id, options = {})
+    def cancel(payment_id, options = {}, server_key = nil)
       if !payment_id || payment_id.to_s == ""
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
       end
 
-      request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/cancel", options)
+      request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/cancel", options, server_key)
     end
 
     # POST /v2/{id}/approve
     # Docs https://api-docs.midtrans.com/#approve-transaction
-    def approve(payment_id, options = {})
+    def approve(payment_id, options = {}, server_key = nil)
       if !payment_id || payment_id.to_s == ""
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
       end
 
-      request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/approve", options)
+      request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/approve", options, server_key)
     end
 
     # POST /v2/{id}/refund
     # Docs https://api-docs.midtrans.com/#refund-transaction
-    def refund(payment_id, options = {})
+    def refund(payment_id, options = {}, server_key = nil)
       if !payment_id || payment_id.to_s == ''
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
       end
 
-      request_with_logging(:post, config.api_host + "/v2/#{ERB::Util.url_encode(payment_id)}/refund", options)
+      request_with_logging(:post, config.api_host + "/v2/#{ERB::Util.url_encode(payment_id)}/refund", options, server_key)
     end
 
     # GET /v2/{id}/status
     # Docs https://api-docs.midtrans.com/#get-status-transaction
-    def status(payment_id)
+    def status(payment_id, server_key = nil)
       if !payment_id || payment_id.to_s == ""
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
       end
 
-      get(config.api_host + "/v2/#{URI.escape(payment_id)}/status")
+      get(config.api_host + "/v2/#{URI.escape(payment_id)}/status", server_key)
     end
 
     # POST /v2/capture
     # Docs https://api-docs.midtrans.com/#capture-transaction
-    def capture(payment_id, gross_amount, options = {})
+    def capture(payment_id, gross_amount, options = {}, server_key = nil)
       if !payment_id || payment_id.to_s == ""
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
       end
 
-      post(config.api_host + "/v2/capture", options.merge(transaction_id: payment_id, gross_amount: gross_amount))
+      post(config.api_host + "/v2/capture", options.merge(transaction_id: payment_id, gross_amount: gross_amount), server_key)
     end
 
     # POST /v2/{id}/deny
     # Docs https://api-docs.midtrans.com/#deny-transaction
-    def deny(payment_id, options = {})
+    def deny(payment_id, options = {}, server_key = nil)
       if !payment_id || payment_id.to_s == ''
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
       end
 
-      request_with_logging(:post, config.api_host + "/v2/#{ERB::Util.url_encode(payment_id)}/deny", options)
+      request_with_logging(:post, config.api_host + "/v2/#{ERB::Util.url_encode(payment_id)}/deny", options, server_key)
     end
 
     # POST /v2/{id}/expire
     # Docs https://api-docs.midtrans.com/#expire-transaction
-    def expire(payment_id)
+    def expire(payment_id, server_key = nil)
       if !payment_id || payment_id.to_s == ""
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
       end
 
-      request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/expire", nil)
+      request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/expire", nil, server_key)
     end
 
     # POST /v2/charge { payment_type: "vtlink" }
-    def create_vtlink(data)
+    def create_vtlink(data, server_key = nil)
       data = data.dup
       data[:payment_type] = "vtlink"
-      request_with_logging(:post, config.api_host + "/v2/charge", data)
+      request_with_logging(:post, config.api_host + "/v2/charge", data, server_key)
     end
 
     # DELETE /v2/vtlink/{id}
-    def delete_vtlink(id, options)
-      request_with_logging(:delete, config.api_host + "/v2/vtlink/#{URI.escape(id)}", options)
+    def delete_vtlink(id, options, server_key = nil)
+      request_with_logging(:delete, config.api_host + "/v2/vtlink/#{URI.escape(id)}", options, server_key)
     end
 
     # GET /v2/point_inquiry/{token_id}
-    def inquiry_points(token_id)
+    def inquiry_points(token_id, server_key = nil)
       if token_id == nil || token_id.to_s == ""
         raise ArgumentError, "parameter token_id can not be bank"
       end
 
-      request_with_logging(:get, config.api_host + "/v2/point_inquiry/#{token_id}", {})
+      request_with_logging(:get, config.api_host + "/v2/point_inquiry/#{token_id}", {}, server_key)
     end
 
     alias_method :point_inquiry, :inquiry_points
