@@ -85,10 +85,10 @@ class Veritrans
       request_options = {
         :path => URI.parse(url).path,
         :headers => {
-          :Authorization => auth_header || basic_auth_header(config.server_key),
-          :Accept => "application/json",
-          :"Content-Type" => "application/json",
-          :"User-Agent" => "Veritrans ruby gem #{Veritrans::VERSION}"
+          "Authorization" => auth_header || basic_auth_header(config.server_key),
+          "Accept" => "application/json",
+          "Content-Type" => "application/json",
+          "User-Agent" => "Veritrans ruby gem #{Veritrans::VERSION}"
         }
       }
 
