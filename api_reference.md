@@ -69,6 +69,24 @@ please use our [documentation](https://api-docs.midtrans.com/)
       <td>POST</td>
       <td>api.midtrans.com/v2/{id}/deny</td>
     </tr>
+    <tr>
+      <td><a href="#link_account">Veritrans.link_account(data)</a></td>
+      <td>Link customer account to merchant apps</td>
+      <td>POST</td>
+      <td>api.midtrans.com/v2/pay/account</td>
+    </tr>
+    <tr>
+      <td><a href="#account_status">Veritrans.account_status(id)</a></td>
+      <td>Enquire account status & payment options</td>
+      <td>GET</td>
+      <td>api.midtrans.com/v2/pay/account/{id}</td>
+    </tr>
+    <tr>
+      <td><a href="#disable_account">Veritrans.disable_account(id)</a></td>
+      <td>Disable Account</td>
+      <td>POST</td>
+      <td>api.midtrans.com/v2/pay/account/{id}/unbind</td>
+    </tr>
   </tbody>
 </table>
 
@@ -323,6 +341,87 @@ q == {
 }
 ```
 
+
+<a name="link_account"></a>
+### Link Account
+
+To be used to Link customer account to merchant apps
+
+```ruby
+q = Veritrans.link_account({
+      "payment_type": "gopay",
+      "gopay_partner": {
+        "phone_number": "81212345678",
+        "country_code": "62",
+        "redirect_url": "https://www.gojek.com"
+      }
+    })
+
+q.data == {
+            "status_code": "200",
+            "payment_type": "gopay",
+            "account_id": "00000269-7836-49e5-bc65-e592afafec14",
+            "account_status": "ENABLED"
+          }
+```
+
+<a name="account_status"></a>
+### Account Status
+
+To be used to enquire account status and fetch the available payment options
+
+```ruby
+q = Veritrans.account_status("00000269-7836-49e5-bc65-e592afafec14")
+
+q.data == {
+            "status_code": "200",
+            "payment_type": "gopay",
+            "account_id": "00000269-7836-49e5-bc65-e592afafec14",
+            "account_status": "ENABLED",
+            "metadata": {
+              "payment_options": [
+                {
+                  "name": "GOPAY_WALLET",
+                  "active": true,
+                  "balance": {
+                    "amount": "1000000.00",
+                    "currency": "IDR"
+                  },
+                  "metadata": {},
+                  "token": "eyJ0eXBlIjogIkdPUEFZX1dBTExFVCIsICJpZCI6ICIifQ=="
+                },
+                {
+                  "name": "PAY_LATER",
+                  "active": true,
+                  "balance": {
+                    "amount": "350000.00",
+                    "currency": "IDR"
+                  },
+                  "metadata": {},
+                  "token": "eyJ0eXBlIjogIlBBWV9MQVRFUiIsICJpZCI6ICIifQ=="
+                }
+              ]
+            }
+          }
+```
+
+
+<a name="disable_account"></a>
+### Disable Account
+
+To be used to disable customer account for merchant apps
+
+```ruby
+q = Veritrans.disable_account("00000269-7836-49e5-bc65-e592afafec14")
+
+q.data == {
+            "status_code": "202",
+            "payment_type": "gopay",
+            "account_id": "00000269-7836-49e5-bc65-e592afafec14",
+            "channel_response_code": "1001",
+            "channel_response_message": "Caller authentication error."
+          }
+```
 
 
 ### `Veritrans::Result`

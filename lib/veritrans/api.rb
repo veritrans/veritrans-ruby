@@ -150,6 +150,37 @@ class Veritrans
       request_with_logging(:get, config.api_host + "/v2/point_inquiry/#{token_id}", {})
     end
 
+    # GET /v2/pay/account/{account_id}
+    def account_status(account_id)
+      if account_id == nil || account_id.to_s == ""
+        raise ArgumentError, "parameter account_id can not be bank"
+      end
+
+      request_with_logging(:get, config.api_host + "/v2/pay/account/#{account_id}", {})
+    end
+
+    # POST /v2/pay/account
+    def link_account(payment_type, data = nil)
+      if payment_type.kind_of?(Hash) && data.nil?
+        data = payment_type
+        payment_type = nil
+      end
+
+      data = data.deep_symbolize_keys if data.respond_to?(:deep_symbolize_keys)
+
+      data[:payment_type] = payment_type if payment_type
+      request_with_logging(:post, config.api_host + "/v2/pay/account", data)
+    end
+
+    # POST /v2/pay/account/{account_id}/unbind
+    def disable_account(account_id)
+      if account_id == nil || account_id.to_s == ""
+        raise ArgumentError, "parameter account_id can not be bank"
+      end
+
+      request_with_logging(:post, config.api_host + "/v2/pay/account/#{account_id}/unbind", {})
+    end
+
     alias_method :point_inquiry, :inquiry_points
 
   end

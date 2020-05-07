@@ -24,7 +24,7 @@ class Veritrans
     def_delegators :instance, :request_with_logging, :basic_auth_header, :get, :post, :delete, :make_request
     def_delegators :instance, :charge, :cancel, :approve, :status, :capture, :expire, :refund, :test_token, :deny
     def_delegators :instance, :create_vtlink, :delete_vtlink, :inquiry_points, :create_widget_token, :create_snap_redirect_url, :create_snap_token
-    def_delegators :instance, :checksum, :events
+    def_delegators :instance, :checksum, :events, :account_status, :link_account, :disable_account
 
     # Shortcut for Veritrans::Events
     def events
