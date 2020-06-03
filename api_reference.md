@@ -82,8 +82,8 @@ please use our [documentation](https://api-docs.midtrans.com/)
       <td>api.midtrans.com/v2/pay/account/{id}</td>
     </tr>
     <tr>
-      <td><a href="#disable_account">Veritrans.disable_account(id)</a></td>
-      <td>Disable Account</td>
+      <td><a href="#unlink_account">Veritrans.unlink_account(id)</a></td>
+      <td>Unlink Account</td>
       <td>POST</td>
       <td>api.midtrans.com/v2/pay/account/{id}/unbind</td>
     </tr>
@@ -406,13 +406,13 @@ q.data == {
 ```
 
 
-<a name="disable_account"></a>
-### Disable Account
+<a name="unlink_account"></a>
+### Unlink Account
 
 To be used to disable customer account for merchant apps
 
 ```ruby
-q = Veritrans.disable_account("00000269-7836-49e5-bc65-e592afafec14")
+q = Veritrans.unlink_account("00000269-7836-49e5-bc65-e592afafec14")
 
 q.data == {
             "status_code": "202",

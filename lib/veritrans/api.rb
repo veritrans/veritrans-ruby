@@ -173,7 +173,7 @@ class Veritrans
     end
 
     # POST /v2/pay/account/{account_id}/unbind
-    def disable_account(account_id)
+    def unlink_account(account_id)
       if account_id == nil || account_id.to_s == ""
         raise ArgumentError, "parameter account_id can not be bank"
       end
