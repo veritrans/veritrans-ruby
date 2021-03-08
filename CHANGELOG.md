@@ -1,3 +1,7 @@
+### Version 2.3.1 (date 9 March 2021)
+
+* Change URI.escape to ERB::Util.url_encode (support ruby 3.0)
+
 ### Version 2.3.0 (date 1 April 2019)
 
 * Add refund, deny, and test_token methods (Thank to @christianmkuss)

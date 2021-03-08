@@ -1,6 +1,6 @@
 # Veritrans API methods
 
-require 'uri'
+require 'erb'
 
 class Veritrans
   module Api
@@ -66,7 +66,7 @@ class Veritrans
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
       end
 
-      request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/cancel", options)
+      request_with_logging(:post, config.api_host + "/v2/#{ERB::Util.url_encode(payment_id)}/cancel", options)
     end
 
     # POST /v2/{id}/approve
@@ -76,7 +76,7 @@ class Veritrans
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
       end
 
-      request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/approve", options)
+      request_with_logging(:post, config.api_host + "/v2/#{ERB::Util.url_encode(payment_id)}/approve", options)
     end
 
     # POST /v2/{id}/refund
@@ -96,7 +96,7 @@ class Veritrans
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
       end
 
-      get(config.api_host + "/v2/#{URI.escape(payment_id)}/status")
+      get(config.api_host + "/v2/#{ERB::Util.url_encode(payment_id)}/status")
     end
 
     # POST /v2/capture
@@ -126,7 +126,7 @@ class Veritrans
         raise ArgumentError, "parameter payment_id can not be blank (got #{payment_id.class} : #{payment_id.inspect})"
       end
 
-      request_with_logging(:post, config.api_host + "/v2/#{URI.escape(payment_id)}/expire", nil)
+      request_with_logging(:post, config.api_host + "/v2/#{ERB::Util.url_encode(payment_id)}/expire", nil)
     end
 
     # POST /v2/charge { payment_type: "vtlink" }
@@ -138,7 +138,7 @@ class Veritrans
 
     # DELETE /v2/vtlink/{id}
     def delete_vtlink(id, options)
-      request_with_logging(:delete, config.api_host + "/v2/vtlink/#{URI.escape(id)}", options)
+      request_with_logging(:delete, config.api_host + "/v2/vtlink/#{ERB::Util.url_encode(id)}", options)
     end
 
     # GET /v2/point_inquiry/{token_id}

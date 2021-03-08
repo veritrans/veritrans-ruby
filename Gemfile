@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'puma'
-gem 'rails', '< 6'
+gem 'rails', '< 7'
 gem 'rake'
 gem 'sinatra'
 gem 'tilt'
