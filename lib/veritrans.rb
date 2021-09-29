@@ -12,8 +12,6 @@ class Veritrans
   include Veritrans::Client
   include Veritrans::Api
 
-  autoload :Testing,    'veritrans/testing'
-  autoload :TestingLib, 'veritrans/testing'
   autoload :CLI,        'veritrans/cli'
   autoload :Events,     'veritrans/events'
 
@@ -21,9 +19,10 @@ class Veritrans
     extend Forwardable
 
     def_delegators :instance, :logger, :logger=, :config, :setup, :file_logger, :file_logger=
-    def_delegators :instance, :request_with_logging, :basic_auth_header, :get, :post, :delete, :make_request
-    def_delegators :instance, :charge, :cancel, :approve, :status, :capture, :expire, :refund, :test_token, :deny
-    def_delegators :instance, :create_vtlink, :delete_vtlink, :inquiry_points, :create_widget_token, :create_snap_redirect_url, :create_snap_token
+    def_delegators :instance, :request_with_logging, :basic_auth_header, :get, :post, :delete, :make_request, :patch
+    def_delegators :instance, :charge, :cancel, :approve, :status, :capture, :expire, :refund, :deny
+    def_delegators :instance, :create_vtlink, :delete_vtlink, :inquiry_points, :create_widget_token, :create_snap_redirect_url, :create_snap_token, :get_snap_token, :get_snap_url, :test_token
+    def_delegators :instance, :link_payment_account, :get_payment_account, :unlink_payment_account, :create_subscription, :get_subscription, :disable_subscription, :enable_subscription, :update_subscription
     def_delegators :instance, :checksum, :events
 
     # Shortcut for Veritrans::Events
