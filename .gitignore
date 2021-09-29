@@ -9,3 +9,7 @@ example/rails/simplepay/log
 example/rails/simplepay/tmp
 veritrans_credentials
 .ruby-version
+.idea/veritrans-ruby.iml
+.idea/vcs.xml
+.idea/modules.xml
+.idea/misc.xml
