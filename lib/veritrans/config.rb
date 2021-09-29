@@ -20,7 +20,6 @@ class Veritrans
       @client_key = value
     end
 
-
     def client_key
       @client_key
     end
@@ -72,11 +71,23 @@ class Veritrans
       diff = options.keys.map(&:to_sym) - Excon::VALID_CONNECTION_KEYS
       if diff.size > 0
         raise ArgumentError,
-          "http_options contain unsupported keys: #{diff.inspect}\n" +
-          "Supported keys are: #{Excon::VALID_CONNECTION_KEYS.inspect}"
+              "http_options contain unsupported keys: #{diff.inspect}\n" +
+                "Supported keys are: #{Excon::VALID_CONNECTION_KEYS.inspect}"
       end
 
       @http_options = options
+    end
+
+    def idempotency_key
+      @idempotency_key
+    end
+
+    def append_notif_url
+      @append_notif_url
+    end
+
+    def override_notif_url
+      @override_notif_url
     end
 
     def http_options
