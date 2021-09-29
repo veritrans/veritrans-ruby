@@ -47,10 +47,11 @@ class Veritrans
 
     def test_token(options = {})
       options[:client_key] = config.client_key
-      request_with_logging(:get, config.api_host + '/v2/token', options).token_id
+      request_with_logging(:get, config.api_host + '/v2/token', options)
     end
 
     # POST https://app.sandbox.midtrans.com/snap/v1/transactions
+    # Create Snap payment page, with this version returning full API response
     def create_snap_token(options = {})
       result = request_with_logging(:post, config.api_host.sub('//api.', '//app.') + "/snap/v1/transactions", options)
       Veritrans::SnapResult.new(result.response, result.url, result.request_options, result.time)
@@ -58,6 +59,20 @@ class Veritrans
 
     alias_method :create_widget_token, :create_snap_token
     alias_method :create_snap_redirect_url, :create_snap_token
+
+    # Create Snap payment page and return snap token
+    def get_snap_token(options = {})
+      result = request_with_logging(:post, config.api_host.sub('//api.', '//app.') + "/snap/v1/transactions", options)
+      Veritrans::SnapResult.new(result.response, result.url, result.request_options, result.time)
+      result.token
+    end
+
+    # Create Snap URL payment
+    def get_snap_url(options = {})
+      result = request_with_logging(:post, config.api_host.sub('//api.', '//app.') + "/snap/v1/transactions", options)
+      Veritrans::SnapResult.new(result.response, result.url, result.request_options, result.time)
+      result.redirect_url
+    end
 
     # POST /v2/{id}/cancel
     # Docs https://api-docs.midtrans.com/#cancel-transaction
@@ -152,5 +167,85 @@ class Veritrans
 
     alias_method :point_inquiry, :inquiry_points
 
-  end
+    # POST /v2/pay/account
+    # param create pay account request (more params detail refer to: https://api-docs.midtrans.com/#create-pay-account)
+    def link_payment_account(param)
+      if param == nil
+        raise ArgumentError, "parameter Payment_type gopay cannot be blank"
+      end
+
+      request_with_logging(:post, config.api_host + "/v2/pay/account", param)
+    end
+
+    # GET /v2/pay/account/{account_id}
+    # account_id (more params detail refer to: https://api-docs.midtrans.com/#get-pay-account)
+    def get_payment_account(account_id)
+      if account_id == nil || account_id == ''
+        raise ArgumentError, "account_id cannot be blank"
+      end
+
+      request_with_logging(:get, config.api_host + "/v2/pay/account/#{account_id}", {})
+    end
+
+    # POST /v2/pay/account/{account_id}/unbind
+    # account_id (more params detail refer to: https://api-docs.midtrans.com/#unbind-pay-account)
+    def unlink_payment_account(account_id)
+      if account_id == nil || account_id == ''
+        raise ArgumentError, "parameter account_id cannot be blank"
+      end
+
+      request_with_logging(:post, config.api_host + "/v2/pay/account/#{account_id}/unbind", {})
+    end
+
+    # POST /v1/subscription
+    # param create subscription request (more params detail refer to: https://api-docs.midtrans.com/#create-subscription)
+    def create_subscription(param)
+      if param == nil
+        raise ArgumentError, "parameter subscription cannot be blank"
+      end
+
+      request_with_logging(:post, config.api_host + "/v1/subscriptions", param)
+    end
+
+    # GET /v1/subscription/{subscription_id}
+    # get subscription request (more params detail refer to: https://api-docs.midtrans.com/#get-subscription)
+    def get_subscription(subscription_id)
+      if subscription_id == nil || subscription_id == ''
+        raise ArgumentError, "subscription_id cannot be blank"
+      end
+
+      request_with_logging(:get, config.api_host + "/v1/subscriptions/#{subscription_id}", {})
+    end
+
+    # POST /v1/subscription/{subscription_id}/disable
+    # disable subscription request (more params detail refer to: https://api-docs.midtrans.com/#disable-subscription)
+    def disable_subscription(subscription_id)
+      if subscription_id == nil || subscription_id == ''
+        raise ArgumentError, "subscription_id cannot be blank"
+      end
+
+      request_with_logging(:post, config.api_host + "/v1/subscriptions/#{subscription_id}/disable", {})
+    end
+
+    # POST /v1/subscription/{subscription_id}/disable
+    # enable subscription request (more params detail refer to: https://api-docs.midtrans.com/#enable-subscription)
+    def enable_subscription(subscription_id)
+      if subscription_id == nil || subscription_id == ''
+        raise ArgumentError, "subscription_id cannot be blank"
+      end
+
+      request_with_logging(:post, config.api_host + "/v1/subscriptions/#{subscription_id}/enable", {})
+    end
+
+    # PATCH /v1/subscription/{subscription_id}
+    # update subscription request (more params detail refer to: https://api-docs.midtrans.com/#update-subscription)
+    def update_subscription(subscription_id, param)
+      if subscription_id && param == nil || subscription_id && param == ''
+        raise ArgumentError, "subscription_id and param cannot be blank"
+      end
+
+      request_with_logging(:patch, config.api_host + "/v1/subscriptions/#{subscription_id}", param)
+      end
+    end
+
 end
