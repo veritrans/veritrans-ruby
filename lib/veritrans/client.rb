@@ -68,13 +68,17 @@ class Veritrans
       make_request(:post, url, params)
     end
 
+    def patch(url, params)
+      make_request(:patch, url, params)
+    end
+
     def make_request(method, url, params, auth_header = nil)
       if !config.server_key || config.server_key == ''
         raise "Please add server_key to config/veritrans.yml"
       end
 
       method = method.to_s.upcase
-      logger.info "Veritrans: #{method} #{url} #{_json_encode(params)}"
+      logger.info "Midtrans: #{method} #{url} #{_json_encode(params)}"
       #logger.info "Veritrans: Using server key: #{config.server_key}"
       #puts "Veritrans: #{method} #{url} #{_json_encode(params)}"
 
@@ -88,7 +92,10 @@ class Veritrans
           "Authorization" => auth_header || basic_auth_header(config.server_key),
           "Accept" => "application/json",
           "Content-Type" => "application/json",
-          "User-Agent" => "Veritrans ruby gem #{Veritrans::VERSION}"
+          "User-Agent" => "Veritrans ruby gem #{Veritrans::VERSION}",
+          "Idempotency-Key" => "#{$idempotency_key}",
+          "X-Append-Notification" => "#{$append_notif_url}",
+          "X-Override-Notification" => "#{$override_notif_url}"
         }
       }
 
@@ -109,7 +116,7 @@ class Veritrans
 
       response = request.send(method.downcase.to_sym, request_options)
 
-      logger.info "Veritrans: got #{(Time.now - s_time).round(3)} sec #{response.status} #{response.body}"
+      logger.info "Midtrans: got #{(Time.now - s_time).round(3)} sec #{response.status} #{response.body}"
 
       Result.new(response, url, request_options, Time.now - s_time)
 
