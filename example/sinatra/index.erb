@@ -1,213 +1,188 @@
 <!doctype html>
 <html>
 <head>
-  <title>veritrans-ruby demo</title>
-  <link rel="icon" type="image/x-icon" href="https://account.midtrans.com/favicon.ico" />
-  <link rel="stylesheet" href="/style.css">
+  <title>Midtrans-Ruby simple demo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/featherlight/1.7.12/featherlight.min.css">
 </head>
 <body>
 
 <header>
-  <h3>Midtrans sinatra app</h3>
+  <h3>Midtrans sample demo sinatra app</h3>
   <a href="https://github.com/veritrans/veritrans-ruby" class="github">Source Code</a>
 </header>
 
 <section>
-  <h4>VT-Web</h4>
-  <form action="/charge_vtweb" method="GET" id="vtweb_form">
-    <fieldset>
-      <p>
-        <label>Language</label>
-        <select name="locale">
-          <option></option>
-          <option value="id">Indonesian</option>
-          <option value="en">English</option>
-        </select>
-      </p>
+  <h4>Snap Popup</h4>
+  <a href="/snap">Click here</a>
+</section>
 
-      <div class="form-row">
-        <label>Payment Types</label>
-        <ul>
-          <% @payment_types = %w{CREDIT_CARD MANDIRI_CLICKPAY MANDIRI_BILL CIMB_CLICKS INDOMARET BANK_TRANSFER MANDIRI_BILL} %>
-          <% for type in @payment_types %>
-            <li>
-              <label>
-                <input type="checkbox" name="enabled_payments[]" value="<%= type %>">
-                <%= type.split("_").map(&:capitalize).join(' ') %>
-              </label>
-            </li>
-          <% end %>
-        </ul>
-        <br/>
-        <small class="types-hint">By default Veritrans will show all available types</small>
-      </div>
-
-      <p>
-        <label>Credit Card BIN promo</label>
-        <input type="text" name="bin_promo" placeholder="411111, 500000, bni, mandiri, 3111">
-        <br/>
-        <small class="bins-hint">
-          <a href="https://api-docs.midtrans.com/#card-features-bin-promo">See documentation</a>
-        </small>
-      </p>
-
-      <p>
-        <label>Credit Card 3D Secure</label>
-        <select name="credit_card_3d_secure">
-          <option></option>
-          <option value="true">Yes</option>
-          <option value="false">No</option>
-        </select>
-      </p>
-
-      <div class="form-row">
-        <label>Credit Card Installment</label>
-        <ul>
-          <li>
-            <label><input type="checkbox" name="installment[bni]">BNI</label>
-          </li>
-          <li>
-            <label><input type="checkbox" name="installment[mandiri]">Mandiri</label>
-          </li>
-          <li>
-            <label><input type="checkbox" name="installment[bca]">BCA</label>
-          </li>
-        </ul>
-      </div>
-
-    </fieldset>
-
+<section>
+  <h4>Snap Redirect</h4>
+  <a href="/snapredirect">Click here</a>
+</section>
+<br>
+<h3>Core API Credit Card</h3>
+<form action="/coreapi" method="POST" id="payment-form">
+  <fieldset>
+    <legend>Checkout</legend>
+    <small><strong>Field that may be presented to customer:</strong></small>
     <p>
-      <input type="submit" value="Create payment page">
+      <label>Card Number</label>
+      <input class="card-number" name="card-number" value="4811 1111 1111 1114" size="23" type="text" autocomplete="off" />
+    </p>
     <p>
-  </form>
-</section>
+      <label>Expiration (MM/YYYY)</label>
+      <input class="card-expiry-month" name="card-expiry-month" value="12" placeholder="MM" size="2" type="text" />
+      <span> / </span>
+      <input class="card-expiry-year" name="card-expiry-year" value="2025" placeholder="YYYY" size="4" type="text" />
+    </p>
+    <p>
+      <label>CVV</label>
+      <input class="card-cvv" name="card-cvv" value="123" size="4" type="password" autocomplete="off" />
+    </p>
+    <p>
+      <label>Save credit card</label>
+      <input type="checkbox" id="save_cc" name="save_cc" value="true">
+    </p>
+    <small><strong>Fields that shouldn't be presented to the customer:</strong></small>
+    <p>
+      <label>3D Secure</label>
+      <input type="checkbox" id="secure" name="secure" value="true" checked>
+    </p>
+    <input id="token_id" name="token_id" type="hidden" />
+    <button class="submit-button" type="submit">Submit Payment</button>
+  </fieldset>
+</form>
 
-<section>
-  <h4>VT-Direct</h4>
+<code>
+        <pre>
+        <b>Testing cards:</b>
 
-  <form action="/charge_vtdirect" method="post" id="card_form">
-    <input type="hidden" name="token_id" id="card_token">
-    <fieldset>
-      <legend>Credit card</legend>
-      <p>
-        <label for="gross_amount">Amount, Rp.</label>
-        <input type="text" name="gross_amount" id="gross_amount" value="30000">
-      </p>
-      <p>
-        <label for="card_number">Card number</label>
-        <input type="text" id="card_number" style="width: 150px" value="4811 1111 1111 1114">
-        <br>
-        <small style="margin-left: 100px" class="card-numbers">
-          <a onclick="$('#card_number').val('4811 1111 1111 1114')">success Visa</a>
-          <a onclick="$('#card_number').val('5810 1111 1111 1112')">success MasterCard</a>
-          <a onclick="$('#card_number').val('4511 1111 1111 1117')">challenge</a>
-          <a onclick="$('#card_number').val('4611 1111 1111 1116')">Deny by FDS</a>
-          <a onclick="$('#card_number').val('4911 1111 1111 1113')">Deny by bank</a>
-          <a href="https://docs.midtrans.com/en/reference/test.html" target="_blank">documentation</a>
-        </small>
-      </p>
-      <p>
-        <label for="card_cvc">Security Code</label>
-        <input type="text" id="card_cvc" style="width: 30px" placeholder="cvc" value="123">
-      </p>
-      <p>
-        <label for="card_exp">Expiration date</label>
-        <input type="text" id="card_exp" placeholder="MM / YY" value="12 / 18">
-      </p>
+        <b>For 3D Secure:</b>
+        Visa        4811 1111 1111 1114
+        MasterCard  5211 1111 1111 1117
 
-      <p>
-        <label for="card_secure">3D-secure</label>
-        <input type="checkbox" id="card_secure">
-      </p>
+        <b>For Non 3D Secure:</b>
+        Visa success      4011 1111 1111 1112
+        Visa challenge    4111 1111 1111 1111
+        Visa deny by FDS  4211 1111 1111 1110
 
-    </fieldset>
+        MasterCard success      5481 1611 1111 1081
+        MasterCard challenge    5110 1111 1111 1119
+        MasterCard deny by FDS  5210 1111 1111 1118
 
-    <input id="submit_btn" type="submit">
-  </form>
-</section>
-
-<section>
-  <h4>Localization</h4>
-  Indonesian translation for validation messages
-  <a href="/localization">Click here</a>
-</section>
-
-<section>
-  <h4>Recurring</h4>
-  <a href="/recurring">Click here</a>
-</section>
-
-<section>
-  <h4>Credit Card Points</h4>
-  <a href="/points">Click here</a>
-</section>
-
-<section>
-  <h4>Snap</h4>
-  <a href="/widget">Click here</a>
-</section>
-
-<script src="https://api.sandbox.midtrans.com/v2/assets/veritrans.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.payment/1.0.2/jquery.payment.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/0.9.9/jquery.magnific-popup.min.js"></script>
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/0.9.9/magnific-popup.css">
-
+        </pre>
+</code>
+<script id="midtrans-script" type="text/javascript" src="https://api.midtrans.com/v2/assets/js/midtrans-new-3ds.min.js" data-environment="sandbox" data-client-key="SB-Mid-client-ArNfhrh7st9bQKmz"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/featherlight/1.7.12/featherlight.min.js"></script>
+<!-- Javascript for token generation -->
 <script type="text/javascript">
-  // set Veritrans settings
-  Veritrans.url = "<%= Veritrans.config.api_host %>/v2/token";
-  Veritrans.client_key = "<%= Veritrans.config.client_key %>";
+    $(function () {
+        // open the console log to check the flow
+        // 3ds new flow:
+        // 1. get token_id
+        // 2. send token_id to backend
+        // 3. initial charge from backend to midtrans api
+        // 4. open redirect_url
 
-  function createTokenData() {
-    return {
-      // Optional params:
-      // secure: true
-      // bank: 'MANDIRI'
+        var options = {
+            performAuthentication: function(redirect_url){
+                openDialog(redirect_url);
+            },
+            onSuccess: function(response){
+                console.log('success');
+                console.log('response:',response);
+                closeDialog();
+            },
+            onFailure: function(response){
+                console.log('fail');
+                console.log('response:',response);
+                closeDialog();
+                alert(response.status_message);
+                $('button').removeAttr("disabled");
+            },
+            onPending: function(response){
+                console.log('pending');
+                console.log('response:',response);
+                closeDialog();
+            }
+        };
 
-      card_number: $('#card_number').val(),
-      card_cvv: $('#card_cvc').val(),
-      card_exp_month: $('#card_exp').val().match(/(\d+) \//)[1],
-      card_exp_year: '20' + $('#card_exp').val().match(/\/ (\d+)/)[1],
-      gross_amount: $('#gross_amount').val(),
-      secure: $('#card_secure')[0].checked
-    };
-  }
-
-  $(document).ready(function () {
-    $('#card_number').payment('formatCardNumber');
-    $('#card_cvc').payment('formatCardCVC');
-    $('#card_exp').payment('formatCardExpiry');
-
-    $('#card_form').on('submit', function (event) {
-      var form = this;
-      $('#submit_btn').attr('disabled', true).val("Processing ...");
-      event.preventDefault();
-
-      Veritrans.token(createTokenData, function (data) {
-        console.log('Token data:', data);
-        // if we get url then it's 3d-secure transaction
-        // so we need to open that page
-        // this callback function will be called again after user confirm 3d-secure
-        // you can also redirect on server side
-        if (data.redirect_url) {
-          $.magnificPopup.open({
-            items: { type: 'iframe', src: data.redirect_url }
-          });
-          $.magnificPopup.instance.content.find('iframe').height(590);
-        // if no redirect_url and we have token_id then just make charge request
-        } else if (data.token_id) {
-          $('#card_token').val(data.token_id);
-          $.magnificPopup.close();
-          form.submit();
-        // if no redirect_url and no token_id, then it should be error
-        } else {
-          alert(data.validation_messages ? data.validation_messages.join("\n") : data.status_message);
-          $('#submit_btn').removeAttr('disabled').removeAttr("value");
+        function openDialog(url) {
+            $.featherlight({
+                iframe: url,
+                iframeMaxWidth: '80%',
+                iframeWidth: 700,
+                iframeHeight: 500,
+                closeOnClick: false,
+                closeOnEsc: false,
+                closeIcon:''
+            });
         }
-      });
+
+        function closeDialog() {
+            $.featherlight.close();
+        }
+
+        $(".submit-button").click(function (event) {
+            var card = {
+                "card_number": $(".card-number").val(),
+                "card_exp_month": $(".card-expiry-month").val(),
+                "card_exp_year": $(".card-expiry-year").val(),
+                "card_cvv": $(".card-cvv").val()
+            };
+
+            event.preventDefault();
+            $(this).attr("disabled", "disabled");
+
+            console.log('1. get token_id');
+            MidtransNew3ds.getCardToken(card, getCardTokenCallback);
+            return false;
+        });
+
+        // callback functions
+        var getCardTokenCallback = {
+            onSuccess: function(response) {
+                // Success to get card token_id, implement as you wish here
+                console.log('Success to get card token_id, response:', response);
+                var token_id = response.token_id;
+                $("#token_id").val(token_id);
+
+                console.log('This is the card token_id:', token_id);
+                // Implement sending the token_id to backend to proceed to next step
+                console.log('2. send token_id to backend');
+                // send token_id, save_cc and secure params
+                // we send secure param for sample, in production, you should define transaction is secure/not in backend
+                // we recommend always use secure=true
+                // data: $("#token_id, #save_cc, #secure").serialize()
+                $.ajax({
+                    type: 'POST',
+                    url: '/coreapi',
+                    data: $("#token_id, #save_cc, #secure").serialize(),
+                    success: function(response){
+                        console.log('3. response charge from backend:', response);
+                        var res = JSON.parse(response)
+                        if (res.redirect_url){
+                            console.log('4. open redirect_url' + res.redirect_url);
+                            MidtransNew3ds.authenticate(res.redirect_url, options);
+                        }
+                    },
+                    error: function(xhr, status, error){
+                        console.error(xhr);
+                    }
+                });
+
+            },
+            onFailure: function(response) {
+                // Fail to get card token_id, implement as you wish here
+                console.log('Fail to get card token_id, response:', response);
+                closeDialog();
+                $('button').removeAttr("disabled");
+            }
+        };
     });
-  });
+
 </script>
 
 </body>
