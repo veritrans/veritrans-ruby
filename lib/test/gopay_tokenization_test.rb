@@ -47,6 +47,7 @@ class TestVeritrans < Minitest::Test
   end
 
   def test_unlink_payment_account
+    #expected the API call will fail because of not click activation from link_payment_account
     p 3
     result = @mt_test.unlink_payment_account($test_gopay_id)
     assert_equal "Account status cannot be updated.", result.status_message
