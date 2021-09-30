@@ -11,6 +11,14 @@ class TestVeritrans < Minitest::Test
       logger: Logger.new(STDOUT),
       file_logger: Logger.new(STDOUT)
     )
+
+    @mt_test_invalid_key = Veritrans.new(
+      server_key: "invalid server key",
+      client_key: "invalid client key",
+      api_host: "https://api.sandbox.midtrans.com",
+      logger: Logger.new(STDOUT),
+      file_logger: Logger.new(STDOUT)
+    )
   end
 
   def test_get_token_credit_card
@@ -38,7 +46,7 @@ class TestVeritrans < Minitest::Test
         "payment_type": "credit_card",
         "transaction_details": {
           "gross_amount": 10000,
-          "order_id": "test-order-#{rand(1..10000)}"
+          "order_id": "ruby-lib-test-creditcard-#{Time.now.to_i}"
         },
         "credit_card": {
           "token_id": "#{get_token.token_id}"
@@ -56,7 +64,7 @@ class TestVeritrans < Minitest::Test
         "payment_type": "bank_transfer",
         "transaction_details": {
           "gross_amount": 10000,
-          "order_id": "test-order-#{rand(1..10000)}"
+          "order_id": "ruby-lib-test-bcava#{Time.now.to_i}"
         },
         "bank_transfer": {
           "bank": "bca",
@@ -74,7 +82,7 @@ class TestVeritrans < Minitest::Test
         "payment_type": "bank_transfer",
         "transaction_details": {
           "gross_amount": 10000,
-          "order_id": "test-order-#{rand(1..10000)}"
+          "order_id": "ruby-lib-test-bniva-#{Time.now.to_i}"
         },
         "bank_transfer": {
           "bank": "bni",
@@ -103,7 +111,7 @@ class TestVeritrans < Minitest::Test
       {
         "payment_type": "cimb_clicks",
         "transaction_details": {
-          "order_id": "order-cimb-#{rand(1..10000)}",
+          "order_id": "ruby-lib-test-cimbclicks-#{Time.now.to_i}",
           "gross_amount": 44000
         },
         "cimb_clicks": {
@@ -120,7 +128,7 @@ class TestVeritrans < Minitest::Test
       {
         "payment_type": "bri_epay",
         "transaction_details": {
-          "order_id": "order-101-#{rand(1..10000)}",
+          "order_id": "ruby-lib-test-epaybri-#{Time.now.to_i}",
           "gross_amount": 44000
         }
       }
@@ -134,7 +142,7 @@ class TestVeritrans < Minitest::Test
     result = @mt_test.charge(
       "payment_type": "echannel",
       "transaction_details": {
-        "order_id": "order-mandiri-#{rand(1..10000)}",
+        "order_id": "ruby-lib-test-mandiribill-#{Time.now.to_i}",
         "gross_amount": 44000
       },
       "echannel": {
@@ -151,7 +159,7 @@ class TestVeritrans < Minitest::Test
     result = @mt_test.charge(
       "payment_type": "cstore",
       "transaction_details": {
-        "order_id": "order-indomaret-#{rand(1..10000)}",
+        "order_id": "ruby-lib-test-indomaret-#{Time.now.to_i}",
         "gross_amount": 44000
       },
       "cstore": {
@@ -168,7 +176,7 @@ class TestVeritrans < Minitest::Test
     result = @mt_test.charge(
       "payment_type": "cstore",
       "transaction_details": {
-        "order_id": "order-alfamart-#{rand(1..10000)}",
+        "order_id": "ruby-lib-test-alfamart-#{Time.now.to_i}",
         "gross_amount": 44000
       },
       "cstore": {
@@ -187,7 +195,7 @@ class TestVeritrans < Minitest::Test
     result = @mt_test.charge(
       "payment_type": "gopay",
       "transaction_details": {
-        "order_id": "order-gopay-#{rand(1..10000)}",
+        "order_id": "ruby-lib-test-gopay-#{Time.now.to_i}",
         "gross_amount": 44000
       },
       "gopay": {
@@ -204,7 +212,7 @@ class TestVeritrans < Minitest::Test
     result = @mt_test.charge(
       "payment_type": "bca_klikpay",
       "transaction_details": {
-        "order_id": "order-bcaklikpay-#{rand(1..10000)}",
+        "order_id": "ruby-lib-test-bcaklikpay-#{Time.now.to_i}",
         "gross_amount": 44000
       },
       "bca_klikpay": {
@@ -221,7 +229,7 @@ class TestVeritrans < Minitest::Test
     result = @mt_test.charge(
       "payment_type": "akulaku",
       "transaction_details": {
-        "order_id": "order-akulaku-#{rand(1..10000)}",
+        "order_id": "ruby-lib-test-#{Time.now.to_i}",
         "gross_amount": 44000
       }
     )
@@ -234,7 +242,7 @@ class TestVeritrans < Minitest::Test
     result = @mt_test.charge(
       "payment_type": "danamon_online",
       "transaction_details": {
-        "order_id": "order-danamon-#{rand(1..10000)}",
+        "order_id": "ruby-lib-test-#{Time.now.to_i}",
         "gross_amount": 44000
       }
     )
@@ -246,7 +254,7 @@ class TestVeritrans < Minitest::Test
   def test_create_widget_token
     result = @mt_test.create_widget_token(
       transaction_details: {
-        order_id: "THE-ITEM-ORDER-#{rand(1..10000)}",
+        order_id: "ruby-lib-test-#{Time.now.to_i}",
         gross_amount: 200000
       },
       "credit_card": {
@@ -254,6 +262,52 @@ class TestVeritrans < Minitest::Test
       }
     )
     assert_equal 201, result.status_code
+  end
+
+  def test_fail_charge_invalid_key
+    @mt_test_invalid_key = Veritrans.new(
+      server_key: "invalid server key",
+      client_key: "invalid client key",
+      api_host: "https://api.sandbox.midtrans.com",
+      logger: Logger.new(STDOUT),
+      file_logger: Logger.new(STDOUT)
+    )
+
+    result = @mt_test_invalid_key.charge(
+      {
+        "payment_type": "bank_transfer",
+        "transaction_details": {
+          "gross_amount": 10000,
+          "order_id": "ruby-lib-test-bcava-#{Time.now.to_i}"
+        },
+        "bank_transfer": {
+          "bank": "bca",
+          "va_number": "1234567891"
+        }
+      }
+    )
+    assert_equal 401, result.status_code
+    assert_equal "Transaction cannot be authorized with the current client/server key.", result.status_message
+  end
+
+  def test_fail_get_token
+    @mt_test_invalid_key = Veritrans.new(
+      server_key: "invalid server key",
+      client_key: "invalid client key",
+      api_host: "https://api.sandbox.midtrans.com",
+      logger: Logger.new(STDOUT),
+      file_logger: Logger.new(STDOUT)
+    )
+
+    card = {
+      card_number: 4617006959746656,
+      card_cvv: 123,
+      card_exp_month: 12,
+      card_exp_year: 2026
+    }
+    result = @mt_test_invalid_key.test_token(card)
+    assert_equal 401, result.status_code
+    assert_equal "Transaction cannot be authorized with the current client/server key.", result.status_message
   end
 
 end
