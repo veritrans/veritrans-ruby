@@ -1,7 +1,6 @@
-How to run sinatra example
+How to run sinatra example:
 
-```ruby
-gem install sinatra
+1. Install dependencies: `bundle install`
+2. Run the sinatra app: `ruby webapp.rb`
 
-ruby sinatra.rb
-```
+The app will run at port 4567. Open `localhost:4567` from your browser.
