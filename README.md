@@ -82,7 +82,7 @@ We have [3 different products](https://docs.midtrans.com/en/welcome/index.html) 
 
 Choose one that you think best for your unique needs.
 
-###Snap
+### Snap
 
 Customizable payment popup will appear on your web/app (no redirection)
 
@@ -135,7 +135,7 @@ Initialize Snap JS when customer click pay button
   </body>
 ```
 
-###Snap redirect
+### Snap redirect
 
 This will result in redirect_url, you can redirect customer to the url, payment page is securely hosted by Midtrans.
 
@@ -155,7 +155,7 @@ result = Veritrans.create_widget_token(
 
 > !!! WARNING NOTE: VT-Web is deprecated, please use [Snap](#Snap Pop-up) instead, it has better previous VT-Web feature and many more improvements, including redirect_url.
 
-###Core API (VT-Direct)
+### Core API (VT-Direct)
 
 It's little more complicated, because credit_card is sensitive data,
 you need put credit card number in our safe storage first using `midtrans.min.js` library, then send received token to with other payment details.
