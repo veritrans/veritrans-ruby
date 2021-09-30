@@ -22,7 +22,7 @@
 </section>
 <br>
 <h3>Core API Credit Card</h3>
-<form action="/coreapi" method="POST" id="payment-form">
+<form action="/coreapi-card-charge-ajax-handler" method="POST" id="payment-form">
   <fieldset>
     <legend>Checkout</legend>
     <small><strong>Field that may be presented to customer:</strong></small>
@@ -91,11 +91,13 @@
                 openDialog(redirect_url);
             },
             onSuccess: function(response){
+                document.getElementById('result-json').innerHTML += JSON.stringify(response, null, 2);
                 console.log('success');
                 console.log('response:',response);
                 closeDialog();
             },
             onFailure: function(response){
+                document.getElementById('result-json').innerHTML += JSON.stringify(response, null, 2);
                 console.log('fail');
                 console.log('response:',response);
                 closeDialog();
@@ -103,6 +105,7 @@
                 $('button').removeAttr("disabled");
             },
             onPending: function(response){
+                document.getElementById('result-json').innerHTML += JSON.stringify(response, null, 2);
                 console.log('pending');
                 console.log('response:',response);
                 closeDialog();
@@ -158,7 +161,7 @@
                 // data: $("#token_id, #save_cc, #secure").serialize()
                 $.ajax({
                     type: 'POST',
-                    url: '/coreapi',
+                    url: '/coreapi-card-charge-ajax-handler',
                     data: $("#token_id, #save_cc, #secure").serialize(),
                     success: function(response){
                         console.log('3. response charge from backend:', response);
@@ -184,6 +187,7 @@
     });
 
 </script>
+<pre><div id="result-json">Transaction result:<br></div></pre>
 
 </body>
 </html>
