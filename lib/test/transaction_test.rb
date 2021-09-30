@@ -19,7 +19,7 @@ class TestVeritrans < Minitest::Test
         "payment_type": "bank_transfer",
         "transaction_details": {
           "gross_amount": 10000,
-          "order_id": "test-order-#{rand(1..10000)}"
+          "order_id": "ruby-lib-test-#{Time.now.to_i}"
         },
         "bank_transfer": {
           "bank": "permata",
@@ -38,7 +38,7 @@ class TestVeritrans < Minitest::Test
         "payment_type": "bank_transfer",
         "transaction_details": {
           "gross_amount": 10000,
-          "order_id": "test-order-#{rand(1..10000)}"
+          "order_id": "ruby-lib-test-#{Time.now.to_i}"
         },
         "bank_transfer": {
           "bank": "permata",
@@ -57,7 +57,7 @@ class TestVeritrans < Minitest::Test
         "payment_type": "bank_transfer",
         "transaction_details": {
           "gross_amount": 10000,
-          "order_id": "test-order-#{rand(1..10000)}"
+          "order_id": "ruby-lib-test-#{Time.now.to_i}"
         },
         "bank_transfer": {
           "bank": "permata",
@@ -77,7 +77,7 @@ class TestVeritrans < Minitest::Test
         "payment_type": "bank_transfer",
         "transaction_details": {
           "gross_amount": 10000,
-          "order_id": "test-order-#{rand(1..10000)}"
+          "order_id": "ruby-lib-test-#{Time.now.to_i}"
         },
         "bank_transfer": {
           "bank": "permata",
@@ -103,7 +103,7 @@ class TestVeritrans < Minitest::Test
         "payment_type": "credit_card",
         "transaction_details": {
           "gross_amount": 10000,
-          "order_id": "test-order-#{rand(1..10000)}"
+          "order_id": "ruby-lib-test-#{Time.now.to_i}"
         },
         "credit_card": {
           "token_id": "#{get_token.token_id}",
@@ -130,7 +130,7 @@ class TestVeritrans < Minitest::Test
         "payment_type": "credit_card",
         "transaction_details": {
           "gross_amount": 10000,
-          "order_id": "test-order-#{rand(1..10000)}"
+          "order_id": "ruby-lib-test-#{Time.now.to_i}"
         },
         "credit_card": {
           "token_id": "#{get_token.token_id}",
@@ -144,7 +144,7 @@ class TestVeritrans < Minitest::Test
     assert_equal "deny", result.fraud_status
   end
 
-  def test_refund_transaction
+  def test_fail_refund_transaction
     param = {
       "refund_key": "reference1",
       "amount": 5000,
