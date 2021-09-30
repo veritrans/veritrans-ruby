@@ -1,4 +1,5 @@
 ### Version 2.4.0 (date 29 September 2021)
+* Update dependency, revamp implementation by removing non relevant features & adding new features
 * Implement Gopay tokenization
 * Implement API subscription
 * Add function Idempotency Key, override notification, append Notification
