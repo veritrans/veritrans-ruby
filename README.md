@@ -10,7 +10,7 @@ To see it in action, we have made example:
 
 1. Sinatra, which demonstrate in as succint code as possible. Please [have a look here](https://github.com/veritrans/veritrans-ruby/tree/master/example/sinatra)
 
-## How to use
+## 1. How to use
 
 ### Add gem veritrans to Gemfile
 
@@ -41,7 +41,7 @@ mt_client = Midtrans.new(
 mt_client.status("order-id-123456")
 ```
 
-also can set one by one
+Alternatively, you can also set config by declaring each one like below:
 
 ```ruby
 Midtrans.config.server_key = "your server key"
@@ -73,10 +73,16 @@ $idempotency_key = "Unique-ID"
 ```
 [More details](http://api-docs.midtrans.com/#idempotent-requests)
 
+### 2. Choose Product/Method
 
-## STEP 1: Process credit cards
+We have [3 different products](https://docs.midtrans.com/en/welcome/index.html) of payment that you can use:
+- [Snap](#Snap) - Customizable payment popup will appear on **your web/app** (no redirection). [doc ref](https://snap-docs.midtrans.com/)
+- [Snap Redirect](#Snap-redirect) - Customer need to be redirected to payment url **hosted by midtrans**. [doc ref](https://snap-docs.midtrans.com/)
+- [Core API (VT-Direct)](#core-api-vt-direct) - Basic backend implementation, you can customize the frontend embedded on **your web/app** as you like (no redirection). [doc ref](https://api-docs.midtrans.com/)
 
-### Snap Pop-up
+Choose one that you think best for your unique needs.
+
+###Snap
 
 Customizable payment popup will appear on your web/app (no redirection)
 
@@ -129,7 +135,7 @@ Initialize Snap JS when customer click pay button
   </body>
 ```
 
-### Snap Redirect
+###Snap redirect
 
 This will result in redirect_url, you can redirect customer to the url, payment page is securely hosted by Midtrans.
 
@@ -149,7 +155,7 @@ result = Veritrans.create_widget_token(
 
 > !!! WARNING NOTE: VT-Web is deprecated, please use [Snap](#Snap Pop-up) instead, it has better previous VT-Web feature and many more improvements, including redirect_url.
 
-### VT-Direct / Core API
+###Core API (VT-Direct)
 
 It's little more complicated, because credit_card is sensitive data,
 you need put credit card number in our safe storage first using `midtrans.min.js` library, then send received token to with other payment details.
@@ -167,7 +173,7 @@ data-client-key="<INSERT YOUR CLIENT KEY HERE>"></script>
 For sinatra:
 
 ```html
-<form action="/coreapi" method="POST" id="payment-form">
+<form action="/coreapi-card-charge-ajax-handler" method="POST" id="payment-form">
   <fieldset>
     <legend>Checkout</legend>
     <small><strong>Field that may be presented to customer:</strong></small>
@@ -220,8 +226,6 @@ On a server side:
   })
 ```
 
-## STEP 2: Process non credit cards payment
-
 We provide many payment channels to accept payment, but the API call is almost the same.
 
 For Snap / VT-Web in only one request, payment page will display all available payment options.
@@ -243,7 +247,7 @@ puts "Please transfer fund to account no. #{@result.permata_va_number} in bank P
 See [our documentation](https://api-docs.midtrans.com/#charge-features) for other available options.
 
 
-## STEP 3: Receive notification callback
+## Receive notification callback
 
 For every transaction success and failed we will send you HTTP POST notification (aka webhook)
 
@@ -283,32 +287,6 @@ end
 
 ----
 
-#### Veritrans::Events
-
-Other option to handle callbacks is our rack-based handler
-
-```ruby
-# config/routes.rb
-mount Veritrans::Events.new => '/vt_events'
-
-# config/initalizers/veritrans.rb
-Veritrans.setup do
-  config.server_key = "..."
-  config.client_key = "..."
-
-  events.subscribe('payment.success') do |payment|
-    # payment variable is hash with params recieved from Veritrans
-    # assuming you have model Order in your project
-    Order.find_by(order_id: payment.order_id).mark_paid!(payment.masked_card)
-  end
-
-  events.subscribe('payment.failed', 'payment.challenge') do |payment|
-    # payment variable is hash with params recieved from Veritrans
-    # assuming you have model Order in your project
-    Order.find_by(order_id: payment.order_id) ...
-  end
-end
-```
 
 #### Logging
 
