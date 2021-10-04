@@ -1,29 +1,40 @@
-# Veritrans ruby library
+# Midtrans Ruby library
 
-Veritrans gem is the library that will help you to integrate seamlessly with
-Midtrans (formerly known as Veritrans Indonesia).
+Midtrans ❤️ Ruby!
+
+This is the Official Ruby API client/library for Midtrans Payment API. Visit [https://midtrans.com](https://midtrans.com). More information about the product and see documentation at [http://docs.midtrans.com](https://docs.midtrans.com) for more technical details.
 
 [![Gem Version](https://badge.fury.io/rb/veritrans.svg)](http://badge.fury.io/rb/veritrans)
 [![Build Status](https://travis-ci.org/veritrans/veritrans-ruby.svg?branch=master)](https://travis-ci.org/veritrans/veritrans-ruby)
 
-To see it in action, we have made example:
+## 1. Installation
 
-1. Sinatra, which demonstrate in as succint code as possible. Please [have a look here](https://github.com/veritrans/veritrans-ruby/tree/master/example/sinatra)
-
-## 1. How to use
-
-### Add gem veritrans to Gemfile
-
+### Using Gemfile
+Add gem veritrans to Gemfile
 ```ruby
 gem 'veritrans'
 ```
 ```ruby
 gem install veritrans
 ```
+```ruby
+bundle install
+```
 
-    bundle install
+## 2. Usage
+### 2.1 Choose Product/Method
 
-### General setting
+We have [3 different products](https://docs.midtrans.com/en/welcome/index.html) of payment that you can use:
+- [Snap](#22A-snap) - Customizable payment popup will appear on **your web/app** (no redirection). [doc ref](https://snap-docs.midtrans.com/)
+- [Snap Redirect](#22B-snap-redirect) - Customer need to be redirected to payment url **hosted by midtrans**. [doc ref](https://snap-docs.midtrans.com/)
+- [Core API (VT-Direct)](#22C-core-api-vt-direct) - Basic backend implementation, you can customize the frontend embedded on **your web/app** as you like (no redirection). [doc ref](https://api-docs.midtrans.com/)
+
+Choose one that you think best for your unique needs.
+
+### 2.2 Client Initialization and Configuration
+
+Get your client key and server key from [Midtrans Dashboard](https://dashboard.midtrans.com)
+
 Create instance of Midtrans client
 
 ```ruby
@@ -49,6 +60,161 @@ Midtrans.config.client_key = "your client key"
 Midtrans.config.api_host = "https://api.sandbox.midtrans.com"
 ```
 
+### 2.2.A Snap
+You can see Snap example [here](example/sinatra).
+
+```ruby
+# Create Snap payment page, with this version returning full API response
+create_snap_token(parameter)
+
+# Create Snap payment page, with this version returning token
+create_snap_token_string(parameter)
+
+# Create Snap payment page, with this version returning redirect url
+create_snap_redirect_url_str(parameter)
+```
+`parameter` is Object or String of JSON of [SNAP Parameter](https://snap-docs.midtrans.com/#json-objects)
+
+#### Get Snap Token
+
+```ruby
+result = Midtrans.create_snap_token(
+  transaction_details: {
+    order_id: "test-transaction-order-123",
+    gross_amount: 100000,
+    secure: true
+  }
+)
+@token = result.token
+```
+
+#### Initialize Snap JS when customer click pay button
+
+On frontend / html:
+Replace `PUT_TRANSACTION_TOKEN_HERE` with `transactionToken` acquired above
+```html
+<html>
+  <body>
+    <button id="pay-button">Pay!</button>
+    <pre><div id="result-json">JSON result will appear here after payment:<br></div></pre> 
+
+<!-- TODO: Remove ".sandbox" from script src URL for production environment. Also input your client key in "data-client-key" -->
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="<Set your ClientKey here>"></script>
+    <script type="text/javascript">
+      document.getElementById('pay-button').onclick = function(){
+        // SnapToken acquired from previous step
+        snap.pay('PUT_TRANSACTION_TOKEN_HERE', {
+          // Optional
+          onSuccess: function(result){
+            /* You may add your own js here, this is just example */ document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+          },
+          // Optional
+          onPending: function(result){
+            /* You may add your own js here, this is just example */ document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+          },
+          // Optional
+          onError: function(result){
+            /* You may add your own js here, this is just example */ document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+          }
+        });
+      };
+    </script>
+  </body>
+</html>
+```
+
+### 2.2.B Snap Redirect
+Also available Snap example [here](example/sinatra).
+
+#### Get Redirection URL of a Payment Page
+
+```ruby
+result = Midtrans.create_snap_redirect_url(
+  transaction_details: {
+    order_id: "test-transaction-order-123",
+    gross_amount: 100000,
+    secure: true
+  }
+)
+@redirecturl = result.redirect_url
+```
+
+### 2.2.C Core API (VT-Direct)
+You can see some Core API examples [here](example/sinatra).
+
+Available methods for `CoreApi` class
+
+```ruby
+# charge : Do `/charge` API request to Midtrans Core API
+def charge(payment_type, data = nil)
+
+# test_token : Do `/token` API request to Midtrans Core API
+def test_token(options = {})
+  
+# point_inquiry : Do `/point_inquiry/{tokenId}` API request to Midtrans Core API 
+def point_inquiry(token_id)
+
+# status : Do `/{orderId}/status` API request to Midtrans Core API
+def status(payment_id)
+
+# approve : Do `/{orderId}/approve` API request to Midtrans Core API
+def approve(payment_id, options = {})
+
+# deny : Do `/{orderId}/deny` API request to Midtrans Core API
+def deny(payment_id, options = {})
+
+# cancel : Do `/{orderId}/cancel` API request to Midtrans Core API return
+def cancel(payment_id, options = {})
+
+# expire : Do `/{orderId}/expire` API request to Midtrans Core API
+def expire(payment_id)
+ 
+# refund : Do `/{orderId}/refund` API request to Midtrans Core API
+def refund(payment_id, options = {})
+
+# capture : Do `/{orderId}/capture` API request to Midtrans Core API
+def capture(payment_id, gross_amount, options = {})
+```
+
+#### Credit Card Get Token
+
+Get token should be handled on  Frontend please refer to [API docs](https://api-docs.midtrans.com)
+
+#### Credit Card Charge
+
+```ruby
+Midtrans.charge(
+  payment_type: "credit_card",
+  credit_card: {
+    token_id: "CREDIT_CARD_TOKEN", # change with your card token,
+    authentication: true
+  },
+  transaction_details: {
+    order_id: "test-transaction-12345",
+    gross_amount: 20000
+  })
+```
+
+#### Credit Card 3DS Authentication
+
+The credit card charge result may contains `redirect_url` for 3DS authentication. 3DS Authentication should be handled on Frontend please refer to [API docs](https://api-docs.midtrans.com/#card-features-3d-secure)
+
+For full example on Credit Card 3DS transaction refer to:
+- [Sinatra example](/example/sinatra) that implement Snap & Core Api
+
+
+### 2.3 Receive notification callback
+
+For every transaction success and failed we will send you HTTP POST notification (aka webhook)
+
+First you should set callback url in [Midtrans dashboard](https://dashboard.sandbox.midtrans.com/settings/vtweb_configuration)
+
+For testing in development phase please read our [Testing webhooks tutorial](https://github.com/veritrans/veritrans-ruby/blob/master/testing_webhooks.md)
+
+### 2.4 Transaction Action
+For full example on transaction action refer to: [Api Reference](api_reference.md)
+
+## 3. Advanced Usage
 ### Override Notification URL
 
 You can opt to change or add custom notification urls on every transaction. It can be achieved by adding additional HTTP headers into charge request.
@@ -73,221 +239,6 @@ $idempotency_key = "Unique-ID"
 ```
 [More details](http://api-docs.midtrans.com/#idempotent-requests)
 
-### 2. Choose Product/Method
-
-We have [3 different products](https://docs.midtrans.com/en/welcome/index.html) of payment that you can use:
-- [Snap](#Snap) - Customizable payment popup will appear on **your web/app** (no redirection). [doc ref](https://snap-docs.midtrans.com/)
-- [Snap Redirect](#Snap-redirect) - Customer need to be redirected to payment url **hosted by midtrans**. [doc ref](https://snap-docs.midtrans.com/)
-- [Core API (VT-Direct)](#core-api-vt-direct) - Basic backend implementation, you can customize the frontend embedded on **your web/app** as you like (no redirection). [doc ref](https://api-docs.midtrans.com/)
-
-Choose one that you think best for your unique needs.
-
-### Snap
-
-Customizable payment popup will appear on your web/app (no redirection)
-
-First, generate token in the back end provided with enough details as necessary
-and as detailed as you wish to.
-
-```ruby
-result = Veritrans.create_widget_token(
-  transaction_details: {
-    order_id: generate_order_id,
-    gross_amount: 100000
-  }
-)
-@token = result.token
-```
-
-Initialize Snap JS when customer click pay button
-
-```html
-<html>
-  <body>
-  <p>
-    <label>Snap Token</label>
-    <input type="text" id="token" value="<%= @token %>" readonly size="50">
-  </p>
-  <button id="pay-button">Pay</button>
-  <pre><div id="result-json">JSON result will appear here after payment:<br></div></pre>
-
-  <!-- TODO: Remove ".sandbox" from script src URL for production environment. Also input your client key in "data-client-key" -->
-  <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-ArNfhrh7st9bQKmz"></script>
-  <script type="text/javascript">
-      document.getElementById('pay-button').onclick = function(){
-          // SnapToken acquired from previous step
-          snap.pay('<%= @token %>', {
-              // Optional
-              onSuccess: function(result){
-                  /* You may add your own js here, this is just example */ document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-              },
-              // Optional
-              onPending: function(result){
-                  /* You may add your own js here, this is just example */ document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-              },
-              // Optional
-              onError: function(result){
-                  /* You may add your own js here, this is just example */ document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-              }
-          });
-      };
-  </script>
-  </body>
-```
-
-### Snap redirect
-
-This will result in redirect_url, you can redirect customer to the url, payment page is securely hosted by Midtrans.
-
-```ruby
-result = Veritrans.create_widget_token(
-  transaction_details: {
-    order_id: generate_order_id,
-    gross_amount: 100000
-  }
-)
-@redirecturl = result.redirect_url
-```
-
-> This is similar feature as old VT-Web
-
-#### VT-Web
-
-> !!! WARNING NOTE: VT-Web is deprecated, please use [Snap](#Snap Pop-up) instead, it has better previous VT-Web feature and many more improvements, including redirect_url.
-
-### Core API (VT-Direct)
-
-It's little more complicated, because credit_card is sensitive data,
-you need put credit card number in our safe storage first using `midtrans.min.js` library, then send received token to with other payment details.
-
-We don't want you to send credit card number to your server, especially for websites not using https.
-
-
-```html
-<script id="midtrans-script" type="text/javascript"
-src="https://api.midtrans.com/v2/assets/js/midtrans-new-3ds.min.js"
-data-environment="sandbox"
-data-client-key="<INSERT YOUR CLIENT KEY HERE>"></script>
-```
-
-For sinatra:
-
-```html
-<form action="/coreapi-card-charge-ajax-handler" method="POST" id="payment-form">
-  <fieldset>
-    <legend>Checkout</legend>
-    <small><strong>Field that may be presented to customer:</strong></small>
-    <p>
-      <label>Card Number</label>
-      <input class="card-number" name="card-number" value="4811 1111 1111 1114" size="23" type="text" autocomplete="off" />
-    </p>
-    <p>
-      <label>Expiration (MM/YYYY)</label>
-      <input class="card-expiry-month" name="card-expiry-month" value="12" placeholder="MM" size="2" type="text" />
-      <span> / </span>
-      <input class="card-expiry-year" name="card-expiry-year" value="2025" placeholder="YYYY" size="4" type="text" />
-    </p>
-    <p>
-      <label>CVV</label>
-      <input class="card-cvv" name="card-cvv" value="123" size="4" type="password" autocomplete="off" />
-    </p>
-    <p>
-      <label>Save credit card</label>
-      <input type="checkbox" id="save_cc" name="save_cc" value="true">
-    </p>
-    <small><strong>Fields that shouldn't be presented to the customer:</strong></small>
-    <p>
-      <label>3D Secure</label>
-      <input type="checkbox" id="secure" name="secure" value="true" checked>
-    </p>
-    <input id="token_id" name="token_id" type="hidden" />
-    <button class="submit-button" type="submit">Submit Payment</button>
-  </fieldset>
-</form>
-```
-
-#### Sending "get-token" request:
-
-Please refer to [this file](example/sinatra/index.erb)
-
-
-On a server side:
-
-```ruby
-@result = Veritrans.charge(
-  payment_type: "credit_card",
-  credit_card: {
-    token_id: params[:token_id],
-    authentication: params[:secure]
-  },
-  transaction_details: {
-    order_id: generate_order_id,
-    gross_amount: 20000
-  })
-```
-
-We provide many payment channels to accept payment, but the API call is almost the same.
-
-For Snap / VT-Web in only one request, payment page will display all available payment options.
-
-For Core API / VT-Direct you have to specify payment method (without get token step, credit card token required only for credit card transactions).
-
-```ruby
-@result = Veritrans.charge(
-  payment_type: "bank_transfer",
-  bank_transfer: { bank: 'permata' },
-  transaction_details: {
-    order_id: @payment.order_id,
-    gross_amount: @payment.amount
-  }
-)
-puts "Please transfer fund to account no. #{@result.permata_va_number} in bank Permata"
-```
-
-See [our documentation](https://api-docs.midtrans.com/#charge-features) for other available options.
-
-
-## Receive notification callback
-
-For every transaction success and failed we will send you HTTP POST notification (aka webhook)
-
-First you should set callback url in our dashboard https://dashboard.sandbox.midtrans.com/settings/vtweb_configuration
-
-For testing in development phase please read our [Testing webhooks tutorial](https://github.com/veritrans/veritrans-ruby/blob/master/testing_webhooks.md)
-
-
-For rails:
-
-```ruby
-# config/routes.rb
-match "/payments/receive_webhook" => "payments#receive_webhook", via: [:post]
-
-# app/controllers/payments_controller.rb
-def receive_webhook
-  post_body = request.body.read
-  callback_params = Veritrans.decode_notification_json(post_body)
-
-  verified_data = Veritrans.status(callback_params['transaction_id'])
-
-  if verified_data.status_code != 404
-    puts "--- Transaction callback ---"
-    puts "Payment:        #{verified_data.data[:order_id]}"
-    puts "Payment type:   #{verified_data.data[:payment_type]}"
-    puts "Payment status: #{verified_data.data[:transaction_status]}"
-    puts "Fraud status:   #{verified_data.data[:fraud_status]}" if verified_data.data[:fraud_status]
-    puts "Payment amount: #{verified_data.data[:gross_amount]}"
-    puts "--- Transaction callback ---"
-
-    render text: "ok"
-  else
-    render text: "ok", :status => :not_found
-  end
-end
-```
-
-----
-
-
 #### Logging
 
 By default gem veritrans will show information via rails' logger. And in addition save important information to `RAILS_APP/log/veritrans.log`
@@ -308,6 +259,9 @@ Veritrans.file_logger = Logger.new("/my/important_logs/veritrans.log")
 
 ----
 
+### To see it in action, we have made example:
+
+Sinatra, which demonstrate in as succint code as possible. Please [have a look here](https://github.com/veritrans/veritrans-ruby/tree/master/example/sinatra)
 
 
 #### Get help
