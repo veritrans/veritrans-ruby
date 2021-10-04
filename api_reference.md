@@ -16,103 +16,103 @@ our [documentation](https://api-docs.midtrans.com/)
 
   <tbody>
     <tr>
-      <td><a href="#charge">Veritrans.charge(data)</a></td>
+      <td><a href="#charge">Midtrans.charge(data)</a></td>
       <td>Charge Transaction</td>
       <td>POST</td>
       <td>api.midtrans.com/v2/charge</td>
     </tr>
     <tr>
-      <td><a href="#token">Veritrans.test_token(data)</a></td>
+      <td><a href="#token">Midtrans.test_token(data)</a></td>
       <td>Get Token for Card</td>
       <td>GET</td>
       <td>api.midtrans.com/v2/token</td>
     </tr>
     <tr>
-      <td><a href="#status">Veritrans.status(id)</a></td>
+      <td><a href="#status">Midtrans.status(id)</a></td>
       <td>Get Last Status</td>
       <td>GET</td>
       <td>api.midtrans.com/v2/{id}/status</td>
     </tr>
     <tr>
-      <td><a href="#cancel">Veritrans.cancel(id)</a></td>
+      <td><a href="#cancel">Midtrans.cancel(id)</a></td>
       <td>Cancel Transaction</td>
       <td>POST</td>
       <td>api.midtrans.com/v2/{id}/cancel</td>
     </tr>
     <tr>
-      <td><a href="#approve">Veritrans.approve(id)</a></td>
+      <td><a href="#approve">Midtrans.approve(id)</a></td>
       <td>Approve Challenge Transaction</td>
       <td>POST</td>
       <td>api.midtrans.com/v2/{id}/approve</td>
     </tr>
     <tr>
-      <td><a href="#refund">Veritrans.refund(id)</a></td>
+      <td><a href="#refund">Midtrans.refund(id)</a></td>
       <td>Refund Successful Transaction</td>
       <td>POST</td>
       <td>api.midtrans.com/v2/{id}/refund</td>
     </tr>
     <tr>
-      <td><a href="#capture">Veritrans.capture(id)</a></td>
+      <td><a href="#capture">Midtrans.capture(id)</a></td>
       <td>Capture Authorise Transaction</td>
       <td>POST</td>
       <td>api.midtrans.com/v2/{id}/capture</td>
     </tr>
     <tr>
-      <td><a href="#expire">Veritrans.expire(id)</a></td>
+      <td><a href="#expire">Midtrans.expire(id)</a></td>
       <td>Expire Pending Transaction</td>
       <td>POST</td>
       <td>api.midtrans.com/v2/{id}/expire</td>
     </tr>
     <tr>
-      <td><a href="#deny">Veritrans.deny(id)</a></td>
+      <td><a href="#deny">Midtrans.deny(id)</a></td>
       <td>Deny Challenged Transaction</td>
       <td>POST</td>
       <td>api.midtrans.com/v2/{id}/deny</td>
     </tr>
     <tr>
-      <td><a href="#link">Veritrans.link_payment_account(data)</a></td>
+      <td><a href="#link">Midtrans.link_payment_account(data)</a></td>
       <td>link the customer's account to be used for payments using specific payment channel.</td>
       <td>POST</td>
       <td>api.midtrans.com/v2/pay/account</td>
     </tr>
         <tr>
-      <td><a href="#get_payment_account">Veritrans.get_payment_account(id)</a></td>
+      <td><a href="#get_payment_account">Midtrans.get_payment_account(id)</a></td>
       <td>create account to use for specific payment channel.</td>
       <td>GET</td>
       <td>api.midtrans.com/v2/pay/account/{account_id}</td>
     </tr>
     <tr>
-      <td><a href="#unlink_payment_account">Veritrans.unlink_payment_account(id)</a></td>
+      <td><a href="#unlink_payment_account">Midtrans.unlink_payment_account(id)</a></td>
       <td>remove the linked customer account.</td>
       <td>POST</td>
       <td>api.midtrans.com/v2/pay/account/{account_id}/unbind</td>
     </tr>
       <tr>
-      <td><a href="#create_subscription">Veritrans.create_subscription(data)</a></td>
+      <td><a href="#create_subscription">Midtrans.create_subscription(data)</a></td>
       <td>Create a subscription transaction</td>
       <td>POST</td>
       <td>api.midtrans.com/v1/subscriptions</td>
     </tr>
       <tr>
-      <td><a href="#create_subscription">Veritrans.get_subscription(id)</a></td>
+      <td><a href="#create_subscription">Midtrans.get_subscription(id)</a></td>
       <td>Retrieve the subscription details of a customer</td>
       <td>GET</td>
       <td>api.midtrans.com/v1/subscriptions/{subscription_id}</td>
     </tr>
       <tr>
-      <td><a href="#disable_subscription">Veritrans.disable_subscription(id)</a></td>
+      <td><a href="#disable_subscription">Midtrans.disable_subscription(id)</a></td>
       <td>Disable a customer's subscription account</td>
       <td>POST</td>
       <td>api.midtrans.com/v1/subscriptions/{subscription_id}/disable</td>
     </tr>
       <tr>
-      <td><a href="#enable_subscription">Veritrans.enable_subscription(id)</a></td>
+      <td><a href="#enable_subscription">Midtrans.enable_subscription(id)</a></td>
       <td>Enable a customer's subscription account</td>
       <td>POST</td>
       <td>api.midtrans.com/v1/subscriptions/{subscription_id}/enable</td>
     </tr>
     <tr>
-      <td><a href="#update_subscription">Veritrans.update_subscription(data)</a></td>
+      <td><a href="#update_subscription">Midtrans.update_subscription(data)</a></td>
       <td>Update the details of a customer's existing subscription account</td>
       <td>PATCH</td>
       <td>api.midtrans.com/v1/subscriptions/{subscription_id}</td>
@@ -128,13 +128,13 @@ our [documentation](https://api-docs.midtrans.com/)
 **For SNAP**
 
 ```ruby
-q = Veritrans.create_widget_token(
+q = Midtrans.create_snap_token(
         transaction_details: {
                 order_id: generate_order_id,
                 gross_amount: 100000
         })
 
-q.class # => Veritrans::Result
+q.class # => Midtrans::Result
 q.data == {
   status_code: "201",
   "token": "2b3ccb6c-d0fb-499a-9d46-ef53ad51fe62",
@@ -142,10 +142,10 @@ q.data == {
 }
 ```
 
-**For VT-Direct /  Core API :**
+**For Core API :**
 
 ```ruby
-q = Veritrans.charge({
+q = Midtrans.charge({
                        # *required
                        payment_type: "credit_card",
                        # *required
@@ -185,7 +185,7 @@ q = Veritrans.charge({
                        custom_field3: "submerchant_id: 23"
                      });
 
-q.class # => Veritrans::Result
+q.class # => Midtrans::Result
 q.data == {
   status_code: "200",
   status_message: "Success, Credit Card transaction is successful",
@@ -218,7 +218,7 @@ card =
     card_exp_year: 2025
   }
 
-q = Veritrans.test_token(card)
+q = Midtrans.test_token(card)
 
 q == '481111-1114-a901971f-2f1b-4781-802a-df326fbf0e9c'
 ```
@@ -230,7 +230,7 @@ q == '481111-1114-a901971f-2f1b-4781-802a-df326fbf0e9c'
 Return current status of transaction.
 
 ```ruby
-q = Veritrans.status("order-2")
+q = Midtrans.status("order-2")
 
 q.data == {
   status_code: "200",
@@ -259,7 +259,7 @@ For internet banking, bank transfer, mobile payments, convenient store payments 
 cancel it as simple as credit card, but before user sent money you can cancel pending transactions.
 
 ```ruby
-q = Veritrans.cancel("testing-0.2072-1415086078")
+q = Midtrans.cancel("testing-0.2072-1415086078")
 
 q.data == {
   status_code: "200",
@@ -284,7 +284,7 @@ Some transactions marked as challenge. If challenge you can approve it or cancel
 web interface, but you also can do it programatically, via API
 
 ```ruby
-q = Veritrans.cancel("testing-0.2072-1415086078")
+q = Midtrans.approve("testing-0.2072-1415086078")
 
 q.data == {
   status_code: "200",
@@ -309,7 +309,7 @@ To be used to refund. Can only be used on transactions that are marked as `succe
 one day after charge request. Defaults to full refund if not specified.
 
 ```ruby
-q = Veritrans.refund('testing-0.2072-1415086078')
+q = Midtrans.refund('testing-0.2072-1415086078')
 
 q == {
   status_code: "200",
@@ -333,7 +333,7 @@ q == {
 This API method is only for merchants who have pre-authorise feature (can be requested) and have pre-authorise payments.
 
 ```ruby
-q = Veritrans.capture("testing-0.2072-1415086078", 101_000)
+q = Midtrans.capture("testing-0.2072-1415086078", 101_000)
 q.success? # => true
 ```
 
@@ -346,7 +346,7 @@ and now wants to pay with credit card. In this situation the previous transactio
 can be used again.
 
 ```ruby
-q = Veritrans.expire("testing-0.2072-1415086078")
+q = Midtrans.expire("testing-0.2072-1415086078")
 q.success? # => true
 ```
 
@@ -357,7 +357,7 @@ q.success? # => true
 Used to deny a card payment transaction in which `fraud_status` is `challenge`
 
 ```ruby
-q = Veritrans.deny("testing-0.2072-1415086078")
+q = Midtrans.deny("testing-0.2072-1415086078")
 
 q == {
   status_code: "200",
@@ -387,7 +387,7 @@ param = {
   }
 }
 
-q = Veritrans.link_payment_account(param)
+q = Midtrans.link_payment_account(param)
 
 q == {
         "status_code": "201",
@@ -420,7 +420,7 @@ q == {
 ### Get payment account
 Get Pay Account is triggered to create a customer account to use for specific payment channel.
 ```ruby
-q = Veritrans.get_payment_account("f2b21e66-c72d-4fc2-9296-7b2682c82a96")
+q = Midtrans.get_payment_account("f2b21e66-c72d-4fc2-9296-7b2682c82a96")
 
 q == {
         "status_code": "201",
@@ -433,7 +433,7 @@ q == {
 ### Unlink payment account
 Unbind Pay Account is triggered to remove the linked customer account.
 ```ruby
-q = Veritrans.unlink_payment_account("f2b21e66-c72d-4fc2-9296-7b2682c82a96")
+q = Midtrans.unlink_payment_account("f2b21e66-c72d-4fc2-9296-7b2682c82a96")
 
 q == {
         "status_code": "204",
@@ -472,7 +472,7 @@ param = {
         }
 }
 
-q = Veritrans.create_subscription(param)
+q = Midtrans.create_subscription(param)
 
 q == {
         "id": "d137e7f4-9474-4fc2-9847-672e09cb16f6",
@@ -509,7 +509,7 @@ q == {
 ### Get subscription
 Retrieve the subscription details of a customer using the subscription_id. Successful request returns subscription object and status:active.
 ```ruby
-q = Veritrans.get_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6")
+q = Midtrans.get_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6")
 
 q == {
         "id": "d137e7f4-9474-4fc2-9847-672e09cb16f6",
@@ -547,7 +547,7 @@ q == {
 Disable a customer's subscription account with a specific subscription_id so that the customer is not charged for the subscription in the future. Successful request returns status_message indicating that the subscription details are updated.
 
 ```ruby
-q = Veritrans.disable_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6")
+q = Midtrans.disable_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6")
 
 q == {
         "status_message": "Subscription is updated."
@@ -557,7 +557,7 @@ q == {
 ### Enable subscription
 Activate a customer's subscription account with a specific subscription_id, so that the customer can start paying for the subscription immediately. Successful request returns status_message indicating that the subscription details are updated.
 ```ruby
-q = Veritrans.enable_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6")
+q = Midtrans.enable_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6")
 
 q == {
         "status_message": "Subscription is updated."
@@ -577,28 +577,27 @@ param = {
   }
 }
 
-q = Veritrans.update_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6", param)
+q = Midtrans.update_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6", param)
 
 q == {
         "status_message": "Subscription is updated."
 }
 ```
 
-### `Veritrans::Result`
+### `Midtrans::Result`
 
 ```ruby
-result = Veritrans.charge(...)
+result = Midtrans.charge(...)
 
-result.class # => Veritrans::Result
+result.class # => Midtrans::Result
 ```
 
-* `Veritrans::Result#success?` - `boolean`, base on `status_code` field in json
-* `Veritrans::Result#created?` - `boolean`, for VT-Link
-* `Veritrans::Result#status_code` - `integer`, e.g. 200, 402. Documentation https://api-docs.midtrans.com/#status-code
-* `Veritrans::Result#status_message` - `string`, e.g. "OK, success do VTWeb transaction, please go to redirect_url"
-* `Veritrans::Result#redirect_url` - `string`, redirect URL for VT-Web and VT-Link
-* `Veritrans::Result#body` - `string`, raw HTTP request body
-* `Veritrans::Result#data` - `hash`, parsed json body as hash
-* `Veritrans::Result#response` - `Excon::Response` instance
-* `Veritrans::Result#method_mising` - acessing fields of `data`. E.g. `result.transction_status`, `result.masked_card`
+* `Midtrans::Result#success?` - `boolean`, base on `status_code` field in json
+* `Midtrans::Result#status_code` - `integer`, e.g. 200, 402. Documentation https://api-docs.midtrans.com/#status-code
+* `Midtrans::Result#status_message` - `string`, e.g."Success, Credit Card transaction is successful"
+* `Midtrans::Result#redirect_url` - `string`, redirect URL for Snap
+* `Midtrans::Result#body` - `string`, raw HTTP request body
+* `Midtrans::Result#data` - `hash`, parsed json body as hash
+* `Midtrans::Result#response` - `Excon::Response` instance
+* `Midtrans::Result#method_mising` - acessing fields of `data`. E.g. `result.transction_status`, `result.masked_card`
   , `result.approval_code`
