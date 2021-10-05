@@ -60,17 +60,17 @@ class Veritrans
     alias_method :create_widget_token, :create_snap_token
     alias_method :create_snap_redirect_url, :create_snap_token
 
-    # Create Snap payment page and return snap token
-    def create_snap_token(options = {})
-      result = request_with_logging(:post, config.api_host.sub('//api.', '//app.') + "/snap/v1/transactions", options)
-      Veritrans::SnapResult.new(result.response, result.url, result.request_options, result.time)
+    # POST https://app.sandbox.midtrans.com/snap/v1/transactions
+    # Create Snap payment page, with this version returning token
+    def create_snap_token_string(options = {})
+      result = create_snap_token(options)
       result.token
     end
 
-    # Create Snap URL payment
-    def create_snap_url(options = {})
-      result = request_with_logging(:post, config.api_host.sub('//api.', '//app.') + "/snap/v1/transactions", options)
-      Veritrans::SnapResult.new(result.response, result.url, result.request_options, result.time)
+    # POST https://app.sandbox.midtrans.com/snap/v1/transactions
+    # Create Snap payment page, with this version returning redirect url
+    def create_snap_redirect_url_str(options = {})
+      result = create_snap_token(options)
       result.redirect_url
     end
 
