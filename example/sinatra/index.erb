@@ -22,172 +22,181 @@
 </section>
 <br>
 <h3>Core API Credit Card</h3>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/picomodal/3.0.0/picoModal.js"></script>
+
+<h1>Checkout</h1>
 <form action="/coreapi-card-charge-ajax-handler" method="POST" id="payment-form">
   <fieldset>
     <legend>Checkout</legend>
     <small><strong>Field that may be presented to customer:</strong></small>
     <p>
       <label>Card Number</label>
-      <input class="card-number" name="card-number" value="4811 1111 1111 1114" size="23" type="text" autocomplete="off" />
+      <input class="card-number" value="4811 1111 1111 1114" size="23" type="text" autocomplete="off" />
     </p>
     <p>
       <label>Expiration (MM/YYYY)</label>
-      <input class="card-expiry-month" name="card-expiry-month" value="12" placeholder="MM" size="2" type="text" />
+      <input class="card-expiry-month" value="12" placeholder="MM" size="2" type="text" />
       <span> / </span>
-      <input class="card-expiry-year" name="card-expiry-year" value="2025" placeholder="YYYY" size="4" type="text" />
+      <input class="card-expiry-year" value="2025" placeholder="YYYY" size="4" type="text" />
     </p>
     <p>
       <label>CVV</label>
-      <input class="card-cvv" name="card-cvv" value="123" size="4" type="password" autocomplete="off" />
+      <input class="card-cvv" value="123" size="4" type="password" autocomplete="off" />
     </p>
-    <p>
-      <label>Save credit card</label>
-      <input type="checkbox" id="save_cc" name="save_cc" value="true">
-    </p>
+
     <small><strong>Fields that shouldn't be presented to the customer:</strong></small>
     <p>
       <label>3D Secure</label>
-      <input type="checkbox" id="secure" name="secure" value="true" checked>
+      <input class="authenticate_3ds" type="checkbox" name="authenticate_3ds" value="true" checked>
     </p>
+
     <input id="token_id" name="token_id" type="hidden" />
     <button class="submit-button" type="submit">Submit Payment</button>
   </fieldset>
 </form>
 
 <code>
-        <pre>
-        <b>Testing cards:</b>
+  <b>Transaction Result:</b>
+  <pre id="result"> Awaiting transactions... </pre>
+  <b>Transaction verified status result:</b>
+  <pre id="status-result"> Awaiting transactions... </pre>
+  <pre>
+  <b>Testing cards:</b>
 
-        <b>For 3D Secure:</b>
-        Visa        4811 1111 1111 1114
-        MasterCard  5211 1111 1111 1117
+    <b>For 3D Secure:</b>
+    Visa success              4811 1111 1111 1114
+    Visa deny by bank         4711 1111 1111 1115
+    Visa deny by FDS          4611 1111 1111 1116
 
-        <b>For Non 3D Secure:</b>
-        Visa success      4011 1111 1111 1112
-        Visa challenge    4111 1111 1111 1111
-        Visa deny by FDS  4211 1111 1111 1110
+    MasterCard success        5211 1111 1111 1117
+    MasterCard deny by bank   5111 1111 1111 1118
+    MasterCard deny by FDS    5411 1111 1111 1115
 
-        MasterCard success      5481 1611 1111 1081
-        MasterCard challenge    5110 1111 1111 1119
-        MasterCard deny by FDS  5210 1111 1111 1118
-
-        </pre>
+    Challenge by FDS          4511 1111 1111 1117
+    </pre>
 </code>
-<script id="midtrans-script" type="text/javascript" src="https://api.midtrans.com/v2/assets/js/midtrans-new-3ds.min.js" data-environment="sandbox" data-client-key="SB-Mid-client-ArNfhrh7st9bQKmz"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/featherlight/1.7.12/featherlight.min.js"></script>
+
+<!-- Import MidtransNew3ds library -->
+<!-- TODO change data-environment to `production` for Production mode -->
+<!-- TODO change data-client-key to your production client key for Production mode -->
+<script id= "midtrans-script" src="https://api.midtrans.com/v2/assets/js/midtrans-new-3ds.min.js" data-environment="sandbox" data-client-key="SB-Mid-client-ArNfhrh7st9bQKmz" type="text/javascript"></script>
+
 <!-- Javascript for token generation -->
 <script type="text/javascript">
-    $(function () {
-        // open the console log to check the flow
-        // 3ds new flow:
-        // 1. get token_id
-        // 2. send token_id to backend
-        // 3. initial charge from backend to midtrans api
-        // 4. open redirect_url
-
-        var options = {
-            performAuthentication: function(redirect_url){
-                openDialog(redirect_url);
-            },
-            onSuccess: function(response){
-                document.getElementById('result-json').innerHTML += JSON.stringify(response, null, 2);
-                console.log('success');
-                console.log('response:',response);
-                closeDialog();
-            },
-            onFailure: function(response){
-                document.getElementById('result-json').innerHTML += JSON.stringify(response, null, 2);
-                console.log('fail');
-                console.log('response:',response);
-                closeDialog();
-                alert(response.status_message);
-                $('button').removeAttr("disabled");
-            },
-            onPending: function(response){
-                document.getElementById('result-json').innerHTML += JSON.stringify(response, null, 2);
-                console.log('pending');
-                console.log('response:',response);
-                closeDialog();
-            }
+    // On Submit button clicked
+    document.querySelector(".submit-button").onclick = function (event) {
+        console.log("SUBMIT button clicked");
+        // prepare cardData
+        var cardData = {
+            "card_number": document.querySelector(".card-number").value,
+            "card_exp_month": document.querySelector(".card-expiry-month").value,
+            "card_exp_year": document.querySelector(".card-expiry-year").value,
+            "card_cvv": document.querySelector(".card-cvv").value,
         };
+        // [1] Use card data to get card token on the callback
+        MidtransNew3ds.getCardToken(cardData, getCardTokenCallback);
 
-        function openDialog(url) {
-            $.featherlight({
-                iframe: url,
-                iframeMaxWidth: '80%',
-                iframeWidth: 700,
-                iframeHeight: 500,
-                closeOnClick: false,
-                closeOnEsc: false,
-                closeIcon:''
-            });
+        event.preventDefault(); return false;
+    };
+
+    // getCardTokenCallback triggered when `MidtransNew3ds.getCardToken` completed.
+    var getCardTokenCallback = {
+        onSuccess: function(response){
+            // success to get card token
+            // [2] Send AJAX to let backend charge the card using the card token_id
+            fetch("/coreapi-card-charge-ajax-handler", {
+                method : "POST",
+                body: JSON.stringify({
+                    "token_id" : response.token_id,
+                    "authenticate_3ds" : document.querySelector('.authenticate_3ds').checked
+                }),
+                headers: {'Content-Type': 'application/json'},
+            })
+              .then(function(response) { return response.json(); })
+              .then(function(responseObj) {
+                  console.log("Charge response:",responseObj);
+                  if (responseObj.status_code == "201"){
+                      // [3.1] Transaction need 3DS authentication
+                      MidtransNew3ds.authenticate(responseObj.redirect_url, callback3dsAuthentication);
+                  } else {
+                      // Transaction do not need 3DS Authentication, transaction is complete with result
+                      transactionComplete(responseObj);
+                  }
+              })
+        },
+        onFailure: function(response){
+            // fail to get card token
+            transactionComplete(response);
         }
+    }
 
-        function closeDialog() {
-            $.featherlight.close();
+    var callback3dsAuthentication = {
+        performAuthentication: function(redirect_url){
+            // [3.2] 3ds authentication redirect_url received, open iframe to display to customer
+            popupModal.openPopup(redirect_url);
+        },
+        // [3.3] When 3DS authentication result received, which contains transaction result
+        // it will trigger one of function below, according to status: success/failure/pending
+        onSuccess: function(response){
+            transactionComplete(response);
+        },
+        onFailure: function(response){
+            transactionComplete(response);
+        },
+        onPending: function(response){
+            transactionComplete(response);
+
         }
+    }
 
-        $(".submit-button").click(function (event) {
-            var card = {
-                "card_number": $(".card-number").val(),
-                "card_exp_month": $(".card-expiry-month").val(),
-                "card_exp_year": $(".card-expiry-year").val(),
-                "card_cvv": $(".card-cvv").val()
-            };
+    function transactionComplete(responseObj){
+        // Close 3DS popup, then display the result (for example)
+        console.log("transactionComplete with status: ",responseObj);
+        popupModal.closePopup();
 
-            event.preventDefault();
-            $(this).attr("disabled", "disabled");
+        document.querySelector("#result").innerText = JSON.stringify(responseObj, null, 2);
+        document.querySelector("#result").scrollIntoView();
 
-            console.log('1. get token_id');
-            MidtransNew3ds.getCardToken(card, getCardTokenCallback);
-            return false;
-        });
+        if (responseObj.transaction_id){
+            // [4] Inform the result to backend update DB status and verify to Midtrans
+            fetch('/check_transaction_status', {
+                method : "POST",
+                body: JSON.stringify({ "transaction_id" : responseObj.transaction_id }),
+                headers: {'Content-Type': 'application/json'},
+            })
+              .then(function(statusResponse) { return statusResponse.json(); } )
+              .then(function(statusResponseObj) {
+                  // Transaction status received after being verified
+                  console.log("Check transaction response:",statusResponseObj);
+                  // transactionComplete(statusResponseObj);
+                  document.querySelector("#status-result").innerText =
+                    JSON.stringify(statusResponseObj, null, 2);
 
-        // callback functions
-        var getCardTokenCallback = {
-            onSuccess: function(response) {
-                // Success to get card token_id, implement as you wish here
-                console.log('Success to get card token_id, response:', response);
-                var token_id = response.token_id;
-                $("#token_id").val(token_id);
+              })
+        }
+    }
 
-                console.log('This is the card token_id:', token_id);
-                // Implement sending the token_id to backend to proceed to next step
-                console.log('2. send token_id to backend');
-                // send token_id, save_cc and secure params
-                // we send secure param for sample, in production, you should define transaction is secure/not in backend
-                // we recommend always use secure=true
-                // data: $("#token_id, #save_cc, #secure").serialize()
-                $.ajax({
-                    type: 'POST',
-                    url: '/coreapi-card-charge-ajax-handler',
-                    data: $("#token_id, #save_cc, #secure").serialize(),
-                    success: function(response){
-                        console.log('3. response charge from backend:', response);
-                        var res = JSON.parse(response)
-                        if (res.redirect_url){
-                            console.log('4. open redirect_url' + res.redirect_url);
-                            MidtransNew3ds.authenticate(res.redirect_url, options);
-                        }
-                    },
-                    error: function(xhr, status, error){
-                        console.error(xhr);
-                    }
-                });
-
+    // helper functions below
+    let popupModal = (function(){
+        let modal = null;
+        return {
+            openPopup(url){
+                modal = picoModal({
+                    content:'<iframe frameborder="0" style="height:90vh; width:100%;" src="'+url+'"></iframe>',
+                    width: "75%",
+                    closeButton: false,
+                    overlayClose: false,
+                    escCloses: false
+                }).show();
             },
-            onFailure: function(response) {
-                // Fail to get card token_id, implement as you wish here
-                console.log('Fail to get card token_id, response:', response);
-                closeDialog();
-                $('button').removeAttr("disabled");
+            closePopup(){
+                try{
+                    modal.close();
+                } catch(e) {}
             }
-        };
-    });
-
+        }
+    }());
 </script>
-<pre><div id="result-json">Transaction result:<br></div></pre>
 
 </body>
 </html>
