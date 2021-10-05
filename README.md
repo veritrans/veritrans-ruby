@@ -163,7 +163,7 @@ def approve(payment_id, options = {})
 # deny : Do `/{orderId}/deny` API request to Midtrans Core API
 def deny(payment_id, options = {})
 
-# cancel : Do `/{orderId}/cancel` API request to Midtrans Core API return
+# cancel : Do `/{orderId}/cancel` API request to Midtrans Core API
 def cancel(payment_id, options = {})
 
 # expire : Do `/{orderId}/expire` API request to Midtrans Core API
@@ -239,7 +239,7 @@ $idempotency_key = "Unique-ID"
 ```
 [More details](http://api-docs.midtrans.com/#idempotent-requests)
 
-#### Logging
+### Logging
 
 By default gem veritrans will show information via rails' logger. And in addition save important information to `RAILS_APP/log/veritrans.log`
 
@@ -264,7 +264,7 @@ Veritrans.file_logger = Logger.new("/my/important_logs/veritrans.log")
 Sinatra, which demonstrate in as succint code as possible. Please [have a look here](https://github.com/veritrans/veritrans-ruby/tree/master/example/sinatra)
 
 
-#### Get help
+### Get help
 
 * [Veritrans gem reference](https://github.com/veritrans/veritrans-ruby/blob/master/api_reference.md)
 * [Midtrans login](https://account.midtrans.com/login)
