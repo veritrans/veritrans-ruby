@@ -26,6 +26,32 @@ class TestVeritrans < Minitest::Test
     assert_equal 201, result.status_code
   end
 
+  def test_create_snap_token_string
+    result = @mt_test.create_snap_token_string(
+      transaction_details: {
+        order_id: "ruby-lib-test-snap-#{Time.now.to_i}",
+        gross_amount: 200000
+      },
+      "credit_card": {
+        "secure": true
+      }
+    )
+    assert result != nil
+  end
+
+  def test_snap_redirect_url_str
+    result = @mt_test.create_snap_redirect_url_str(
+      transaction_details: {
+        order_id: "ruby-lib-test-snap#{Time.now.to_i}",
+        gross_amount: 200000
+      },
+      "credit_card": {
+        "secure": true
+      }
+    )
+    assert_match "https://app.sandbox.midtrans.com/snap/v2/vtweb/", result
+  end
+
   def test_snap_invalid_serverkey
     @mt_test_invalid_key = Veritrans.new(
       server_key: "invalid server key",
