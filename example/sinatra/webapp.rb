@@ -2,19 +2,9 @@ require 'veritrans'
 require 'json'
 require 'sinatra'
 
-Veritrans.setup do
-  config.load_yml File.dirname(__FILE__) + "/veritrans.yml#development"
-end
-
-# Alternative way to to initialize core api client:
-# mt_client = Midtrans.new(
-#   server_key: "your server key",
-#   client_key: "your client key",
-#   api_host: "https://api.sandbox.midtrans.com", # default
-#   http_options: {}, # optional
-#   logger: Logger.new(STDOUT), # optional
-#   file_logger: Logger.new(STDOUT), # optional
-# )
+Midtrans.config.server_key = "SB-Mid-server-uQmMImQMeo0Ky3Svl90QTUj2"
+Midtrans.config.client_key = "SB-Mid-client-ArNfhrh7st9bQKmz"
+Midtrans.config.api_host = "https://api.sandbox.midtrans.com"
 
 set :public_folder, File.dirname(__FILE__)
 set :views, File.dirname(__FILE__)
@@ -29,7 +19,7 @@ get "/" do
 end
 
 get "/snap" do
-  result = Veritrans.create_widget_token(
+  result = Midtrans.create_snap_token(
     transaction_details: {
       order_id: generate_order_id,
       gross_amount: 100000,
@@ -41,7 +31,7 @@ get "/snap" do
 end
 
 get "/snapredirect" do
-  result = Veritrans.create_widget_token(
+  result = Midtrans.create_snap_redirect_url(
     transaction_details: {
       order_id: generate_order_id,
       gross_amount: 100000,
@@ -53,16 +43,30 @@ get "/snapredirect" do
 end
 
 post "/coreapi-card-charge-ajax-handler" do
-  @result = Veritrans.charge(
+  @data = JSON.parse(request.body.read)
+  @result = Midtrans.charge(
     payment_type: "credit_card",
     credit_card: {
-      token_id: params[:token_id],
-      authentication: params[:secure]
+      token_id: @data['token_id'],
+      authentication: @data['authenticate_3ds']
     },
     transaction_details: {
       order_id: generate_order_id,
       gross_amount: 20000
     })
+
+  if params[:format] == "json"
+    content_type :json
+    @result.response.body
+  else
+    erb :response
+  end
+end
+
+post "/check_transaction_status" do
+  @data = JSON.parse(request.body.read)
+  transaction_id = @data['transaction_id']
+  @result = Midtrans.status(transaction_id)
 
   if params[:format] == "json"
     content_type :json
