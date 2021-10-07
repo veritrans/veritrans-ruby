@@ -14,6 +14,7 @@ Add gem veritrans to Gemfile
 ```ruby
 gem 'veritrans'
 ```
+Run this command in your terminal
 ```ruby
 gem install veritrans
 ```
@@ -61,7 +62,7 @@ Midtrans.config.api_host = "https://api.sandbox.midtrans.com"
 ```
 
 ### 2.2.A Snap
-You can see Snap example [here](example/sinatra).
+You can see Snap example [with Sinatra](example/sinatra) and [without framework](example/snap).
 
 ```ruby
 # Create Snap payment page, with this version returning full API response
@@ -124,7 +125,7 @@ Replace `PUT_TRANSACTION_TOKEN_HERE` with `transactionToken` acquired above
 ```
 
 ### 2.2.B Snap Redirect
-Also available Snap example [here](example/sinatra).
+You can see Snap example [with Sinatra](example/sinatra) and [without framework](example/snap).
 
 #### Get Redirection URL of a Payment Page
 
@@ -140,7 +141,7 @@ result = Midtrans.create_snap_redirect_url(
 ```
 
 ### 2.2.C Core API (VT-Direct)
-You can see some Core API examples [here](example/sinatra).
+You can see some Core API examples [with Sinatra](example/sinatra) and [without framework](example/coreapi).
 
 Available methods for `CoreApi` class
 
@@ -178,7 +179,8 @@ def capture(payment_id, gross_amount, options = {})
 
 #### Credit Card Get Token
 
-Get token should be handled on  Frontend please refer to [API docs](https://api-docs.midtrans.com)
+Get token should be handled on Frontend please refer to [API docs](https://docs.midtrans.com/en/core-api/credit-card).
+For example on demonstrate frontend of Core API card integration [Sinatra example](/example/sinatra)
 
 #### Credit Card Charge
 
@@ -203,13 +205,50 @@ For full example on Credit Card 3DS transaction refer to:
 - [Sinatra example](/example/sinatra) that implement Snap & Core Api
 
 
-### 2.3 Receive notification callback
+### 2.3 Handle HTTP Notification
+> **IMPORTANT NOTE**: To update transaction status on your backend/database, **DO NOT** solely rely on frontend callbacks! For security reason to make sure the status is authentically coming from Midtrans, only update transaction status based on HTTP Notification or API Get Status.
 
-For every transaction success and failed we will send you HTTP POST notification (aka webhook)
+Create separated web endpoint (notification url) to receive HTTP POST notification callback/webhook.
+HTTP notification will be sent whenever transaction status is changed.
+Example also available [here](example/sinatra)
 
-First you should set callback url in [Midtrans dashboard](https://dashboard.sandbox.midtrans.com/settings/vtweb_configuration)
+```ruby
+post_body = JSON.parse(request.body.read)
+notification = Midtrans.status(post_body['transaction_id'])
 
-For testing in development phase please read our [Testing webhooks tutorial](https://github.com/veritrans/veritrans-ruby/blob/master/testing_webhooks.md)
+order_id = notification.data[:order_id]
+payment_type = notification.data[:payment_type]
+transaction_status = notification.data[:transaction_status]
+fraud_status = notification.data[:fraud_status]
+
+puts "Transaction order_id: #{order_id}"
+puts "Payment type:   #{payment_type}"
+puts "Transaction status: #{transaction_status}"
+puts "Fraud status:   #{fraud_status}"
+
+return "Transaction notification received. Order ID: #{order_id}. Transaction status: #{transaction_status}. Fraud status: #{fraud_status}"
+
+# Sample transactionStatus handling logic
+if transaction_status == "capture" && fraud_status == "challange"
+  # TODO set transaction status on your databaase to 'challenge'
+else
+  if transaction_status == "capture" && fraud_status == "success"
+    # TODO set transaction status on your databaase to 'success'
+  else if transaction_status == "settlement"
+         # TODO set transaction status on your databaase to 'success' 
+         else if transaction_status == "deny"
+              # TODO you can ignore 'deny', because most of the time it allows payment retries
+            else if transaction_status == "cancel" || transaction_status == "expire"
+                   # TODO set transaction status on your databaase to 'failure'
+                 else if transaction_status == "pending"
+                        # Todo set transaction status on your databaase to 'pending' / waiting payment
+                      end
+                 end
+            end
+       end
+  end
+end
+```
 
 ### 2.4 Transaction Action
 For full example on transaction action refer to: [Api Reference](api_reference.md)
@@ -220,9 +259,9 @@ For full example on transaction action refer to: [Api Reference](api_reference.m
 You can opt to change or add custom notification urls on every transaction. It can be achieved by adding additional HTTP headers into charge request.
 ```ruby
 # Add new notification url(s) alongside the settings on Midtrans Dashboard Portal (MAP)
-$append_notif_url = "https://example.com/test1,https://example.com/test2"
+Midtrans.config.append_notif_url = "https://example.com/test1,https://example.com/test2"
 # Use new notification url(s) disregarding the settings on Midtrans Dashboard Portal (MAP)
-$override_notif_url = "https://example.com/test1"
+Midtrans.config.override_notif_url = "https://example.com/test1"
 ```
 
 [More details](https://api-docs.midtrans.com/#override-notification-url)
@@ -235,22 +274,22 @@ You can opt to add idempotency key on charge transaction. It can be achieved by 
 Is a unique value that is put on header on API request. Midtrans API accept Idempotency-Key on header to safely handle retry request
 without performing the same operation twice. This is helpful for cases where merchant didn't receive the response because of network issue or other unexpected error.
 ```ruby
-$idempotency_key = "Unique-ID"
+Midtrans.config.idempotency_key = "Unique-ID"
 ```
 [More details](http://api-docs.midtrans.com/#idempotent-requests)
 
-### Logging
+### Log Configuration
+By default gem veritrans will show information via rails' logger. And in addition save important information to `RAILS_APP/log/Midtrans.log`
 
-By default gem veritrans will show information via rails' logger. And in addition save important information to `RAILS_APP/log/veritrans.log`
-
-It's configurable.
+You can config like example below:
 
 ```ruby
-Veritrans.logger = Rails.logger
-Veritrans.file_logger = Logger.new("/my/important_logs/veritrans.log")
+Midtrans.logger = Rails.logger
+# To set custom logger
+Midtrans.file_logger = Logger.new("./log/midtrans.log")
 ```
 
-`Veritrans.file_logger` save information about:
+`Midtrans.file_logger` save information about:
 
 * "charge", "cancel", "approve" api calls
 * Validation errors for "charge", "cancel", "approve"
