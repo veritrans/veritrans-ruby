@@ -1,7 +1,6 @@
 # API Reference
 
-Here is only reference for API of this gem, to see complete information please use
-our [documentation](https://api-docs.midtrans.com/)
+This is only partial reference of the APIs that are implemented in this Ruby Gem. For more details refer to [documentation](https://api-docs.midtrans.com/)
 
 
 <table>
@@ -17,12 +16,12 @@ our [documentation](https://api-docs.midtrans.com/)
   <tbody>
     <tr>
       <td><a href="#charge">Midtrans.charge(data)</a></td>
-      <td>Charge Transaction</td>
+      <td>Charge Transaction (Core API)</td>
       <td>POST</td>
       <td>api.midtrans.com/v2/charge</td>
     </tr>
     <tr>
-      <td><a href="#token">Midtrans.test_token(data)</a></td>
+      <td><a href="#token">Midtrans.create_card_token(data)</a></td>
       <td>Get Token for Card</td>
       <td>GET</td>
       <td>api.midtrans.com/v2/token</td>
@@ -69,21 +68,27 @@ our [documentation](https://api-docs.midtrans.com/)
       <td>POST</td>
       <td>api.midtrans.com/v2/{id}/deny</td>
     </tr>
+        <tr>
+      <td><a href="#snap">Midtrans.create_snap_token(data)</a></td>
+      <td>Charge Transaction (SNAP)</td>
+      <td>POST</td>
+      <td>app.midtrans.com/snap/v1/transactions</td>
+    </tr>
     <tr>
       <td><a href="#link">Midtrans.link_payment_account(data)</a></td>
-      <td>link the customer's account to be used for payments using specific payment channel.</td>
+      <td>Link the customer's payment provider account to be used for payments using specific payment channel.</td>
       <td>POST</td>
       <td>api.midtrans.com/v2/pay/account</td>
     </tr>
         <tr>
       <td><a href="#get_payment_account">Midtrans.get_payment_account(id)</a></td>
-      <td>create account to use for specific payment channel.</td>
+      <td>Get account to use for specific payment channel.</td>
       <td>GET</td>
       <td>api.midtrans.com/v2/pay/account/{account_id}</td>
     </tr>
     <tr>
       <td><a href="#unlink_payment_account">Midtrans.unlink_payment_account(id)</a></td>
-      <td>remove the linked customer account.</td>
+      <td>Unlink the linked customer account.</td>
       <td>POST</td>
       <td>api.midtrans.com/v2/pay/account/{account_id}/unbind</td>
     </tr>
@@ -94,7 +99,7 @@ our [documentation](https://api-docs.midtrans.com/)
       <td>api.midtrans.com/v1/subscriptions</td>
     </tr>
       <tr>
-      <td><a href="#create_subscription">Midtrans.get_subscription(id)</a></td>
+      <td><a href="#get_subscription">Midtrans.get_subscription(id)</a></td>
       <td>Retrieve the subscription details of a customer</td>
       <td>GET</td>
       <td>api.midtrans.com/v1/subscriptions/{subscription_id}</td>
@@ -121,29 +126,14 @@ our [documentation](https://api-docs.midtrans.com/)
 </table>
 
 
+## Usage Example
+
+### Create Transaction
+
 <a name="charge"></a>
+#### Core API
 
-### Charge
-
-**For SNAP**
-
-```ruby
-q = Midtrans.create_snap_token(
-        transaction_details: {
-                order_id: generate_order_id,
-                gross_amount: 100000
-        })
-
-q.class # => Midtrans::Result
-q.data == {
-  status_code: "201",
-  "token": "2b3ccb6c-d0fb-499a-9d46-ef53ad51fe62",
-  "redirect_url": "https://app.sandbox.midtrans.com/snap/v2/vtweb/2b3ccb6c-d0fb-499a-9d46-ef53ad51fe62"
-}
-```
-
-**For Core API :**
-
+Perform a transaction with various available payment methods and features. Example below: credit card charge.
 ```ruby
 q = Midtrans.charge({
                        # *required
@@ -205,9 +195,9 @@ q.success? # => true
 
 <a name="token"></a>
 
-### Test Token
+#### Create card token
 
-Get a token from card information for testing. **Not to be used outside of tests**
+Creating card token, in production create token should be handled on Frontend please refer to [API docs](https://docs.midtrans.com/en/core-api/credit-card).
 
 ```ruby
 card =
@@ -218,17 +208,16 @@ card =
     card_exp_year: 2025
   }
 
-q = Midtrans.test_token(card)
+q = Midtrans.create_card_token(card)
 
 q == '481111-1114-a901971f-2f1b-4781-802a-df326fbf0e9c'
 ```
 
 <a name="status"></a>
 
-### Status
+#### Status
 
-Return current status of transaction.
-
+Get Transaction Status is triggered to obtain the transaction_status and other details of a specific transaction.
 ```ruby
 q = Midtrans.status("order-2")
 
@@ -250,13 +239,9 @@ q.data == {
 
 <a name="cancel"></a>
 
-### Cancel
+#### Cancel
 
-Cancel transaction, before it was settled. For credit card payments you can cancel it before we trigger settlement in
-bank. Usually we do settlement next day after payment happen, about 4pm.
-
-For internet banking, bank transfer, mobile payments, convenient store payments if user already made payment, you can't
-cancel it as simple as credit card, but before user sent money you can cancel pending transactions.
+Cancel a transaction with a specific order_id. Cancelation can only be done before settlement process.
 
 ```ruby
 q = Midtrans.cancel("testing-0.2072-1415086078")
@@ -278,10 +263,9 @@ q.data == {
 
 <a name="approve"></a>
 
-### Approve
+#### Approve
 
-Some transactions marked as challenge. If challenge you can approve it or cancel it. Usual way is to use our dashboard
-web interface, but you also can do it programatically, via API
+Approve transaction is triggered to accept the card payment transaction with `fraud_status:challenge`
 
 ```ruby
 q = Midtrans.approve("testing-0.2072-1415086078")
@@ -303,10 +287,9 @@ q.data == {
 
 <a name="refund"></a>
 
-### Refund
+#### Refund
 
-To be used to refund. Can only be used on transactions that are marked as `successful` which happens automatically after
-one day after charge request. Defaults to full refund if not specified.
+Refund transaction is triggered to update the transaction status to refund, when the customer decides to cancel a completed transaction or a payment that is settled.
 
 ```ruby
 q = Midtrans.refund('testing-0.2072-1415086078')
@@ -328,7 +311,7 @@ q == {
 
 <a name="capture"></a>
 
-### Capture
+#### Capture
 
 This API method is only for merchants who have pre-authorise feature (can be requested) and have pre-authorise payments.
 
@@ -339,7 +322,7 @@ q.success? # => true
 
 <a name="expire"></a>
 
-### Expire
+#### Expire
 
 To expire pending transactions. For example if a merchant chooses to pay via ATM and then the user changes their mind
 and now wants to pay with credit card. In this situation the previous transaction should be expired. The same order_id
@@ -352,10 +335,9 @@ q.success? # => true
 
 <a name="deny"></a>
 
-### Deny
+#### Deny
 
-Used to deny a card payment transaction in which `fraud_status` is `challenge`
-
+Deny transaction is triggered to immediately deny the card payment transaction with `fraud_status:challenge`
 ```ruby
 q = Midtrans.deny("testing-0.2072-1415086078")
 
@@ -374,7 +356,27 @@ q == {
 }
 ```
 
-### Link payment account
+<a name="snap"></a>
+#### Snap
+Snap is a payment service that allows Midtrans partners to use Midtrans payment systems. This allows Midtrans payment page to pop-up on your web page after checkout. 
+Example below: create Snap transaction.
+```ruby
+q = Midtrans.create_snap_token(
+        transaction_details: {
+                order_id: generate_order_id,
+                gross_amount: 100000
+        })
+
+q.class # => Midtrans::Result
+q.data == {
+  status_code: "201",
+  "token": "2b3ccb6c-d0fb-499a-9d46-ef53ad51fe62",
+  "redirect_url": "https://app.sandbox.midtrans.com/snap/v2/vtweb/2b3ccb6c-d0fb-499a-9d46-ef53ad51fe62"
+}
+```
+
+<a name="link"></a>
+#### Link payment account
 Link the customer account to be used for specific payment channels.
 
 ```ruby
@@ -417,7 +419,8 @@ q == {
 }
 ```
 
-### Get payment account
+<a name="get_payment_account"></a>
+#### Get payment account
 Get Pay Account is triggered to create a customer account to use for specific payment channel.
 ```ruby
 q = Midtrans.get_payment_account("f2b21e66-c72d-4fc2-9296-7b2682c82a96")
@@ -430,7 +433,8 @@ q == {
 }
 ```
 
-### Unlink payment account
+<a name="unlink_payment_account"></a>
+#### Unlink payment account
 Unbind Pay Account is triggered to remove the linked customer account.
 ```ruby
 q = Midtrans.unlink_payment_account("f2b21e66-c72d-4fc2-9296-7b2682c82a96")
@@ -445,7 +449,8 @@ q == {
 }
 ```
 
-### Create subscription
+<a name="create_subscription"></a>
+#### Create subscription
 Create a subscription transaction by sending all the details required to create a transaction. The details such as name, amount, currency, payment_type, token, and schedule are sent in the request. Successful request returns id status:active, and other subscription details.
 
 ```ruby
@@ -506,7 +511,8 @@ q == {
 }
 ```
 
-### Get subscription
+<a name="get_subscription"></a>
+#### Get subscription
 Retrieve the subscription details of a customer using the subscription_id. Successful request returns subscription object and status:active.
 ```ruby
 q = Midtrans.get_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6")
@@ -543,7 +549,8 @@ q == {
 }
 ```
 
-### Disable subscription
+<a name="disable_subscription"></a>
+#### Disable subscription
 Disable a customer's subscription account with a specific subscription_id so that the customer is not charged for the subscription in the future. Successful request returns status_message indicating that the subscription details are updated.
 
 ```ruby
@@ -554,7 +561,8 @@ q == {
 }
 ```
 
-### Enable subscription
+<a name="enable_subscription"></a>
+#### Enable subscription
 Activate a customer's subscription account with a specific subscription_id, so that the customer can start paying for the subscription immediately. Successful request returns status_message indicating that the subscription details are updated.
 ```ruby
 q = Midtrans.enable_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6")
@@ -564,7 +572,8 @@ q == {
 }
 ```
 
-### Update subscription
+<a name="update_subscription"></a>
+#### Update subscription
 Update the details of a customer's existing subscription account with the specific subscription_id. Successful request returns status_message indicating that the subscription details are updated.
 ```ruby
 param = {
@@ -592,12 +601,10 @@ result = Midtrans.charge(...)
 result.class # => Midtrans::Result
 ```
 
-* `Midtrans::Result#success?` - `boolean`, base on `status_code` field in json
+* `Midtrans::Result#success?` - `boolean`, Based on `status_code` field in API response JSON
 * `Midtrans::Result#status_code` - `integer`, e.g. 200, 402. Documentation https://api-docs.midtrans.com/#status-code
 * `Midtrans::Result#status_message` - `string`, e.g."Success, Credit Card transaction is successful"
-* `Midtrans::Result#redirect_url` - `string`, redirect URL for Snap
-* `Midtrans::Result#body` - `string`, raw HTTP request body
-* `Midtrans::Result#data` - `hash`, parsed json body as hash
-* `Midtrans::Result#response` - `Excon::Response` instance
-* `Midtrans::Result#method_mising` - acessing fields of `data`. E.g. `result.transction_status`, `result.masked_card`
-  , `result.approval_code`
+* `Midtrans::Result#redirect_url` - `string`, For Snap payment page, where customer can be redirected to complete the payment
+* `Midtrans::Result#body` - `string`, Raw HTTP request body
+* `Midtrans::Result#data` - `hash`, Parsed API response JSON body as hash
+* `Midtrans::Result#response` - Raw `Excon::Response` instance
