@@ -78,12 +78,24 @@ class Veritrans
       @http_options = options
     end
 
+    def idempotency_key=(value)
+      @idempotency_key = value
+    end
+
     def idempotency_key
       @idempotency_key
     end
 
+    def append_notif_url=(value)
+      @append_notif_url = value
+    end
+
     def append_notif_url
       @append_notif_url
+    end
+
+    def override_notif_url=(value)
+      @override_notif_url = value
     end
 
     def override_notif_url

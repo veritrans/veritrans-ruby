@@ -84,6 +84,10 @@ class Veritrans
 
       default_options = config.http_options || {}
 
+      idempotency_key = config.idempotency_key
+      append_notif_url = config.append_notif_url
+      override_notif_url = config.override_notif_url
+
       # Add authentication and content type
       # Docs https://api-docs.midtrans.com/#http-s-header
       request_options = {
@@ -93,9 +97,9 @@ class Veritrans
           "Accept" => "application/json",
           "Content-Type" => "application/json",
           "User-Agent" => "Veritrans ruby gem #{Veritrans::VERSION}",
-          "Idempotency-Key" => "#{$idempotency_key}",
-          "X-Append-Notification" => "#{$append_notif_url}",
-          "X-Override-Notification" => "#{$override_notif_url}"
+          "Idempotency-Key" => "#{idempotency_key}",
+          "X-Append-Notification" => "#{append_notif_url}",
+          "X-Override-Notification" => "#{override_notif_url}"
         }
       }
 
