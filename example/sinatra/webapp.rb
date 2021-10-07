@@ -30,7 +30,7 @@ get "/snap" do
   erb :snap
 end
 
-get "/snapredirect" do
+get "/snap_redirect" do
   result = Midtrans.create_snap_redirect_url(
     transaction_details: {
       order_id: generate_order_id,
@@ -39,10 +39,10 @@ get "/snapredirect" do
     }
   )
   @redirecturl = result.redirect_url
-  erb :snapredirect
+  erb :snap_redirect
 end
 
-post "/coreapi-card-charge-ajax-handler" do
+post "/coreapi_card_charge_ajax_handler" do
   @data = JSON.parse(request.body.read)
   @result = Midtrans.charge(
     payment_type: "credit_card",
@@ -76,6 +76,43 @@ post "/check_transaction_status" do
   end
 end
 
+post "/handle_http_notification" do
+  post_body = JSON.parse(request.body.read)
+  notification = Midtrans.status(post_body['transaction_id'])
+
+  order_id = notification.data[:order_id]
+  payment_type = notification.data[:payment_type]
+  transaction_status = notification.data[:transaction_status]
+  fraud_status = notification.data[:fraud_status]
+
+  puts "Transaction order_id: #{order_id}"
+  puts "Payment type:   #{payment_type}"
+  puts "Transaction status: #{transaction_status}"
+  puts "Fraud status:   #{fraud_status}"
+
+  return "Transaction notification received. Order ID: #{order_id}. Transaction status: #{transaction_status}. Fraud status: #{fraud_status}"
+
+  # Sample transactionStatus handling logic
+  if transaction_status == "capture" && fraud_status == "challange"
+    # TODO set transaction status on your databaase to 'challenge'
+  else if transaction_status == "capture" && fraud_status == "success"
+      # TODO set transaction status on your databaase to 'success'
+      else if transaction_status == "settlement"
+        # TODO set transaction status on your databaase to 'success'
+      else if transaction_status == "deny"
+          # TODO you can ignore 'deny', because most of the time it allows payment retries
+        else if transaction_status == "cancel" || transaction_status == "expire"
+            # TODO set transaction status on your databaase to 'failure'
+          else if transaction_status == "pending"
+              # Todo set transaction status on your databaase to 'pending' / waiting payment
+            end
+          end
+        end
+      end
+    end
+  end
+
+end
 
 
 
