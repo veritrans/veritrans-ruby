@@ -18,14 +18,14 @@
 
 <section>
   <h4>Snap Redirect</h4>
-  <a href="/snapredirect">Click here</a>
+  <a href="/snap_redirect">Click here</a>
 </section>
 <br>
 <h3>Core API Credit Card</h3>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/picomodal/3.0.0/picoModal.js"></script>
 
 <h1>Checkout</h1>
-<form action="/coreapi-card-charge-ajax-handler" method="POST" id="payment-form">
+<form action="/coreapi_card_charge_ajax_handler" method="POST" id="payment-form">
   <fieldset>
     <legend>Checkout</legend>
     <small><strong>Field that may be presented to customer:</strong></small>
@@ -79,7 +79,7 @@
 <!-- Import MidtransNew3ds library -->
 <!-- TODO change data-environment to `production` for Production mode -->
 <!-- TODO change data-client-key to your production client key for Production mode -->
-<script id= "midtrans-script" src="https://api.midtrans.com/v2/assets/js/midtrans-new-3ds.min.js" data-environment="sandbox" data-client-key="SB-Mid-client-ArNfhrh7st9bQKmz" type="text/javascript"></script>
+<script id= "midtrans-script" src="https://api.midtrans.com/v2/assets/js/midtrans-new-3ds.min.js" data-environment="sandbox" data-client-key=<%= Midtrans.config.client_key %> type="text/javascript"></script>
 
 <!-- Javascript for token generation -->
 <script type="text/javascript">
@@ -104,7 +104,7 @@
         onSuccess: function(response){
             // success to get card token
             // [2] Send AJAX to let backend charge the card using the card token_id
-            fetch("/coreapi-card-charge-ajax-handler", {
+            fetch("/coreapi_card_charge_ajax_handler", {
                 method : "POST",
                 body: JSON.stringify({
                     "token_id" : response.token_id,
