@@ -593,7 +593,7 @@ q == {
 }
 ```
 
-### `Midtrans::Result`
+#### `Midtrans::Result`
 
 ```ruby
 result = Midtrans.charge(...)
