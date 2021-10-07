@@ -4,16 +4,10 @@ require 'veritrans/client'
 require 'veritrans/api'
 require 'veritrans/result'
 
-if defined?(::Rails)
-  require 'veritrans/events'
-end
 
 class Veritrans
   include Veritrans::Client
   include Veritrans::Api
-
-  autoload :CLI,        'veritrans/cli'
-  autoload :Events,     'veritrans/events'
 
   class << self
     extend Forwardable
@@ -21,7 +15,7 @@ class Veritrans
     def_delegators :instance, :logger, :logger=, :config, :setup, :file_logger, :file_logger=
     def_delegators :instance, :request_with_logging, :basic_auth_header, :get, :post, :delete, :make_request, :patch
     def_delegators :instance, :charge, :cancel, :approve, :status, :capture, :expire, :refund, :deny
-    def_delegators :instance, :create_vtlink, :delete_vtlink, :inquiry_points, :create_widget_token, :create_snap_redirect_url, :create_snap_token, :create_snap_token_string, :create_snap_redirect_url_str, :test_token
+    def_delegators :instance, :create_vtlink, :delete_vtlink, :inquiry_points, :create_widget_token, :create_snap_redirect_url, :create_snap_token, :create_snap_token_string, :create_snap_redirect_url_str, :test_token, :create_card_token
     def_delegators :instance, :link_payment_account, :get_payment_account, :unlink_payment_account, :create_subscription, :get_subscription, :disable_subscription, :enable_subscription, :update_subscription
     def_delegators :instance, :checksum, :events
 
@@ -183,13 +177,7 @@ class Veritrans
     if !@file_logger
       require 'logger'
       begin
-        if defined?(Rails) && Rails.root
-          require 'fileutils'
-          FileUtils.mkdir_p(Rails.root.join("log"))
-          @file_logger = Logger.new(Rails.root.join("log/veritrans.log").to_s)
-        else
           @file_logger = Logger.new("/dev/null")
-        end
       rescue => error
         STDERR.puts "Failed to create Midtrans.file_logger, will use /dev/null"
         STDERR.puts "#{error.class}: #{error.message}"
