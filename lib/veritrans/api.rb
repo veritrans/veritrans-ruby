@@ -50,6 +50,8 @@ class Veritrans
       request_with_logging(:get, config.api_host + '/v2/token', options)
     end
 
+    alias_method :create_card_token, :test_token
+
     # POST https://app.sandbox.midtrans.com/snap/v1/transactions
     # Create Snap payment page, with this version returning full API response
     def create_snap_token(options = {})
