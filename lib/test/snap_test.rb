@@ -49,7 +49,7 @@ class TestVeritrans < Minitest::Test
         "secure": true
       }
     )
-    assert_match "https://app.sandbox.midtrans.com/snap/v2/vtweb/", result
+    assert_match "https://", result
   end
 
   def test_snap_invalid_serverkey
