@@ -614,12 +614,18 @@ charge_response.body == {
 }
 ```
 
-#### `Midtrans::Result`
-
+### Get json field value from Midtrans API result
 ```ruby
 result = Midtrans.charge(...)
 
-result.class # => Midtrans::Result
+# If in the future there is a new attribute in the Midtrans Result.
+# Recommended retrieve like example below.
+# :new_attribute is the new field name in API response JSON
+result.data[:new_attribute]
+
+# Alternatively you can also access like below.
+# But make sure the new field name already show in API response JSON, if not will trigger error.
+result.new_attribute
 ```
 
 * `Midtrans::Result#success?` - `boolean`, Based on `status_code` field in API response JSON
