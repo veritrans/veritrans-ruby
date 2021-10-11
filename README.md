@@ -175,12 +175,36 @@ def refund(payment_id, options = {})
 
 # capture : Do `/{orderId}/capture` API request to Midtrans Core API
 def capture(payment_id, gross_amount, options = {})
+
+# link_payment_account : Do `/pay/account` API request to Midtrans Core API
+def link_payment_account(param)
+
+# get_payment_account : Do `/pay/account/{account_id}` API request to Midtrans Core API
+def get_payment_account(account_id)
+
+# unlink_payment_account : Do `/pay/account/{account_id}/unbind` API request to Midtrans Core API
+def unlink_payment_account(account_id)
+
+# create_subscription : Do `/subscription` API request to Midtrans Core API
+def create_subscription(param)
+
+# get_subscription : Do `/subscription/{subscription_id}` API request to Midtrans Core API
+def get_subscription(subscription_id)
+
+# disable_subscription : Do `/subscription/{subscription_id}/disable` API request to Midtrans Core API
+def disable_subscription(subscription_id)
+
+# enable_subscription : Do `/subscription/{subscription_id}/enable` API request to Midtrans Core API
+def enable_subscription(subscription_id)
+
+# update_subscription : Do `/subscription/{subscription_id}` API request to Midtrans Core API
+def update_subscription(subscription_id, param)
 ```
 
 #### Credit Card Get Token
 
 Get token should be handled on Frontend please refer to [API docs](https://docs.midtrans.com/en/core-api/credit-card).
-For example on demonstrate frontend of Core API card integration [Sinatra example](/example/sinatra)
+Further example to demonstrate Core API card integration (including get card token on frontend), available on [Sinatra example](/example/sinatra)
 
 #### Credit Card Charge
 
@@ -231,22 +255,16 @@ return "Transaction notification received. Order ID: #{order_id}. Transaction st
 # Sample transactionStatus handling logic
 if transaction_status == "capture" && fraud_status == "challange"
   # TODO set transaction status on your databaase to 'challenge'
-else
-  if transaction_status == "capture" && fraud_status == "success"
-    # TODO set transaction status on your databaase to 'success'
-  else if transaction_status == "settlement"
-         # TODO set transaction status on your databaase to 'success' 
-         else if transaction_status == "deny"
-              # TODO you can ignore 'deny', because most of the time it allows payment retries
-            else if transaction_status == "cancel" || transaction_status == "expire"
-                   # TODO set transaction status on your databaase to 'failure'
-                 else if transaction_status == "pending"
-                        # Todo set transaction status on your databaase to 'pending' / waiting payment
-                      end
-                 end
-            end
-       end
-  end
+elsif transaction_status == "capture" && fraud_status == "success"
+  # TODO set transaction status on your databaase to 'success'
+elsif transaction_status == "settlement"
+  # TODO set transaction status on your databaase to 'success'
+elsif transaction_status == "deny"
+  # TODO you can ignore 'deny', because most of the time it allows payment retries
+elsif transaction_status == "cancel" || transaction_status == "expire"
+  # TODO set transaction status on your databaase to 'failure'
+elsif transaction_status == "pending"
+  # Todo set transaction status on your databaase to 'pending' / waiting payment
 end
 ```
 
@@ -270,18 +288,17 @@ Midtrans.config.override_notif_url = "https://example.com/test1"
 > Both header can only receive up to maximum of **3 urls**.
 
 ### Idempotency-Key
-You can opt to add idempotency key on charge transaction. It can be achieved by adding additional HTTP headers into charge request.
 Is a unique value that is put on header on API request. Midtrans API accept Idempotency-Key on header to safely handle retry request
 without performing the same operation twice. This is helpful for cases where merchant didn't receive the response because of network issue or other unexpected error.
+You can opt to add idempotency key by adding additional HTTP headers into charge request.
 ```ruby
 Midtrans.config.idempotency_key = "Unique-ID"
 ```
 [More details](http://api-docs.midtrans.com/#idempotent-requests)
 
 ### Log Configuration
-By default gem veritrans will show information via rails' logger. And in addition save important information to `RAILS_APP/log/Midtrans.log`
-
-You can config like example below:
+By default if you are using Rails, gem Veritrans will show information via Rails logger and in addition save important information to `RAILS_APP/log/Midtrans.log`
+You can configure it like example below:
 
 ```ruby
 Midtrans.logger = Rails.logger
