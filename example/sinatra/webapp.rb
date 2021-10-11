@@ -95,21 +95,16 @@ post "/handle_http_notification" do
   # Sample transactionStatus handling logic
   if transaction_status == "capture" && fraud_status == "challange"
     # TODO set transaction status on your databaase to 'challenge'
-  else if transaction_status == "capture" && fraud_status == "success"
-      # TODO set transaction status on your databaase to 'success'
-      else if transaction_status == "settlement"
-        # TODO set transaction status on your databaase to 'success'
-      else if transaction_status == "deny"
-          # TODO you can ignore 'deny', because most of the time it allows payment retries
-        else if transaction_status == "cancel" || transaction_status == "expire"
-            # TODO set transaction status on your databaase to 'failure'
-          else if transaction_status == "pending"
-              # Todo set transaction status on your databaase to 'pending' / waiting payment
-            end
-          end
-        end
-      end
-    end
+  elsif transaction_status == "capture" && fraud_status == "success"
+    # TODO set transaction status on your databaase to 'success'
+  elsif transaction_status == "settlement"
+    # TODO set transaction status on your databaase to 'success'
+  elsif transaction_status == "deny"
+    # TODO you can ignore 'deny', because most of the time it allows payment retries
+  elsif transaction_status == "cancel" || transaction_status == "expire"
+    # TODO set transaction status on your databaase to 'failure'
+  elsif transaction_status == "pending"
+    # Todo set transaction status on your databaase to 'pending' / waiting payment
   end
 
 end
