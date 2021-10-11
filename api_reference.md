@@ -135,7 +135,7 @@ This is only partial reference of the APIs that are implemented in this Ruby Gem
 
 Perform a transaction with various available payment methods and features. Example below: credit card charge.
 ```ruby
-q = Midtrans.charge({
+charge_response = Midtrans.charge({
                        # *required
                        payment_type: "credit_card",
                        # *required
@@ -174,9 +174,7 @@ q = Midtrans.charge({
                        custom_field2: "new_year_promo",
                        custom_field3: "submerchant_id: 23"
                      });
-
-q.class # => Midtrans::Result
-q.data == {
+charge_response.body == {
   status_code: "200",
   status_message: "Success, Credit Card transaction is successful",
   transaction_id: "20bcc3dd-6fa5-4a9a-a9ad-615af992aa3d",
@@ -189,13 +187,28 @@ q.data == {
   approval_code: "1415006572598",
   gross_amount: "100000.00"
 }
+```
 
-q.success? # => true
+<a name="snap"></a>
+#### Snap
+Snap allows you (as a merchant) to easily integrate with Midtrans payment system to start accepting payments. Snap payment page can be displayed as a seamless pop-up within your web/app during checkout, or as a (Midtrans hosted) web page url redirect.
+Example below: create Snap transaction.
+```ruby
+charge_response = Midtrans.create_snap_token(
+        transaction_details: {
+                order_id: generate_order_id,
+                gross_amount: 100000
+        })
+charge_response.body == {
+  status_code: "201",
+  "token": "2b3ccb6c-d0fb-499a-9d46-ef53ad51fe62",
+  "redirect_url": "https://app.sandbox.midtrans.com/snap/v2/vtweb/2b3ccb6c-d0fb-499a-9d46-ef53ad51fe62"
+}
 ```
 
 <a name="token"></a>
 
-#### Create card token
+### Create card token
 
 Creating card token, in production create token should be handled on Frontend please refer to [API docs](https://docs.midtrans.com/en/core-api/credit-card).
 
@@ -208,175 +221,183 @@ card =
     card_exp_year: 2025
   }
 
-q = Midtrans.create_card_token(card)
+get_token = Midtrans.create_card_token(card)
 
-q == '481111-1114-a901971f-2f1b-4781-802a-df326fbf0e9c'
+get_token.token_id == "481111-1114-a901971f-2f1b-4781-802a-df326fbf0e9c"
 ```
 
 <a name="status"></a>
 
-#### Status
+### Status
 
 Get Transaction Status is triggered to obtain the transaction_status and other details of a specific transaction.
 ```ruby
-q = Midtrans.status("order-2")
+charge_response = Midtrans.status("ruby-lib-test-1633926689")
 
-q.data == {
-  status_code: "200",
-  status_message: "Success, transaction found",
-  transaction_id: "20bcc3dd-6fa5-4a9a-a9ad-615af992aa3d",
-  masked_card: "481111-1114",
-  order_id: "order-2",
-  payment_type: "credit_card",
-  transaction_time: "2014-11-03 16:22:52",
-  transaction_status: "settlement",
+charge_response.body == {
+  transaction_time: "2021-10-11 11:31:29",
+  gross_amount: "10000.00",
+  currency: "IDR",
+  order_id: "ruby-lib-test-1633926689",
+  payment_type: "bank_transfer",
+  signature_key: "412c0a69df9c74d05666ffb079d09b404e3d596b927dbb027bd470d072401a767b0f9ad4659248118979ce274e5bcec3dd683abf9e279ce001eab67f49de5866",
+  status_code: "201",
+  transaction_id: "569a305d-9fec-4fa1-a707-294ee97f7b2a",
+  transaction_status: "pending",
   fraud_status: "accept",
-  signature_key: "639af8e985f68526839e6ed04c1...",
-  bank: "bni",
-  gross_amount: "100000.00"
+  status_message: "Success, transaction is found",
+  merchant_id: "G686051436",
+  permata_va_number: "514003740741123"
 }
 ```
 
 <a name="cancel"></a>
 
-#### Cancel
+### Cancel
 
 Cancel a transaction with a specific order_id. Cancelation can only be done before settlement process.
 
 ```ruby
-q = Midtrans.cancel("testing-0.2072-1415086078")
+charge_response = Midtrans.cancel("ruby-lib-test-1633926562")
 
-q.data == {
+charge_response.body == {
   status_code: "200",
   status_message: "Success, transaction is canceled",
-  transaction_id: "b38f598a-59ab-4850-b311-2aa14c78bc45",
-  masked_card: "481111-1114",
-  order_id: "testing-0.2072-1415086078",
-  payment_type: "credit_card",
-  transaction_time: "2014-11-04 14:29:47",
+  transaction_id: "7e75d03e-54a4-44c6-a385-6bbdd28d85c3",
+  order_id: "ruby-lib-test-1633926562",
+  gross_amount: "10000.00",
+  currency: "IDR",
+  payment_type: "bank_transfer",
+  transaction_time: "2021-10-11 11:29:23",
   transaction_status: "cancel",
   fraud_status: "accept",
-  bank: "bni",
-  gross_amount: "100000.00"
+  merchant_id: "G686051436"
 }
 ```
 
 <a name="approve"></a>
 
-#### Approve
+### Approve
 
 Approve transaction is triggered to accept the card payment transaction with `fraud_status:challenge`
 
 ```ruby
-q = Midtrans.approve("testing-0.2072-1415086078")
+charge_response = Midtrans.approve("ruby-lib-test-1633926990")
 
-q.data == {
+charge_response.body == {
   status_code: "200",
   status_message: "Success, transaction is approved",
-  transaction_id: "8492c240-1600-465a-9bf1-808863410b0e",
-  masked_card: "451111-1117",
-  order_id: "testing-0.0501-1415086808",
+  bank: "bni",
+  transaction_id: "23e5ad9a-c28c-466c-8894-cbbc5445eb97",
+  masked_card: "551011-1115",
+  order_id: "ruby-lib-test-1633926990",
+  merchant_id: "G686051436",
   payment_type: "credit_card",
-  transaction_time: "2014-11-04 14:41:58",
+  transaction_time: "2021-10-11 11:36:33",
   transaction_status: "capture",
   fraud_status: "accept",
-  bank: "bni",
-  gross_amount: "100000.00"
+  gross_amount: "10000.00",
+  currency: "IDR",
+  approval_code: "1633926993796"
 }
 ```
 
 <a name="refund"></a>
 
-#### Refund
+### Refund
 
 Refund transaction is triggered to update the transaction status to refund, when the customer decides to cancel a completed transaction or a payment that is settled.
 
 ```ruby
-q = Midtrans.refund('testing-0.2072-1415086078')
+charge_response = Midtrans.refund("ruby-example-coreapi-creditcard-1633678954")
 
-q == {
+charge_response.body == {
   status_code: "200",
-  status_message: "Success, refund request is approved",
-  transaction_id: "447e846a-403e-47db-a5da-d7f3f06375d6",
-  order_id: "testing-0.2072-1415086078",
-  payment_type: "credit_card",
-  transaction_time: "2015-06-15 13:36:24",
-  transaction_status: "refund",
+  status_message: "Success, refund offline request is approved",
+  bank: "bni",
+  transaction_id: "b2a62a3d-03e1-4232-b6b4-5832d5aa7eeb",
+  order_id: "ruby-example-coreapi-creditcard-1633678954",
+  merchant_id: "G686051436",
   gross_amount: "10000.00",
-  refund_chargeback_id: 1,
-  refund_amount: "10000.00",
+  currency: "IDR",
+  payment_type: "credit_card",
+  transaction_time: "2021-10-08 14:42:34",
+  transaction_status: "partial_refund",
+  fraud_status: "accept",
+  approval_code: "1633678955297",
+  masked_card: "521111-1117",
+  refund_chargeback_id: 101293,
+  refund_chargeback_uuid: "c720cb44-272d-4b64-b97d-47d89e86da02",
+  refund_amount: "2000.00",
+  settlement_time: "2021-10-09 16:35:04",
   refund_key: "reference1"
 }
 ```
 
 <a name="capture"></a>
 
-#### Capture
+### Capture
 
 This API method is only for merchants who have pre-authorise feature (can be requested) and have pre-authorise payments.
 
 ```ruby
-q = Midtrans.capture("testing-0.2072-1415086078", 101_000)
-q.success? # => true
+charge_response = Midtrans.capture("testing-0.2072-1415086078", 101_000)
+charge_response.success? # => true
 ```
 
 <a name="expire"></a>
 
-#### Expire
+### Expire
 
 To expire pending transactions. For example if a merchant chooses to pay via ATM and then the user changes their mind
 and now wants to pay with credit card. In this situation the previous transaction should be expired. The same order_id
 can be used again.
 
 ```ruby
-q = Midtrans.expire("testing-0.2072-1415086078")
-q.success? # => true
+charge_response = Midtrans.expire("ruby-lib-test-1633927809")
+charge_response.body = {
+  status_code: "407",
+  status_message: "Success, transaction has expired",
+  transaction_id: "6ff22198-875e-4a6d-a15d-e23ab3345a4d",
+  order_id: "ruby-lib-test-1633927809",
+  gross_amount: "10000.00",
+  currency: "IDR",
+  payment_type: "bank_transfer",
+  transaction_time: "2021-10-11 11:50:09",
+  transaction_status: "expire",
+  fraud_status: "accept",
+  merchant_id: "G686051436"  
+}
 ```
 
 <a name="deny"></a>
 
-#### Deny
+### Deny
 
 Deny transaction is triggered to immediately deny the card payment transaction with `fraud_status:challenge`
 ```ruby
-q = Midtrans.deny("testing-0.2072-1415086078")
+charge_response = Midtrans.deny("ruby-lib-test-1633927987")
 
-q == {
+charge_response.body == {
   status_code: "200",
   status_message: "Success, transaction is denied",
-  transaction_id: "ca297170-be4c-45ed-9dc9-be5ba99d30ee",
-  masked_card: "451111-1117",
-  order_id: "testing-0.2072-1415086078",
-  payment_type: "credit_card",
-  transaction_time: "2014-10-31 14:46:44",
-  transaction_status: "deny",
-  fraud_status: "deny",
   bank: "bni",
-  gross_amount: "30000.00"
-}
-```
-
-<a name="snap"></a>
-#### Snap
-Snap is a payment service that allows Midtrans partners to use Midtrans payment systems. This allows Midtrans payment page to pop-up on your web page after checkout. 
-Example below: create Snap transaction.
-```ruby
-q = Midtrans.create_snap_token(
-        transaction_details: {
-                order_id: generate_order_id,
-                gross_amount: 100000
-        })
-
-q.class # => Midtrans::Result
-q.data == {
-  status_code: "201",
-  "token": "2b3ccb6c-d0fb-499a-9d46-ef53ad51fe62",
-  "redirect_url": "https://app.sandbox.midtrans.com/snap/v2/vtweb/2b3ccb6c-d0fb-499a-9d46-ef53ad51fe62"
+  transaction_id: "91cf84b9-1523-45b4-adf7-cd76751f71c6",
+  masked_card: "551011-1115",
+  order_id: "ruby-lib-test-1633927987",
+  merchant_id: "G686051436",
+  payment_type: "credit_card",
+  transaction_time: "2021-10-11 11:53:07",
+  transaction_status: "cancel",
+  fraud_status: "deny",
+  gross_amount: "10000.00",
+  currency: "IDR",
+  approval_code: "1633927988537"
 }
 ```
 
 <a name="link"></a>
-#### Link payment account
+### Link payment account
 Link the customer account to be used for specific payment channels.
 
 ```ruby
@@ -389,9 +410,9 @@ param = {
   }
 }
 
-q = Midtrans.link_payment_account(param)
+charge_response = Midtrans.link_payment_account(param)
 
-q == {
+charge_response.body == {
         "status_code": "201",
         "payment_type": "gopay",
         "account_id": "f2b21e66-c72d-4fc2-9296-7b2682c82a96",
@@ -420,12 +441,12 @@ q == {
 ```
 
 <a name="get_payment_account"></a>
-#### Get payment account
-Get Pay Account is triggered to create a customer account to use for specific payment channel.
+### Get payment account
+Get Pay Account is triggered to get a customer account to use for specific payment channel.
 ```ruby
-q = Midtrans.get_payment_account("f2b21e66-c72d-4fc2-9296-7b2682c82a96")
+charge_response = Midtrans.get_payment_account("f2b21e66-c72d-4fc2-9296-7b2682c82a96")
 
-q == {
+charge_response.body == {
         "status_code": "201",
         "payment_type": "gopay",
         "account_id": "f2b21e66-c72d-4fc2-9296-7b2682c82a96",
@@ -434,12 +455,12 @@ q == {
 ```
 
 <a name="unlink_payment_account"></a>
-#### Unlink payment account
+### Unlink payment account
 Unbind Pay Account is triggered to remove the linked customer account.
 ```ruby
-q = Midtrans.unlink_payment_account("f2b21e66-c72d-4fc2-9296-7b2682c82a96")
+charge_response = Midtrans.unlink_payment_account("f2b21e66-c72d-4fc2-9296-7b2682c82a96")
 
-q == {
+charge_response.body == {
         "status_code": "204",
         "payment_type": "gopay",
         "account_id": "f2b21e66-c72d-4fc2-9296-7b2682c82a96",
@@ -450,7 +471,7 @@ q == {
 ```
 
 <a name="create_subscription"></a>
-#### Create subscription
+### Create subscription
 Create a subscription transaction by sending all the details required to create a transaction. The details such as name, amount, currency, payment_type, token, and schedule are sent in the request. Successful request returns id status:active, and other subscription details.
 
 ```ruby
@@ -477,9 +498,9 @@ param = {
         }
 }
 
-q = Midtrans.create_subscription(param)
+charge_response = Midtrans.create_subscription(param)
 
-q == {
+charge_response.body == {
         "id": "d137e7f4-9474-4fc2-9847-672e09cb16f6",
         "name": "MONTHLY_2021",
         "amount": "17000",
@@ -512,12 +533,12 @@ q == {
 ```
 
 <a name="get_subscription"></a>
-#### Get subscription
+### Get subscription
 Retrieve the subscription details of a customer using the subscription_id. Successful request returns subscription object and status:active.
 ```ruby
-q = Midtrans.get_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6")
+charge_response = Midtrans.get_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6")
 
-q == {
+charge_response.body == {
         "id": "d137e7f4-9474-4fc2-9847-672e09cb16f6",
         "name": "MONTHLY_2021",
         "amount": "17000",
@@ -550,30 +571,30 @@ q == {
 ```
 
 <a name="disable_subscription"></a>
-#### Disable subscription
+### Disable subscription
 Disable a customer's subscription account with a specific subscription_id so that the customer is not charged for the subscription in the future. Successful request returns status_message indicating that the subscription details are updated.
 
 ```ruby
-q = Midtrans.disable_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6")
+charge_response = Midtrans.disable_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6")
 
-q == {
+charge_response.body == {
         "status_message": "Subscription is updated."
 }
 ```
 
 <a name="enable_subscription"></a>
-#### Enable subscription
+### Enable subscription
 Activate a customer's subscription account with a specific subscription_id, so that the customer can start paying for the subscription immediately. Successful request returns status_message indicating that the subscription details are updated.
 ```ruby
-q = Midtrans.enable_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6")
+charge_response = Midtrans.enable_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6")
 
-q == {
+charge_response.body == {
         "status_message": "Subscription is updated."
 }
 ```
 
 <a name="update_subscription"></a>
-#### Update subscription
+### Update subscription
 Update the details of a customer's existing subscription account with the specific subscription_id. Successful request returns status_message indicating that the subscription details are updated.
 ```ruby
 param = {
@@ -586,9 +607,9 @@ param = {
   }
 }
 
-q = Midtrans.update_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6", param)
+charge_response = Midtrans.update_subscription("d137e7f4-9474-4fc2-9847-672e09cb16f6", param)
 
-q == {
+charge_response.body == {
         "status_message": "Subscription is updated."
 }
 ```
@@ -605,6 +626,6 @@ result.class # => Midtrans::Result
 * `Midtrans::Result#status_code` - `integer`, e.g. 200, 402. Documentation https://api-docs.midtrans.com/#status-code
 * `Midtrans::Result#status_message` - `string`, e.g."Success, Credit Card transaction is successful"
 * `Midtrans::Result#redirect_url` - `string`, For Snap payment page, where customer can be redirected to complete the payment
-* `Midtrans::Result#body` - `string`, Raw HTTP request body
+* `Midtrans::Result#body` - `string`, Raw HTTP response body
 * `Midtrans::Result#data` - `hash`, Parsed API response JSON body as hash
 * `Midtrans::Result#response` - Raw `Excon::Response` instance
