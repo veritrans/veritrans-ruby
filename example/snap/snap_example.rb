@@ -14,7 +14,7 @@ Midtrans.config.client_key = "SB-Mid-client-ArNfhrh7st9bQKmz"
 Midtrans.config.api_host = "https://api.sandbox.midtrans.com"
 
 # Create snap transaction
-Midtrans.create_snap_token(
+result = Midtrans.create_snap_token(
   transaction_details: {
     order_id: "snap-example-test-#{Time.now.to_i}",
     gross_amount: 200000
@@ -23,6 +23,8 @@ Midtrans.create_snap_token(
     "secure": true
   }
 )
+
+puts result.body
 
 # transaction is object representation of API JSON response
 # {

@@ -24,7 +24,7 @@ card = {
 get_token = Midtrans.create_card_token(card)
 
 # prepare CORE API parameter to charge credit card ( refer to: https://docs.midtrans.com/en/core-api/credit-card?id=_2-sending-transaction-data-to-charge-api )
-Midtrans.charge(
+result = Midtrans.charge(
   {
     "payment_type": "credit_card",
     "transaction_details": {
@@ -36,6 +36,8 @@ Midtrans.charge(
     }
   }
 )
+
+puts result.body
 
 # charge_response is object representation of API JSON response
 # {"status_code":"200",
