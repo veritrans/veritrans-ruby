@@ -4,10 +4,15 @@ require 'veritrans/client'
 require 'veritrans/api'
 require 'veritrans/result'
 
+if defined?(::Rails)
+  require 'veritrans/events'
+end
 
 class Veritrans
   include Veritrans::Client
   include Veritrans::Api
+
+  autoload :Events,     'veritrans/events'
 
   class << self
     extend Forwardable
@@ -177,7 +182,13 @@ class Veritrans
     if !@file_logger
       require 'logger'
       begin
+        if defined?(Rails) && Rails.root
+          require 'fileutils'
+          FileUtils.mkdir_p(Rails.root.join("log"))
+          @file_logger = Logger.new(Rails.root.join("log/veritrans.log").to_s)
+        else
           @file_logger = Logger.new("/dev/null")
+        end
       rescue => error
         STDERR.puts "Failed to create Midtrans.file_logger, will use /dev/null"
         STDERR.puts "#{error.class}: #{error.message}"
