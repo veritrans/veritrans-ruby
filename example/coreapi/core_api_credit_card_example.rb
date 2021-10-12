@@ -37,23 +37,24 @@ result = Midtrans.charge(
   }
 )
 
-puts result.body
+puts result.data
 
-# charge_response is object representation of API JSON response
-# {"status_code":"200",
-# "status_message":"Success, Credit Card transaction is successful"
-# ,"channel_response_code":"00"
-# ,"channel_response_message":"Approved"
-#,"bank":"bni",
-# "transaction_id":"66b4e5f6-745b-4dd8-9e92-b77bd8ba7514",
-# "order_id":"ruby-example-coreapi-creditcard-1633504079",
-# "merchant_id":"G686051436",
-# "gross_amount":"10000.00",
-# "currency":"IDR",
-# "payment_type":"credit_card",
-# "transaction_time":"2021-10-06 14:07:59",
-# "transaction_status":"capture",
-# "fraud_status":"accept",
-# "approval_code":"1633504079902",
-# "masked_card":"521111-1117",
-# "card_type":"debit"}
+# result.data this will be Hash representation of the API JSON response, of example:
+# {
+# : status_code => "200",
+# : status_message => "Success, Credit Card transaction is successful",
+# : channel_response_code => "00",
+# : channel_response_message => "Approved",
+# : bank => "bni",
+# : transaction_id => "21386a6e-6e26-4191-9d05-877aa6063c08",
+# : order_id => "ruby-example-coreapi-creditcard-1634014338",
+# : merchant_id => "G686051436",: gross_amount => "10000.00",
+# : currency => "IDR",
+# : payment_type => "credit_card",
+# : transaction_time => "2021-10-12 11:52:18",
+# : transaction_status => "capture",
+# : fraud_status => "accept",
+# : approval_code => "1634014339258",
+# : masked_card => "521111-1117",
+# : card_type => "debit"
+# }

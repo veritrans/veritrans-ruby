@@ -24,10 +24,10 @@ result = Midtrans.create_snap_token(
   }
 )
 
-puts result.body
+puts result.data
 
-# transaction is object representation of API JSON response
+# result.data this will be Hash representation of the API JSON response, of example:
 # {
-# "token":"96fc2295-ed06-4399-94ac-acbe3e0a007a",
-# "redirect_url":"https://app.sandbox.midtrans.com/snap/v2/vtweb/96fc2295-ed06-4399-94ac-acbe3e0a007a"
+# : token => "008e586b-17f5-459f-8418-2764f08f1d8c",
+# : redirect_url => "https://app.sandbox.midtrans.com/snap/v2/vtweb/008e586b-17f5-459f-8418-2764f08f1d8c"
 # }
