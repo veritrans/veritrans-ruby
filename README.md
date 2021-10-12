@@ -209,7 +209,7 @@ Further example to demonstrate Core API card integration (including get card tok
 #### Credit Card Charge
 
 ```ruby
-Midtrans.charge(
+result = Midtrans.charge(
   payment_type: "credit_card",
   credit_card: {
     token_id: "CREDIT_CARD_TOKEN", # change with your card token,
@@ -219,6 +219,8 @@ Midtrans.charge(
     order_id: "test-transaction-12345",
     gross_amount: 20000
   })
+# result.data this will be Hash representation of the API JSON response:
+puts result.data
 ```
 
 #### Credit Card 3DS Authentication
@@ -297,7 +299,7 @@ Midtrans.config.idempotency_key = "Unique-ID"
 [More details](http://api-docs.midtrans.com/#idempotent-requests)
 
 ### Log Configuration
-By default if you are using Rails, gem Veritrans will show information via Rails logger and in addition save important information to `RAILS_APP/log/Midtrans.log`
+By default if you are using Rails, gem Veritrans will show information via Rails logger and in addition save important information to `RAILS_APP/log/Midtrans.log` <br>
 You can configure it like example below:
 
 ```ruby
