@@ -273,7 +273,8 @@ class TestVeritrans < Minitest::Test
       file_logger: Logger.new(STDOUT)
     )
 
-    result = @mt_test_invalid_key.charge(
+    begin
+    @mt_test_invalid_key.charge(
       {
         "payment_type": "bank_transfer",
         "transaction_details": {
@@ -286,8 +287,10 @@ class TestVeritrans < Minitest::Test
         }
       }
     )
-    assert_equal 401, result.status_code
-    assert_equal "Transaction cannot be authorized with the current client/server key.", result.status_message
+    rescue MidtransError => e
+    assert_equal "401", e.status
+    assert_match "Transaction cannot be authorized with the current client/server key.", e.data
+    end
   end
 
   def test_fail_get_token
@@ -305,9 +308,12 @@ class TestVeritrans < Minitest::Test
       card_exp_month: 12,
       card_exp_year: 2026
     }
-    result = @mt_test_invalid_key.test_token(card)
-    assert_equal 401, result.status_code
-    assert_equal "Transaction cannot be authorized with the current client/server key.", result.status_message
+    begin
+      @mt_test_invalid_key.test_token(card)
+    rescue MidtransError => e
+      assert_equal "401", e.status
+      assert_match "Transaction cannot be authorized with the current client/server key.", e.data
+    end
   end
 
 end

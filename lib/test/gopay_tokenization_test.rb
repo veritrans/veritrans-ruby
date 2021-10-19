@@ -49,22 +49,32 @@ class TestVeritrans < Minitest::Test
   def test_unlink_payment_account
     #expected the API call will fail because of not click activation from link_payment_account
     p 3
-    result = @mt_test.unlink_payment_account($test_gopay_id)
-    assert_equal "Account status cannot be updated.", result.status_message
+    begin
+      @mt_test.unlink_payment_account($test_gopay_id)
+    rescue MidtransError => e
+      assert_equal "412", e.status
+      assert_match "Account status cannot be updated.", e.data
+    end
   end
 
   def test_get_payment_acc_dummy
     p 4
-    result = @mt_test.get_payment_account("dummy")
-    assert_equal 404, result.status_code
-    assert_equal "Account doesn't exist.", result.status_message
+    begin
+    @mt_test.get_payment_account("dummy")
+    rescue MidtransError => e
+    assert_equal "404", e.status
+    assert_match "Account doesn't exist.", e.data
+    end
   end
 
   def test_unlink_dummy_account
     p 5
-    result = @mt_test.unlink_payment_account("dummy")
-    assert_equal 404, result.status_code
-    assert_equal "Account doesn't exist.", result.status_message
+    begin
+    @mt_test.unlink_payment_account("dummy")
+    rescue MidtransError => e
+    assert_equal "404", e.status
+    assert_match "Account doesn't exist.", e.data
+    end
   end
 
 end

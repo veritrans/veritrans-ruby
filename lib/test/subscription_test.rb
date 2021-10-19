@@ -77,24 +77,40 @@ class TestVeritrans < Minitest::Test
   end
 
   def test_get_subscription_none_acc
-    result = @mt_test.get_subscription("dummy")
-    assert_equal "Subscription doesn't exist.", result.status_message
+    begin
+      @mt_test.get_subscription("dummy")
+    rescue MidtransError => e
+      assert_equal "404", e.status
+      assert_match "Subscription doesn't exist.", e.data
+    end
   end
 
   def test_disable_subscription_none
-    result = @mt_test.disable_subscription("dummy")
-    assert_equal "Subscription doesn't exist.", result.status_message
+    begin
+      @mt_test.disable_subscription("dummy")
+    rescue MidtransError => e
+      assert_equal "404", e.status
+      assert_match "Subscription doesn't exist.", e.data
+    end
   end
 
   def test_enable_subscription_none
-    result = @mt_test.enable_subscription("dummy")
-    assert_equal "Subscription doesn't exist.", result.status_message
+    begin
+      @mt_test.enable_subscription("dummy")
+    rescue MidtransError => e
+      assert_equal "404", e.status
+      assert_match "Subscription doesn't exist.", e.data
+    end
   end
 
   def test_update_subscription_none
-    param = {}
-    result = @mt_test.update_subscription("dummy", param)
-    assert_equal "Subscription doesn't exist.", result.status_message
+    begin
+      param = {}
+      @mt_test.update_subscription("dummy", param)
+    rescue MidtransError => e
+      assert_equal "404", e.status
+      assert_match "Subscription doesn't exist.", e.data
+    end
   end
 
 end

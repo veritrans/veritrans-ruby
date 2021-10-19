@@ -60,8 +60,8 @@ class TestVeritrans < Minitest::Test
       logger: Logger.new(STDOUT),
       file_logger: Logger.new(STDOUT)
     )
-
-    result = @mt_test_invalid_key.create_widget_token(
+    begin
+    @mt_test_invalid_key.create_widget_token(
       transaction_details: {
         order_id: "ruby-lib-test-#{Time.now.to_i}",
         gross_amount: 200000
@@ -70,8 +70,10 @@ class TestVeritrans < Minitest::Test
         "secure": true
       }
     )
-    assert_equal 401, result.status_code
-    assert_equal ["Access denied due to unauthorized transaction, please check client or server key", "Visit https://snap-docs.midtrans.com/#request-headers for more details"], result.error_messages
+    rescue MidtransError => e
+    assert_equal "401", e.status
+    assert_match "please check client or server key", e.data
+    end
   end
 
   end
