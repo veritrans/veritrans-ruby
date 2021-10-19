@@ -74,7 +74,7 @@ class Veritrans
 
     def make_request(method, url, params, auth_header = nil)
       if !config.server_key || config.server_key == ''
-        raise "Please add server_key to config/veritrans.yml"
+        raise "Please config your server key"
       end
 
       method = method.to_s.upcase
@@ -119,6 +119,26 @@ class Veritrans
       request = Excon.new(url, connection_options)
 
       response = request.send(method.downcase.to_sym, request_options)
+
+      if defined?(response.body)
+        response_body = JSON.parse(response.body)
+        if response_body.has_key? 'status_code'
+          status_code = Integer(response_body["status_code"])
+          if status_code >= 400 && status_code != 407
+            raise MidtransError.new(
+              "Midtrans API is returning API error. HTTP status code: #{status_code}",
+              "#{status_code}",
+              "#{response_body}")
+          end
+        end
+      end
+
+      if response.status >= 400
+        raise MidtransError.new(
+          "Midtrans API is returning API error. HTTP status code: #{response.status}  API response: #{response.body}",
+          "#{response.status}",
+          "#{response.body}")
+      end
 
       logger.info "Midtrans: got #{(Time.now - s_time).round(3)} sec #{response.status} #{response.body}"
 
