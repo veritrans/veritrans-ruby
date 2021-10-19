@@ -635,12 +635,12 @@ puts response.data == {
 result = Midtrans.charge(...)
 
 # If in the future there is a new attribute in the Midtrans Result.
-# Recommended retrieve like example below.
+# The recommended way to retrieve the value is like example below.
 # :new_attribute is the new field name in API response JSON
 result.data[:new_attribute]
 
-# Alternatively you can also access like below.
-# But make sure the new field name already show in API response JSON, if not will trigger error.
+# Alternatively you can also retrieve the value like below.
+# When the field name is not actually exists on the API response JSON, it will trigger an error. Make sure to handle it.
 result.new_attribute
 ```
 
