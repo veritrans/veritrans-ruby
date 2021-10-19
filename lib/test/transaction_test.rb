@@ -145,14 +145,16 @@ class TestVeritrans < Minitest::Test
   end
 
   def test_fail_refund_transaction
+    begin
     param = {
       "refund_key": "reference1",
       "amount": 5000,
       "reason": "for some reason"
     }
-    result = @mt_test.refund("dummy-order-id", param)
-    assert_equal 404, result.status_code
-    assert_equal "Transaction doesn't exist.", result.status_message
+    @mt_test.refund("dummy-order-id", param)
+    rescue MidtransError => e
+      assert_equal "404", e.status
+      end
   end
 
   end
