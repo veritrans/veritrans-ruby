@@ -273,7 +273,21 @@ end
 ### 2.4 Transaction Action
 For full example on transaction action refer to: [Api Reference](api_reference.md)
 
-## 3. Advanced Usage
+## 3. Handling Error / Exception
+When using function that result in Midtrans API call e.g: `Midtrans.charge(...)` or `Midtrans.create_snap_token(...)`
+there's a chance it may throw error (`MidtransError` object), the error object will contains below properties that can be used as information to your error handling logic:
+
+```ruby
+begin
+  Midtrans.create_snap_token(parameter)
+rescue MidtransError => e
+  puts e.message # Basic error message string
+  puts e.status # HTTP status code e.g: 400, 401, etc.
+  puts e.data # JSON of the API response
+end
+```
+
+## 4. Advanced Usage
 ### Override Notification URL
 
 You can opt to change or add custom notification urls on every transaction. It can be achieved by adding additional HTTP headers into charge request.
