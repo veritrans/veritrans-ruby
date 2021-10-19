@@ -3,6 +3,7 @@ require 'veritrans/config'
 require 'veritrans/client'
 require 'veritrans/api'
 require 'veritrans/result'
+require 'veritrans/midtrans_error'
 
 if defined?(::Rails)
   require 'veritrans/events'
