@@ -282,8 +282,9 @@ begin
   Midtrans.create_snap_token(parameter)
 rescue MidtransError => e
   puts e.message # Basic error message string
-  puts e.status # HTTP status code e.g: 400, 401, etc.
-  puts e.data # JSON of the API response
+  puts e.http_status_code # HTTP status code e.g: 400, 401, etc.
+  puts e.api_response # API response body in String
+  puts e.raw_http_client_data # Raw HTTP client response
 end
 ```
 
@@ -343,3 +344,9 @@ Sinatra, which demonstrate in as succint code as possible. Please [have a look h
 * [Midtrans registration](https://account.midtrans.com/register)
 * [Midtrans documentation](http://docs.midtrans.com)
 * Technical support [support@midtrans.com](mailto:support@midtrans.com)
+
+## Important Changes
+
+### v2.4.0
+- API client methods will now raise `MidtransError` when getting unexpected API response. You may need to update your error handling. [Handling Error / Exception](#3-Handling-Error--Exception)
+- Removed features: CLI, Testing. Mainly removed due to no longer relevant/essential to this library's purpose.
