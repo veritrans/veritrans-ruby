@@ -27,8 +27,9 @@ result = Midtrans.create_snap_token(
 puts "Snap result : #{result.data}"
 rescue MidtransError => e
   puts e.message # Basic message error
-  puts e.status # HTTP status code e.g: 400, 401, etc.
-  puts e.data # JSON of the API response
+  puts e.http_status_code # HTTP status code e.g: 400, 401, etc.
+  puts e.api_response # API response body in String
+  puts e.raw_http_client_data # Raw HTTP client response
 end
 
 # result.data this will be Hash representation of the API JSON response, of example:
