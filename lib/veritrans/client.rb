@@ -74,7 +74,7 @@ class Veritrans
 
     def make_request(method, url, params, auth_header = nil)
       if !config.server_key || config.server_key == ''
-        raise "Please config your server key"
+        raise "Please configure your server key"
       end
 
       method = method.to_s.upcase
@@ -128,7 +128,8 @@ class Veritrans
             raise MidtransError.new(
               "Midtrans API is returning API error. HTTP status code: #{status_code}",
               "#{status_code}",
-              "#{response_body}")
+              "#{response_body}",
+              "#{request_options}")
           end
         end
       end
@@ -137,7 +138,8 @@ class Veritrans
         raise MidtransError.new(
           "Midtrans API is returning API error. HTTP status code: #{response.status}  API response: #{response.body}",
           "#{response.status}",
-          "#{response.body}")
+          "#{response.body}",
+          "#{request_options}")
       end
 
       logger.info "Midtrans: got #{(Time.now - s_time).round(3)} sec #{response.status} #{response.body}"
