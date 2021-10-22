@@ -349,4 +349,4 @@ Sinatra, which demonstrate in as succint code as possible. Please [have a look h
 
 ### v2.4.0
 - API client methods will now raise `MidtransError` when getting unexpected API response. You may need to update your error handling. [Handling Error / Exception](#3-Handling-Error--Exception)
-- Removed features: CLI, Testing. Mainly removed due to no longer relevant/essential to this library's purpose.
+- Removed features: CLI, TestingLib. Mainly removed due to no longer relevant/essential to this library's purpose.
