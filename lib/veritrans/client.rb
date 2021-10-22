@@ -129,7 +129,7 @@ class Veritrans
               "Midtrans API is returning API error. HTTP status code: #{status_code}",
               "#{status_code}",
               "#{response_body}",
-              "#{request_options}")
+              "#{response}")
           end
         end
       end
@@ -139,7 +139,7 @@ class Veritrans
           "Midtrans API is returning API error. HTTP status code: #{response.status}  API response: #{response.body}",
           "#{response.status}",
           "#{response.body}",
-          "#{request_options}")
+          "#{response}")
       end
 
       logger.info "Midtrans: got #{(Time.now - s_time).round(3)} sec #{response.status} #{response.body}"
