@@ -14,8 +14,7 @@ Gem::Specification.new do |s|
   s.files      = `git ls-files`.split("\n")
   s.test_files = []
 
-  s.require_paths = ["lib"] 
-  s.executables   = ["veritrans", "midtrans"]
+  s.require_paths = ["lib"]
 
   s.add_runtime_dependency "excon", "~> 0.20"
 end

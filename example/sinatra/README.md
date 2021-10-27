@@ -1,8 +1,6 @@
-To run examples:
+How to run sinatra example:
 
-```
-gem install sinatra
-ruby sinatra.rb
-```
+1. Install dependencies: `bundle install`
+2. Run the sinatra app: `bundle exec ruby webapp.rb`
 
-Or see online demo https://veritrans-ruby-example.herokuapp.com/
+The app will run at port 4567. Open `localhost:4567` from your browser.

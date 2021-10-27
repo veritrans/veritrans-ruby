@@ -1,7 +1,0 @@
-development:
-  client_key: spec_client_key
-  server_key: spec_server_key
-test:
-  client_key: test_client_key
-  server_key: test_server_key
-  

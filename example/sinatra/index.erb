@@ -1,213 +1,201 @@
 <!doctype html>
 <html>
 <head>
-  <title>veritrans-ruby demo</title>
-  <link rel="icon" type="image/x-icon" href="https://account.midtrans.com/favicon.ico" />
-  <link rel="stylesheet" href="/style.css">
+  <title>Midtrans-Ruby simple demo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/featherlight/1.7.12/featherlight.min.css">
 </head>
 <body>
 
 <header>
-  <h3>Midtrans sinatra app</h3>
+  <h3>Midtrans sample demo sinatra app</h3>
   <a href="https://github.com/veritrans/veritrans-ruby" class="github">Source Code</a>
 </header>
 
 <section>
-  <h4>VT-Web</h4>
-  <form action="/charge_vtweb" method="GET" id="vtweb_form">
-    <fieldset>
-      <p>
-        <label>Language</label>
-        <select name="locale">
-          <option></option>
-          <option value="id">Indonesian</option>
-          <option value="en">English</option>
-        </select>
-      </p>
+  <h4>Snap Popup</h4>
+  <a href="/snap">Click here</a>
+</section>
 
-      <div class="form-row">
-        <label>Payment Types</label>
-        <ul>
-          <% @payment_types = %w{CREDIT_CARD MANDIRI_CLICKPAY MANDIRI_BILL CIMB_CLICKS INDOMARET BANK_TRANSFER MANDIRI_BILL} %>
-          <% for type in @payment_types %>
-            <li>
-              <label>
-                <input type="checkbox" name="enabled_payments[]" value="<%= type %>">
-                <%= type.split("_").map(&:capitalize).join(' ') %>
-              </label>
-            </li>
-          <% end %>
-        </ul>
-        <br/>
-        <small class="types-hint">By default Veritrans will show all available types</small>
-      </div>
+<section>
+  <h4>Snap Redirect</h4>
+  <a href="/snap_redirect">Click here</a>
+</section>
+<br>
+<h3>Core API Credit Card</h3>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/picomodal/3.0.0/picoModal.js"></script>
 
-      <p>
-        <label>Credit Card BIN promo</label>
-        <input type="text" name="bin_promo" placeholder="411111, 500000, bni, mandiri, 3111">
-        <br/>
-        <small class="bins-hint">
-          <a href="https://api-docs.midtrans.com/#card-features-bin-promo">See documentation</a>
-        </small>
-      </p>
-
-      <p>
-        <label>Credit Card 3D Secure</label>
-        <select name="credit_card_3d_secure">
-          <option></option>
-          <option value="true">Yes</option>
-          <option value="false">No</option>
-        </select>
-      </p>
-
-      <div class="form-row">
-        <label>Credit Card Installment</label>
-        <ul>
-          <li>
-            <label><input type="checkbox" name="installment[bni]">BNI</label>
-          </li>
-          <li>
-            <label><input type="checkbox" name="installment[mandiri]">Mandiri</label>
-          </li>
-          <li>
-            <label><input type="checkbox" name="installment[bca]">BCA</label>
-          </li>
-        </ul>
-      </div>
-
-    </fieldset>
-
+<h1>Checkout</h1>
+<form action="/coreapi_card_charge_ajax_handler" method="POST" id="payment-form">
+  <fieldset>
+    <legend>Checkout</legend>
+    <small><strong>Field that may be presented to customer:</strong></small>
     <p>
-      <input type="submit" value="Create payment page">
+      <label>Card Number</label>
+      <input class="card-number" value="4811 1111 1111 1114" size="23" type="text" autocomplete="off" />
+    </p>
     <p>
-  </form>
-</section>
+      <label>Expiration (MM/YYYY)</label>
+      <input class="card-expiry-month" value="12" placeholder="MM" size="2" type="text" />
+      <span> / </span>
+      <input class="card-expiry-year" value="2025" placeholder="YYYY" size="4" type="text" />
+    </p>
+    <p>
+      <label>CVV</label>
+      <input class="card-cvv" value="123" size="4" type="password" autocomplete="off" />
+    </p>
 
-<section>
-  <h4>VT-Direct</h4>
+    <small><strong>Fields that shouldn't be presented to the customer:</strong></small>
+    <p>
+      <label>3D Secure</label>
+      <input class="authenticate_3ds" type="checkbox" name="authenticate_3ds" value="true" checked>
+    </p>
 
-  <form action="/charge_vtdirect" method="post" id="card_form">
-    <input type="hidden" name="token_id" id="card_token">
-    <fieldset>
-      <legend>Credit card</legend>
-      <p>
-        <label for="gross_amount">Amount, Rp.</label>
-        <input type="text" name="gross_amount" id="gross_amount" value="30000">
-      </p>
-      <p>
-        <label for="card_number">Card number</label>
-        <input type="text" id="card_number" style="width: 150px" value="4811 1111 1111 1114">
-        <br>
-        <small style="margin-left: 100px" class="card-numbers">
-          <a onclick="$('#card_number').val('4811 1111 1111 1114')">success Visa</a>
-          <a onclick="$('#card_number').val('5810 1111 1111 1112')">success MasterCard</a>
-          <a onclick="$('#card_number').val('4511 1111 1111 1117')">challenge</a>
-          <a onclick="$('#card_number').val('4611 1111 1111 1116')">Deny by FDS</a>
-          <a onclick="$('#card_number').val('4911 1111 1111 1113')">Deny by bank</a>
-          <a href="https://docs.midtrans.com/en/reference/test.html" target="_blank">documentation</a>
-        </small>
-      </p>
-      <p>
-        <label for="card_cvc">Security Code</label>
-        <input type="text" id="card_cvc" style="width: 30px" placeholder="cvc" value="123">
-      </p>
-      <p>
-        <label for="card_exp">Expiration date</label>
-        <input type="text" id="card_exp" placeholder="MM / YY" value="12 / 18">
-      </p>
+    <input id="token_id" name="token_id" type="hidden" />
+    <button class="submit-button" type="submit">Submit Payment</button>
+  </fieldset>
+</form>
 
-      <p>
-        <label for="card_secure">3D-secure</label>
-        <input type="checkbox" id="card_secure">
-      </p>
+<code>
+  <b>Transaction Result:</b>
+  <pre id="result"> Awaiting transactions... </pre>
+  <b>Transaction verified status result:</b>
+  <pre id="status-result"> Awaiting transactions... </pre>
+  <pre>
+  <b>Testing cards:</b>
 
-    </fieldset>
+    <b>For 3D Secure:</b>
+    Visa success              4811 1111 1111 1114
+    Visa deny by bank         4711 1111 1111 1115
+    Visa deny by FDS          4611 1111 1111 1116
 
-    <input id="submit_btn" type="submit">
-  </form>
-</section>
+    MasterCard success        5211 1111 1111 1117
+    MasterCard deny by bank   5111 1111 1111 1118
+    MasterCard deny by FDS    5411 1111 1111 1115
 
-<section>
-  <h4>Localization</h4>
-  Indonesian translation for validation messages
-  <a href="/localization">Click here</a>
-</section>
+    Challenge by FDS          4511 1111 1111 1117
+    </pre>
+</code>
 
-<section>
-  <h4>Recurring</h4>
-  <a href="/recurring">Click here</a>
-</section>
+<!-- Import MidtransNew3ds library -->
+<!-- TODO change data-environment to `production` for Production mode -->
+<!-- TODO change data-client-key to your production client key for Production mode -->
+<script id= "midtrans-script" src="https://api.midtrans.com/v2/assets/js/midtrans-new-3ds.min.js" data-environment="sandbox" data-client-key=<%= Midtrans.config.client_key %> type="text/javascript"></script>
 
-<section>
-  <h4>Credit Card Points</h4>
-  <a href="/points">Click here</a>
-</section>
-
-<section>
-  <h4>Snap</h4>
-  <a href="/widget">Click here</a>
-</section>
-
-<script src="https://api.sandbox.midtrans.com/v2/assets/veritrans.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.payment/1.0.2/jquery.payment.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/0.9.9/jquery.magnific-popup.min.js"></script>
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/0.9.9/magnific-popup.css">
-
+<!-- Javascript for token generation -->
 <script type="text/javascript">
-  // set Veritrans settings
-  Veritrans.url = "<%= Veritrans.config.api_host %>/v2/token";
-  Veritrans.client_key = "<%= Veritrans.config.client_key %>";
+    // On Submit button clicked
+    document.querySelector(".submit-button").onclick = function (event) {
+        console.log("SUBMIT button clicked");
+        // prepare cardData
+        var cardData = {
+            "card_number": document.querySelector(".card-number").value,
+            "card_exp_month": document.querySelector(".card-expiry-month").value,
+            "card_exp_year": document.querySelector(".card-expiry-year").value,
+            "card_cvv": document.querySelector(".card-cvv").value,
+        };
+        // [1] Use card data to get card token on the callback
+        MidtransNew3ds.getCardToken(cardData, getCardTokenCallback);
 
-  function createTokenData() {
-    return {
-      // Optional params:
-      // secure: true
-      // bank: 'MANDIRI'
-
-      card_number: $('#card_number').val(),
-      card_cvv: $('#card_cvc').val(),
-      card_exp_month: $('#card_exp').val().match(/(\d+) \//)[1],
-      card_exp_year: '20' + $('#card_exp').val().match(/\/ (\d+)/)[1],
-      gross_amount: $('#gross_amount').val(),
-      secure: $('#card_secure')[0].checked
+        event.preventDefault(); return false;
     };
-  }
 
-  $(document).ready(function () {
-    $('#card_number').payment('formatCardNumber');
-    $('#card_cvc').payment('formatCardCVC');
-    $('#card_exp').payment('formatCardExpiry');
-
-    $('#card_form').on('submit', function (event) {
-      var form = this;
-      $('#submit_btn').attr('disabled', true).val("Processing ...");
-      event.preventDefault();
-
-      Veritrans.token(createTokenData, function (data) {
-        console.log('Token data:', data);
-        // if we get url then it's 3d-secure transaction
-        // so we need to open that page
-        // this callback function will be called again after user confirm 3d-secure
-        // you can also redirect on server side
-        if (data.redirect_url) {
-          $.magnificPopup.open({
-            items: { type: 'iframe', src: data.redirect_url }
-          });
-          $.magnificPopup.instance.content.find('iframe').height(590);
-        // if no redirect_url and we have token_id then just make charge request
-        } else if (data.token_id) {
-          $('#card_token').val(data.token_id);
-          $.magnificPopup.close();
-          form.submit();
-        // if no redirect_url and no token_id, then it should be error
-        } else {
-          alert(data.validation_messages ? data.validation_messages.join("\n") : data.status_message);
-          $('#submit_btn').removeAttr('disabled').removeAttr("value");
+    // getCardTokenCallback triggered when `MidtransNew3ds.getCardToken` completed.
+    var getCardTokenCallback = {
+        onSuccess: function(response){
+            // success to get card token
+            // [2] Send AJAX to let backend charge the card using the card token_id
+            fetch("/coreapi_card_charge_ajax_handler", {
+                method : "POST",
+                body: JSON.stringify({
+                    "token_id" : response.token_id,
+                    "authenticate_3ds" : document.querySelector('.authenticate_3ds').checked
+                }),
+                headers: {'Content-Type': 'application/json'},
+            })
+              .then(function(response) { return response.json(); })
+              .then(function(responseObj) {
+                  console.log("Charge response:",responseObj);
+                  if (responseObj.status_code == "201"){
+                      // [3.1] Transaction need 3DS authentication
+                      MidtransNew3ds.authenticate(responseObj.redirect_url, callback3dsAuthentication);
+                  } else {
+                      // Transaction do not need 3DS Authentication, transaction is complete with result
+                      transactionComplete(responseObj);
+                  }
+              })
+        },
+        onFailure: function(response){
+            // fail to get card token
+            transactionComplete(response);
         }
-      });
-    });
-  });
+    }
+
+    var callback3dsAuthentication = {
+        performAuthentication: function(redirect_url){
+            // [3.2] 3ds authentication redirect_url received, open iframe to display to customer
+            popupModal.openPopup(redirect_url);
+        },
+        // [3.3] When 3DS authentication result received, which contains transaction result
+        // it will trigger one of function below, according to status: success/failure/pending
+        onSuccess: function(response){
+            transactionComplete(response);
+        },
+        onFailure: function(response){
+            transactionComplete(response);
+        },
+        onPending: function(response){
+            transactionComplete(response);
+
+        }
+    }
+
+    function transactionComplete(responseObj){
+        // Close 3DS popup, then display the result (for example)
+        console.log("transactionComplete with status: ",responseObj);
+        popupModal.closePopup();
+
+        document.querySelector("#result").innerText = JSON.stringify(responseObj, null, 2);
+        document.querySelector("#result").scrollIntoView();
+
+        if (responseObj.transaction_id){
+            // [4] Inform the result to backend update DB status and verify to Midtrans
+            fetch('/check_transaction_status', {
+                method : "POST",
+                body: JSON.stringify({ "transaction_id" : responseObj.transaction_id }),
+                headers: {'Content-Type': 'application/json'},
+            })
+              .then(function(statusResponse) { return statusResponse.json(); } )
+              .then(function(statusResponseObj) {
+                  // Transaction status received after being verified
+                  console.log("Check transaction response:",statusResponseObj);
+                  // transactionComplete(statusResponseObj);
+                  document.querySelector("#status-result").innerText =
+                    JSON.stringify(statusResponseObj, null, 2);
+
+              })
+        }
+    }
+
+    // helper functions below
+    let popupModal = (function(){
+        let modal = null;
+        return {
+            openPopup(url){
+                modal = picoModal({
+                    content:'<iframe frameborder="0" style="height:90vh; width:100%;" src="'+url+'"></iframe>',
+                    width: "75%",
+                    closeButton: false,
+                    overlayClose: false,
+                    escCloses: false
+                }).show();
+            },
+            closePopup(){
+                try{
+                    modal.close();
+                } catch(e) {}
+            }
+        }
+    }());
 </script>
 
 </body>

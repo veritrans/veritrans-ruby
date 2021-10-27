@@ -68,17 +68,25 @@ class Veritrans
       make_request(:post, url, params)
     end
 
+    def patch(url, params)
+      make_request(:patch, url, params)
+    end
+
     def make_request(method, url, params, auth_header = nil)
       if !config.server_key || config.server_key == ''
-        raise "Please add server_key to config/veritrans.yml"
+        raise "Please configure your server key"
       end
 
       method = method.to_s.upcase
-      logger.info "Veritrans: #{method} #{url} #{_json_encode(params)}"
+      logger.info "Midtrans: #{method} #{url} #{_json_encode(params)}"
       #logger.info "Veritrans: Using server key: #{config.server_key}"
       #puts "Veritrans: #{method} #{url} #{_json_encode(params)}"
 
       default_options = config.http_options || {}
+
+      idempotency_key = config.idempotency_key
+      append_notif_url = config.append_notif_url
+      override_notif_url = config.override_notif_url
 
       # Add authentication and content type
       # Docs https://api-docs.midtrans.com/#http-s-header
@@ -88,7 +96,10 @@ class Veritrans
           "Authorization" => auth_header || basic_auth_header(config.server_key),
           "Accept" => "application/json",
           "Content-Type" => "application/json",
-          "User-Agent" => "Veritrans ruby gem #{Veritrans::VERSION}"
+          "User-Agent" => "Veritrans ruby gem #{Veritrans::VERSION}",
+          "Idempotency-Key" => "#{idempotency_key}",
+          "X-Append-Notification" => "#{append_notif_url}",
+          "X-Override-Notification" => "#{override_notif_url}"
         }
       }
 
@@ -109,7 +120,29 @@ class Veritrans
 
       response = request.send(method.downcase.to_sym, request_options)
 
-      logger.info "Veritrans: got #{(Time.now - s_time).round(3)} sec #{response.status} #{response.body}"
+      if defined?(response.body)
+        response_body = JSON.parse(response.body)
+        if response_body.has_key? 'status_code'
+          status_code = Integer(response_body["status_code"])
+          if status_code >= 400 && status_code != 407
+            raise MidtransError.new(
+              "Midtrans API is returning API error. HTTP status code: #{status_code}",
+              "#{status_code}",
+              "#{response_body}",
+              "#{response}")
+          end
+        end
+      end
+
+      if response.status >= 400
+        raise MidtransError.new(
+          "Midtrans API is returning API error. HTTP status code: #{response.status}  API response: #{response.body}",
+          "#{response.status}",
+          "#{response.body}",
+          "#{response}")
+      end
+
+      logger.info "Midtrans: got #{(Time.now - s_time).round(3)} sec #{response.status} #{response.body}"
 
       Result.new(response, url, request_options, Time.now - s_time)
 

@@ -1,3 +1,12 @@
+### Version 2.4.0 (date 22 October 2021)
+* Update dependency, revamp implementation by removing non relevant features & adding new features
+* Implement Gopay tokenization
+* Implement API subscription
+* Add function Idempotency Key, override notification, append Notification
+* Make new unit test using minitest
+* Create example core api and snap using Sinatra framework
+* API client methods will now raise `MidtransError` when getting unexpected API response. You may need to update your error handling.
+
 ### Version 2.3.1 (date 9 March 2021)
 
 * Change URI.escape to ERB::Util.url_encode (support ruby 3.0)
