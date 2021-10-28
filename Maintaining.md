@@ -10,5 +10,6 @@
 
 ## Update Rubygems.org
 - Run this command `gem build veritrans.gemspec`
-- Run this command `gem push veritrans-2.4.0.gem`
+- Run this command `gem push veritrans-2.4.0.gem`, after that you are required to enter email and password account in Rubygems.org
+- You can get account Rubygems.org in `Account Access & Resources`
 - If you are using Rubymine, you can use `Tools -> Gem -> Build Gem` and `Push Gem`
