@@ -1,8 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'puma'
-gem 'rails', '< 7'
-gem 'rake'
 gem 'sinatra'
 gem 'tilt'
 gem 'sqlite3'
