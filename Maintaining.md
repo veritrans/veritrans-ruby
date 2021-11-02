@@ -4,6 +4,7 @@
 
 - Make your changes
 - Update `version` value on `version.rb` file
+- To install the package from local codes, you should build a gem `gem build veritrans.gemspec` after that `gem install veritrans-2.4.0.gem`
 - To run all test `ruby -Itest all.rb`
 - To run specific test `ruby snap_test.rb`
 - If you are using Rubymine, you can right click folder test and choose `run all tests in test`
