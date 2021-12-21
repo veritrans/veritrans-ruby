@@ -230,6 +230,93 @@ The credit card charge result may contains `redirect_url` for 3DS authentication
 For full example on Credit Card 3DS transaction refer to:
 - [Sinatra example](/example/sinatra) that implement Snap & Core Api
 
+### 2.2.D Subscription API
+
+You can see some Subscription API examples [here](example/subscription), [Subscription API Docs](https://api-docs.midtrans.com/#subscription-api).
+
+#### Subscription API for Credit Card
+
+To use subscription API for credit card, you should first obtain the 1-click saved token, [refer to this docs.](https://docs.midtrans.com/en/core-api/advanced-features?id=recurring-transaction-with-subscriptions-api)
+You will receive `saved_token_id` as part of the response when the initial card payment is accepted (will also available in the HTTP notification's JSON), [refer to this docs.](https://docs.midtrans.com/en/core-api/advanced-features?id=sample-3ds-authenticate-json-response-for-the-first-transaction)
+```ruby
+require 'veritrans'
+# Set Midtrans config
+Midtrans.config.server_key = "SB-Mid-server-uQmMImQMeo0Ky3Svl90QTUj2"
+Midtrans.config.client_key = "SB-Mid-client-ArNfhrh7st9bQKmz"
+Midtrans.config.api_host = "https://api.sandbox.midtrans.com"
+# Prepare parameter
+parameter = {
+  "name": "MONTHLY_2021",
+  "amount": "14000",
+  "currency": "IDR",
+  "payment_type": "credit_card",
+  "token": saved_token_id,
+  "schedule": {
+    "interval": 1,
+    "interval_unit": "month",
+    "max_interval": 12,
+    "start_time": "2021-12-20 07:00:00 +0700"
+  },
+  "metadata": {
+    "description": "Recurring payment for A"
+  },
+  "customer_details": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "johndoe@email.com",
+    "phone": "+62812345678"
+  }
+}
+
+result = Midtrans.create_subscription(parameter)
+puts "Create subscription response : #{result.data}"
+
+result_get_subs = Midtrans.get_subscription(subscription_id)
+puts "get subscription response : #{result_get_subs.data}"
+
+result_enable_subs = Midtrans.enable_subscription(subscription_id)
+puts "enable subscription response : #{result_enable_subs.data}"
+
+# update subscription by subscription_id and update_subscription_param
+result_update_subs = Midtrans.update_subscription(subscription_id, update_subscription_param)
+puts "update subscription response : #{result_update_subs.data}"
+
+# disable subscription by subscription_id
+result_disable_subs = Midtrans.disable_subscription(subscription_id)
+puts "disable subscription response : #{result_disable_subs.data}"
+```
+
+#### Subscription API for Gopay
+
+To use subscription API for gopay, you should first link your customer gopay account with gopay tokenization API, [refer to this section.](#22e-tokenization-api) You will receive gopay payment token using `getPaymentAccount` API call. You can see some Subscription API examples [here](example/subscription)
+
+### 2.2.E Tokenization API
+You can see some Tokenization API examples [here](examples/tokenization), [Tokenization API Docs.](https://api-docs.midtrans.com/#gopay-tokenization)
+```ruby
+require 'veritrans'
+# Set Midtrans config
+Midtrans.config.server_key = "SB-Mid-server-uQmMImQMeo0Ky3Svl90QTUj2"
+Midtrans.config.client_key = "SB-Mid-client-ArNfhrh7st9bQKmz"
+Midtrans.config.api_host = "https://api.sandbox.midtrans.com"
+# Prepare parameter
+parameter = {
+  "payment_type": "gopay",
+  "gopay_partner": {
+    "phone_number": "81987654321",
+    "country_code": "62",
+    "redirect_url": "https://www.gojek.com"
+  }
+}
+
+result = Midtrans.link_payment_account(parameter)
+puts "Create pay account response : #{result.data}"
+
+result_get_account = Midtrans.get_payment_account(active_account_id)
+puts "Get pay account response : #{result_get_account.data}"
+
+result_unlink = Midtrans.unlink_payment_account(active_account_id)
+puts "Unlink response : #{result_unlink.data}"
+```
 
 ### 2.3 Handle HTTP Notification
 > **IMPORTANT NOTE**: To update transaction status on your backend/database, **DO NOT** solely rely on frontend callbacks! For security reason to make sure the status is authentically coming from Midtrans, only update transaction status based on HTTP Notification or API Get Status.
