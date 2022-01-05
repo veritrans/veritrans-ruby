@@ -25,6 +25,7 @@ Midtrans.config.api_host = "https://api.sandbox.midtrans.com"
 saved_token_id = "521111eLfszZpPoDAxJEjmoYCuaR1117"
 
 # prepare parameter ( refer to: https://api-docs.midtrans.com/#create-subscription ) create subscription parameter example
+begin
 parameter = {
   "name": "MONTHLY_2021",
   "amount": "14000",
@@ -35,7 +36,7 @@ parameter = {
     "interval": 1,
     "interval_unit": "month",
     "max_interval": 12,
-    "start_time": "2021-12-20 07:00:00 +0700"
+    "start_time": "2022-12-20 07:00:00 +0700"
   },
   "metadata": {
     "description": "Recurring payment for A"
@@ -50,6 +51,12 @@ parameter = {
 
 result = Midtrans.create_subscription(parameter)
 puts "Create subscription response : #{result.data}"
+rescue MidtransError => e
+  puts e.message # Basic message error
+  puts e.http_status_code # HTTP status code e.g: 400, 401, etc.
+  puts e.api_response # API response body in String
+  puts e.raw_http_client_data # Raw HTTP client response
+end
 # result.data this will be Hash representation of the API JSON response
 # {
 # 	: id => "1d9c15ea-13e2-43f3-a87b-90aad6a9ad95",
@@ -76,16 +83,31 @@ puts "Create subscription response : #{result.data}"
 subscription_id = "1d9c15ea-13e2-43f3-a87b-90aad6a9ad95"
 
 # get subscription by subscription_id
+begin
 result_get_subs = Midtrans.get_subscription(subscription_id)
 puts "get subscription response : #{result_get_subs.data}"
+rescue MidtransError => e
+  puts e.message # Basic message error
+  puts e.http_status_code # HTTP status code e.g: 400, 401, etc.
+  puts e.api_response # API response body in String
+  puts e.raw_http_client_data # Raw HTTP client response
+end
 
 # enable subscription by subscription_id
+begin
 result_enable_subs = Midtrans.enable_subscription(subscription_id)
 puts "enable subscription response : #{result_enable_subs.data}"
+rescue MidtransError => e
+  puts e.message # Basic message error
+  puts e.http_status_code # HTTP status code e.g: 400, 401, etc.
+  puts e.api_response # API response body in String
+  puts e.raw_http_client_data # Raw HTTP client response
+end
 
 # update subscription by subscription_id and update_subscription_param
+begin
 update_subscription_param = {
-  "name": "MONTHLY_2021",
+  "name": "MONTHLY_2022",
   "amount": "300000",
   "currency": "IDR",
   "token": saved_token_id,
@@ -96,7 +118,20 @@ update_subscription_param = {
 
 result_update_subs = Midtrans.update_subscription(subscription_id, update_subscription_param)
 puts "update subscription response : #{result_update_subs.data}"
+rescue MidtransError => e
+  puts e.message # Basic message error
+  puts e.http_status_code # HTTP status code e.g: 400, 401, etc.
+  puts e.api_response # API response body in String
+  puts e.raw_http_client_data # Raw HTTP client response
+end
 
 # disable subscription by subscription_id
+begin
 result_disable_subs = Midtrans.disable_subscription(subscription_id)
 puts "disable subscription response : #{result_disable_subs.data}"
+rescue MidtransError => e
+  puts e.message # Basic message error
+  puts e.http_status_code # HTTP status code e.g: 400, 401, etc.
+  puts e.api_response # API response body in String
+  puts e.raw_http_client_data # Raw HTTP client response
+end
