@@ -60,6 +60,9 @@ Midtrans.config.server_key = "your server key"
 Midtrans.config.client_key = "your client key"
 Midtrans.config.api_host = "https://api.sandbox.midtrans.com"
 ```
+Follow the steps given below to switch to Midtrans Production environment and to accept real payments from real customers.
+1. Change api_host URL from `https://api.sandbox.midtrans.com` to `https://api.midtrans.com`.
+2. Use Client Key and Server Key for Production environment. For more details, refer to [Retrieving API Access Keys](https://docs.midtrans.com/en/midtrans-account/overview?id=retrieving-api-access-keys).
 
 ### 2.2.A Snap
 You can see Snap example [with Sinatra](example/sinatra) and [without framework](example/snap).
@@ -241,12 +244,12 @@ You will receive `saved_token_id` as part of the response when the initial card 
 ```ruby
 require 'veritrans'
 # Set Midtrans config
-Midtrans.config.server_key = "SB-Mid-server-uQmMImQMeo0Ky3Svl90QTUj2"
-Midtrans.config.client_key = "SB-Mid-client-ArNfhrh7st9bQKmz"
+Midtrans.config.server_key = "your server key"
+Midtrans.config.client_key = "your client key"
 Midtrans.config.api_host = "https://api.sandbox.midtrans.com"
 # Prepare parameter
 parameter = {
-  "name": "MONTHLY_2021",
+  "name": "MONTHLY_2022",
   "amount": "14000",
   "currency": "IDR",
   "payment_type": "credit_card",
@@ -255,7 +258,7 @@ parameter = {
     "interval": 1,
     "interval_unit": "month",
     "max_interval": 12,
-    "start_time": "2021-12-20 07:00:00 +0700"
+    "start_time": "2022-12-20 07:00:00 +0700"
   },
   "metadata": {
     "description": "Recurring payment for A"
@@ -295,8 +298,8 @@ You can see some Tokenization API examples [here](examples/tokenization), [Token
 ```ruby
 require 'veritrans'
 # Set Midtrans config
-Midtrans.config.server_key = "SB-Mid-server-uQmMImQMeo0Ky3Svl90QTUj2"
-Midtrans.config.client_key = "SB-Mid-client-ArNfhrh7st9bQKmz"
+Midtrans.config.server_key = "your server key"
+Midtrans.config.client_key = "your client key"
 Midtrans.config.api_host = "https://api.sandbox.midtrans.com"
 # Prepare parameter
 parameter = {
