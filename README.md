@@ -249,7 +249,7 @@ Midtrans.config.client_key = "your client key"
 Midtrans.config.api_host = "https://api.sandbox.midtrans.com"
 # Prepare parameter
 parameter = {
-  "name": "MONTHLY_2022",
+  "name": "monthly_subscription",
   "amount": "14000",
   "currency": "IDR",
   "payment_type": "credit_card",
@@ -258,6 +258,7 @@ parameter = {
     "interval": 1,
     "interval_unit": "month",
     "max_interval": 12,
+    #start_time value is just a sample time & should be replaced with a valid future time.
     "start_time": "2022-12-20 07:00:00 +0700"
   },
   "metadata": {
