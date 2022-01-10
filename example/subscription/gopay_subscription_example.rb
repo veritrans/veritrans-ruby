@@ -41,7 +41,7 @@ gopay_account_id = "7501d1f5-697c-4b4b-b095-69e60003759f"
 # prepare CORE API parameter ( refer to: https://api-docs.midtrans.com/#create-subscription ) create subscription parameter example
 begin
 parameter = {
-  "name": "SUBS-Gopay-2021",
+  "name": "gopay_monthly_subscription",
   "amount": "10000",
   "currency": "IDR",
   "payment_type": "gopay",
@@ -123,7 +123,7 @@ end
 # update subscription by subscription_id and update_subscription_param
 begin
   update_subscription_param = {
-  "name": "MONTHLY_2021",
+  "name": "gopay_monthly_subscription",
   "amount": "300000",
   "currency": "IDR",
   "token": gopay_payment_option_token,
