@@ -27,7 +27,7 @@ saved_token_id = "521111eLfszZpPoDAxJEjmoYCuaR1117"
 # prepare parameter ( refer to: https://api-docs.midtrans.com/#create-subscription ) create subscription parameter example
 begin
 parameter = {
-  "name": "MONTHLY_2021",
+  "name": "monthly_subscription",
   "amount": "14000",
   "currency": "IDR",
   "payment_type": "credit_card",
@@ -36,6 +36,7 @@ parameter = {
     "interval": 1,
     "interval_unit": "month",
     "max_interval": 12,
+    # start_time value is just a sample time & should be replaced with a valid future time.
     "start_time": "2022-12-20 07:00:00 +0700"
   },
   "metadata": {
@@ -107,7 +108,7 @@ end
 # update subscription by subscription_id and update_subscription_param
 begin
 update_subscription_param = {
-  "name": "MONTHLY_2022",
+  "name": "monthly_subscription",
   "amount": "300000",
   "currency": "IDR",
   "token": saved_token_id,
