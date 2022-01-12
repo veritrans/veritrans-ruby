@@ -126,7 +126,7 @@ class Veritrans
           status_code = Integer(response_body["status_code"])
           if status_code >= 400 && status_code != 407
             raise MidtransError.new(
-              "Midtrans API is returning API error. HTTP status code: #{status_code}",
+              "Midtrans API is returning API error. HTTP status code: #{status_code} API response: #{response_body}",
               "#{status_code}",
               "#{response_body}",
               "#{response}")
