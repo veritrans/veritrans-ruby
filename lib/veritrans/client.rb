@@ -132,7 +132,7 @@ class Veritrans
             raise MidtransError.new(
               "Midtrans API is returning API error. HTTP status code: #{status_code} API response: #{response_body}",
               "#{status_code}",
-              "#{response_body}",
+              response.body,
               "#{response}")
           end
         end
