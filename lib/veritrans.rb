@@ -1,5 +1,6 @@
 require 'veritrans/version'
 require 'veritrans/config'
+require 'veritrans/sanitizer'
 require 'veritrans/client'
 require 'veritrans/api'
 require 'veritrans/result'

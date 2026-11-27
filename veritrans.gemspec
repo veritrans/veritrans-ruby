@@ -16,6 +16,6 @@ Gem::Specification.new do |s|
 
   s.require_paths = ["lib"]
 
-  s.add_runtime_dependency "excon", "~> 0.20"
+  s.add_runtime_dependency "excon", ">= 0.20", "< 2"
 end
 
