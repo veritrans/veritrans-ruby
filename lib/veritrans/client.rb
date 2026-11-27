@@ -124,9 +124,9 @@ class Veritrans
 
       response = request.send(method.downcase.to_sym, request_options)
 
-      if defined?(response.body)
+      if defined?(response.body) && response.body.to_s.strip.length > 0
         response_body = JSON.parse(response.body)
-        if response_body.has_key? 'status_code'
+        if response_body.is_a?(Hash) && response_body.has_key?('status_code')
           status_code = Integer(response_body["status_code"])
           if status_code >= 400 && status_code != 407
             raise MidtransError.new(
