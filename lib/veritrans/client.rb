@@ -22,6 +22,10 @@ class Veritrans
       Veritrans::Client._json_encode(params)
     end
 
+    def _sanitize(params)
+      Veritrans::Sanitizer.sanitize(params)
+    end
+
     # If you using Rails then it will call ActiveSupport::JSON.decode
     # Otherwise JSON.parse
     def self._json_decode(params)
@@ -36,14 +40,14 @@ class Veritrans
     # This is proxy method for make_request to save request and response to logfile
     def request_with_logging(method, url, params)
       short_url = url.sub(config.api_host, '')
-      file_logger.info("Perform #{short_url} \nSending: " + _json_encode(params))
+      file_logger.info("Perform #{short_url} \nSending: " + _json_encode(_sanitize(params)))
 
       result = make_request(method, url, params)
 
       if result.status_code < 300
-        file_logger.info("Success #{short_url} \nGot: " + _json_encode(result.data) + "\n")
+        file_logger.info("Success #{short_url} \nGot: " + _json_encode(_sanitize(result.data)) + "\n")
       else
-        file_logger.warn("Failed #{short_url} \nGot: " + _json_encode(result.data) + "\n")
+        file_logger.warn("Failed #{short_url} \nGot: " + _json_encode(_sanitize(result.data)) + "\n")
       end
 
       result
@@ -78,7 +82,7 @@ class Veritrans
       end
 
       method = method.to_s.upcase
-      logger.info "Midtrans: #{method} #{url} #{_json_encode(params)}"
+      logger.info "Midtrans: #{method} #{url} #{_json_encode(_sanitize(params))}"
       #logger.info "Veritrans: Using server key: #{config.server_key}"
       #puts "Veritrans: #{method} #{url} #{_json_encode(params)}"
 
@@ -142,7 +146,8 @@ class Veritrans
           "#{response}")
       end
 
-      logger.info "Midtrans: got #{(Time.now - s_time).round(3)} sec #{response.status} #{response.body}"
+      sanitized_body = _sanitize(Veritrans::Client._json_decode(response.body)) rescue response.body
+      logger.info "Midtrans: got #{(Time.now - s_time).round(3)} sec #{response.status} #{_json_encode(sanitized_body)}"
 
       Result.new(response, url, request_options, Time.now - s_time)
 
